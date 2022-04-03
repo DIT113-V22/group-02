@@ -13,7 +13,7 @@ SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer,rightOdometer);
  
 const int triggerPin           = 6;  //D6
 const int echoPin              = 7;  //D7
-const unsigned int maxDistance = 100;
+const unsigned int maxDistance = 200;
 SR04 front{arduinoRuntime, triggerPin, echoPin, maxDistance};
 int sensorOut = HIGH;
 
@@ -27,8 +27,9 @@ void setup()
 void loop()
 {
   const auto distance = front.getDistance();
-  // The car comes to a stop if the Front UltraSonic reads a distance of 1.5m or lower
-  if (distance > 0 && distance < 1500) {
+  // The car comes to a stop if the Front UltraSonic reads a distance of 1 metre or lower.
+  // The distance upper bound in the if block is slightly greater than 1 metre, however, as the car overcomes its inertia during motion first before coming to a halt.
+  if (distance > 0 && distance < 150) {
     car.setSpeed(0); 
   }
 
