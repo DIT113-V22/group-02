@@ -27,8 +27,7 @@ void setup()
 void loop()
 {
   const auto distance = front.getDistance();
-  // The car comes to a stop if the Front UltraSonic reads a distance of 1 metre or lower.
-  // The distance upper bound in the if block is slightly greater than 1 metre, however, as the car overcomes its inertia during motion first before coming to a halt.
+  // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
   if (distance > 0 && distance < 150) {
     car.setSpeed(0); 
   }
