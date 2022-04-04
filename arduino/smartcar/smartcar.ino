@@ -64,7 +64,8 @@ void checkObstacles(){
   const auto distance = front.getDistance();
   // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
   if (distance > 0 && distance < 150) {
-    car.setSpeed(0); 
+    speed = 0;
+    car.setSpeed(speed); 
   }
 }
 
