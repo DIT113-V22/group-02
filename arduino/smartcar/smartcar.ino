@@ -20,8 +20,8 @@ int sensorOut = HIGH;
 void setup()
 {
   // Move the car with 50% of its full speed
-  car.setSpeed(50);
   Serial.begin(9600);
+  car.setSpeed(50);
 }
 
 void loop()
