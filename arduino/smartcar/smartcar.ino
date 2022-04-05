@@ -23,7 +23,7 @@ SR04 front{arduinoRuntime, triggerPin, echoPin, maxDistance};
 
 /*--- CONSTANTS ---*/
 const int SPEED_INCREMENT = 5;
-const int TURNING_INCREMENT = 5;
+const int TURNING_INCREMENT = 10;
 
 
 
@@ -90,12 +90,12 @@ void decreaseSpeed(){
   car.setSpeed(speed);
 }
 
-void turnLeft(){ // turns the car 10 degrees counter-clockwise
+void turnLeft(){ // turns the car 10 degrees counter-clockwise (degrees depend on TURNING_INCREMENT)
   turningAngle = turningAngle-TURNING_INCREMENT;
   car.setAngle(turningAngle);
 }
 
-void turnRight(){ // turns the car 10 degrees clockwise
+void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNING_INCREMENT)
   turningAngle = turningAngle+TURNING_INCREMENT;
   car.setAngle(turningAngle);
 }
