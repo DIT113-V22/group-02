@@ -27,7 +27,6 @@ const int TURNING_INCREMENT = 10;
 
 
 
-
 /*--- CAR INFO ---*/
 int speed = 0;
 int turningAngle = 0;
@@ -72,7 +71,7 @@ void handleInput(){
 void checkObstacles(){
   const auto distance = front.getDistance();
   // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
-  if (distance > 0 && distance < 150) {
+  if (distance > 0 && distance < 150 && speed>0) {
     speed = 0;
     car.setSpeed(speed); 
   }
@@ -86,7 +85,7 @@ void increaseSpeed(){
 
 void decreaseSpeed(){
   //sets max speed to 110
-  speed = speed-SPEED_INCREMENT > 0 ? speed-SPEED_INCREMENT : 0;
+  speed = speed-SPEED_INCREMENT;
   car.setSpeed(speed);
 }
 
