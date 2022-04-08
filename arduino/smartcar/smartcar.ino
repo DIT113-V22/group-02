@@ -62,6 +62,9 @@ void handleInput(){
       case 'l': 
         turnRight();
         break;
+      case 'u':
+        car.setSpeed(0);
+        break;
       default:
         break;
     }
