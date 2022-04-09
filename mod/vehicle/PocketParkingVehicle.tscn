@@ -178,6 +178,12 @@ transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.89230
 [node name="Back" type="Position3D" parent="AttachmentSlots"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0.4, 2.74527 )
 
+[node name="LeftFront" type="Position3D" parent="AttachmentSlots"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.00833, 0, -2.446 )
+
+[node name="RightFront" type="Position3D" parent="AttachmentSlots"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.980777, 0, -2.48073 )
+
 [node name="BuiltinAttachments" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.267129, -0.0989716, -0.81715 )
 
