@@ -22,7 +22,7 @@ SR04 front{arduinoRuntime, triggerPin, echoPin, maxDistance};
 
 
 /*--- CONSTANTS ---*/
-const int SPEED_INCREMENT = 110;
+const int SPEED_INCREMENT = 5;
 const int TURNING_INCREMENT = 10;
 
 
