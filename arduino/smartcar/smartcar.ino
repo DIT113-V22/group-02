@@ -20,12 +20,53 @@ const int echoPin = 7;  //D7
 const unsigned int maxDistance = 200;
 SR04 front{arduinoRuntime, triggerPin, echoPin, maxDistance};
 
+//Infrared Sensors
+const int leftIRPin = 1;
+const int rightIRPin = 2;
+const int backIRPin = 3;        
+const int frontRightIRPin = 4;
+const int frontLeftIRPin = 5;
 
+typedef GP2Y0A21 infrared; //Basically a 'rename'
+  infrared rightIR(arduinoRuntime, rightIRPin);
+  infrared leftIR(arduinoRuntime, leftIRPin);
+  infrared back(arduinoRuntime, backIRPin);
+  infrared frontLeft(arduinoRuntime, frontLeftIRPin);
+  infrared frontRight(arduinoRuntime, frontRightIRPin);
+  
 /*--- CONSTANTS ---*/
 const int SPEED_INCREMENT = 5;
 const int TURNING_INCREMENT = 10;
 
-
+void StraightParkingFunc(){
+  int angle = 0;
+  const auto lDist = leftIR.getDistance();
+  const auto frontDist = front.getDistance();
+  const auto frontLeftDist = frontLeft.getDistance();
+  const auto rDist = rightIR.getDistance();
+  const auto backDist = back.getDistance();
+  const auto frontRightDist = frontRight.getDistance();
+  
+  //Using sensors on side and back as well here to avoid collisions with obstacles in provided distances 
+  if ((frontRightDist > 0 && frontRightDist < 20) && (rDist > 0 && rDist <= 20)){
+    angle = angle + 10;
+    car.setAngle(angle);
+  }
+  else if ((frontDist > 0 && frontDist <= 20) && (frontLeftDist > 0 && frontRightDist < 30) && (frontLeftDist > 0 && frontLeftDist <= 30)){
+    car.setSpeed(0);
+  }
+  else if ((frontLeftDist > 0 && frontLeftDist < 20) && (lDist > 0 && lDist <= 20)){
+    angle = angle - 10;
+    car.setAngle(angle);
+  }
+  else if ((frontDist > 0 && frontDist <= 10) && (rDist > 0 && rDist <= 20) && (lDist > 0 && lDist <= 20) && (frontLeftDist > 0 && frontLeftDist < 20) && (frontRightDist > 0 && frontRightDist < 20)) {
+    car.setSpeed(0);
+    Serial.println("Car is parked!");
+  }
+  else {
+    car.setSpeed(10);
+  }
+}
 
 /*--- CAR INFO ---*/
 int speed = 0;
