@@ -51,7 +51,7 @@ bool obsAtFront() {
 }
 
 bool obsAtFrontLeft() {
-    return (frontLeftDist > 0 && frontLeftDist <= 30)
+    return (frontLeftDist > 0 && frontLeftDist <= 30);
 }
 
 bool obsAtFrontRight() {
@@ -146,9 +146,10 @@ void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNI
 
 void autoRightPark(){ // the car is supposed to park inside a parking spot to its immediate right
     gyroscope.update();
+    int targetAngle = 0;
     int currentAngle = gyroscope.getHeading();
     if (currentAngle - 90 < 0){
-        targetAngle = 360 - abs(startAngle - 90);
+        targetAngle = 360 - abs(currentAngle - 90);
     } else {
         targetAngle = currentAngle - 90;
     }
