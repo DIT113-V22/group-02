@@ -1,4 +1,5 @@
 #include <Smartcar.h>
+#include <stdlib.h>
 
 ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
@@ -38,34 +39,31 @@ typedef GP2Y0A21 infrared; //Basically a 'rename'
 const int SPEED_INCREMENT = 5;
 const int TURNING_INCREMENT = 10;
 
-void StraightParkingFunc(){
-  int angle = 0;
-  const auto lDist = leftIR.getDistance();
-  const auto frontDist = front.getDistance();
-  const auto frontLeftDist = frontLeft.getDistance();
-  const auto rDist = rightIR.getDistance();
-  const auto backDist = back.getDistance();
-  const auto frontRightDist = frontRight.getDistance();
-  
-  //Using sensors on side and back as well here to avoid collisions with obstacles in provided distances 
-  if ((frontRightDist > 0 && frontRightDist < 20) && (rDist > 0 && rDist <= 20)){
-    angle = angle + 10;
-    car.setAngle(angle);
-  }
-  else if ((frontDist > 0 && frontDist <= 20) && (frontLeftDist > 0 && frontRightDist < 30) && (frontLeftDist > 0 && frontLeftDist <= 30)){
-    car.setSpeed(0);
-  }
-  else if ((frontLeftDist > 0 && frontLeftDist < 20) && (lDist > 0 && lDist <= 20)){
-    angle = angle - 10;
-    car.setAngle(angle);
-  }
-  else if ((frontDist > 0 && frontDist <= 10) && (rDist > 0 && rDist <= 20) && (lDist > 0 && lDist <= 20) && (frontLeftDist > 0 && frontLeftDist < 20) && (frontRightDist > 0 && frontRightDist < 20)) {
-    car.setSpeed(0);
-    Serial.println("Car is parked!");
-  }
-  else {
-    car.setSpeed(10);
-  }
+const auto lDist = leftIR.getDistance();
+const auto frontDist = front.getDistance();
+const auto frontLeftDist = frontLeft.getDistance();
+const auto rDist = rightIR.getDistance();
+const auto backDist = back.getDistance();
+const auto frontRightDist = frontRight.getDistance();
+
+bool obsAtFront() {
+    return (frontDist > 0 && frontDist <= 20);
+}
+
+bool obsAtFrontLeft() {
+    return (frontLeftDist > 0 && frontLeftDist <= 30)
+}
+
+bool obsAtFrontRight() {
+    return (frontRightDist > 0 && frontRightDist < 20);
+}
+
+bool obsAtLeft() {
+    return (lDist > 0 && lDist <= 20);
+}
+
+bool obsAtRight() {
+    return (rDist > 0 && rDist <= 20);
 }
 
 /*--- CAR INFO ---*/
@@ -106,6 +104,9 @@ void handleInput(){
       case 'u':
         car.setSpeed(0);
         break;
+      case 'p':
+        autoRightPark();
+        break;
       default:
         break;
     }
@@ -141,4 +142,29 @@ void turnLeft(){ // turns the car 10 degrees counter-clockwise (degrees depend o
 void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNING_INCREMENT)
   turningAngle = turningAngle+TURNING_INCREMENT;
   car.setAngle(turningAngle);
+}
+
+void autoRightPark(){ // the car is supposed to park inside a parking spot to its immediate right
+    gyroscope.update();
+    int currentAngle = gyroscope.getHeading();
+    if (currentAngle - 90 < 0){
+        targetAngle = 360 - abs(startAngle - 90);
+    } else {
+        targetAngle = currentAngle - 90;
+    }
+    car.setAngle(50);
+    car.setSpeed(20);
+    while (targetAngle < currentAngle){
+        currentAngle = gyroscope.getHeading();
+        if(obsAtFrontRight) { // reduce turning angle
+
+        }else if(obsAtFrontLeft) { // get the car to reverse and change turning angle
+
+        }else if(obsAtLeft) { // increase turning angle, opposite of AtRight
+
+        }else if(obsAtRight) { // reduce turning angle
+
+        }
+    }
+    // here the car will have the correct angle, car will drive foward and park
 }
