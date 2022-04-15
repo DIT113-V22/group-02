@@ -1,0 +1,278 @@
+[gd_scene load_steps=26 format=2]
+
+[ext_resource path="res://ExternClass.gd" type="Script" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends \"res://ExternClass.gd\"
+
+export(Array, NodePath) var cosmetic_wheels
+export(Array, NodePath) var right_wheels
+export(Array, NodePath) var left_wheels
+
+export(NodePath) onready var left_motor
+export(NodePath) onready var right_motor
+"
+
+[sub_resource type="SpatialMaterial" id=5]
+albedo_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="CylinderMesh" id=6]
+material = SubResource( 5 )
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends \"res://ExternClass.gd\"
+
+export(int, 100) var forward_pin = 0
+export(int, 100) var backward_pin = 0
+export(int, 100) var enable_pin = 0
+"
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends \"res://ExternClass.gd\"
+
+export(NodePath) var node = \"\"
+export(int, 256) var pin = 205;
+"
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends \"res://ExternClass.gd\"
+
+export(NodePath) var _forward_reference
+export(bool) var provides_direction = true
+export(int, 100) var distance_pin = 99
+export(int, 100) var direction_pin = 99
+"
+
+[sub_resource type="BoxShape" id=7]
+extents = Vector3( 0.7, 0.485599, 1.35573 )
+
+[sub_resource type="CubeMesh" id=8]
+size = Vector3( 1.3, 0.3, 2.5 )
+
+[sub_resource type="SpatialMaterial" id=9]
+albedo_color = Color( 0.596078, 0, 0, 1 )
+
+[sub_resource type="PrismMesh" id=10]
+left_to_right = 1.0
+size = Vector3( 0.6, 0.35, 1.1 )
+
+[sub_resource type="SpatialMaterial" id=11]
+albedo_color = Color( 0.211765, 0.211765, 0.211765, 1 )
+
+[sub_resource type="PrismMesh" id=12]
+left_to_right = 0.0
+size = Vector3( 0.5, 0.35, 1.1 )
+
+[sub_resource type="SpatialMaterial" id=13]
+albedo_color = Color( 0.211765, 0.211765, 0.211765, 1 )
+
+[sub_resource type="CubeMesh" id=14]
+size = Vector3( 0.25, 0.05, 0.025 )
+
+[sub_resource type="CubeMesh" id=15]
+
+[sub_resource type="SpatialMaterial" id=16]
+albedo_color = Color( 1, 0.278431, 0.278431, 1 )
+
+[sub_resource type="CubeMesh" id=17]
+size = Vector3( 1.83, 1.75, 2 )
+
+[sub_resource type="SpatialMaterial" id=18]
+albedo_color = Color( 0.211765, 0.211765, 0.211765, 1 )
+
+[sub_resource type="PrismMesh" id=19]
+left_to_right = 1.0
+size = Vector3( 1.25, 0.965, 2.4 )
+
+[sub_resource type="SpatialMaterial" id=20]
+albedo_color = Color( 0.596078, 0, 0, 1 )
+
+[sub_resource type="PrismMesh" id=21]
+left_to_right = 0.0
+size = Vector3( 1.25, 0.95, 2.4 )
+
+[sub_resource type="SpatialMaterial" id=22]
+albedo_color = Color( 0.596078, 0, 0, 1 )
+
+[sub_resource type="CubeMesh" id=23]
+size = Vector3( 0.95, 0.3, 0.2 )
+
+[sub_resource type="SpatialMaterial" id=24]
+albedo_color = Color( 0.596078, 0, 0, 1 )
+
+[node name="TemplateCar" type="RigidBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23062, 0 )
+script = SubResource( 1 )
+extern_class = "RayCar"
+right_wheels = [ NodePath("RightBack"), NodePath("RightFront") ]
+left_wheels = [ NodePath("LeftBack"), NodePath("LeftFront") ]
+left_motor = NodePath("BuiltinAttachments/Left BrushedMotor")
+right_motor = NodePath("BuiltinAttachments/Right BrushedMotor")
+
+[node name="LeftBack" type="RayCast" parent="."]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.125, 0.9, 1.25 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+script = ExtResource( 1 )
+extern_class = "RayWheel"
+
+[node name="MeshInstance" type="MeshInstance" parent="LeftBack"]
+transform = Transform( 0.4, 4.37117e-09, 7.64281e-16, 0, -4.37114e-09, 0.4, 1.74847e-08, -0.1, -1.74846e-08, 0, -0.5, 0 )
+mesh = SubResource( 6 )
+material/0 = null
+
+[node name="LeftFront" type="RayCast" parent="."]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.125, 0.9, -1 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+script = ExtResource( 1 )
+extern_class = "RayWheel"
+
+[node name="MeshInstance" type="MeshInstance" parent="LeftFront"]
+transform = Transform( 0.4, 4.37117e-09, 7.64281e-16, 0, -4.37114e-09, 0.4, 1.74847e-08, -0.1, -1.74846e-08, 0, -0.5, 0 )
+mesh = SubResource( 6 )
+material/0 = null
+
+[node name="RightBack" type="RayCast" parent="."]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.125, 0.9, 1.25 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+script = ExtResource( 1 )
+extern_class = "RayWheel"
+
+[node name="MeshInstance" type="MeshInstance" parent="RightBack"]
+transform = Transform( 0.4, 4.37117e-09, 7.64281e-16, 0, -4.37114e-09, 0.4, 1.74847e-08, -0.1, -1.74846e-08, 0, -0.5, 0 )
+mesh = SubResource( 6 )
+material/0 = null
+
+[node name="RightFront" type="RayCast" parent="."]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.125, 0.9, -1 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+script = ExtResource( 1 )
+extern_class = "RayWheel"
+
+[node name="MeshInstance" type="MeshInstance" parent="RightFront"]
+transform = Transform( 0.4, 4.37117e-09, 7.64281e-16, 0, -4.37114e-09, 0.4, 1.74847e-08, -0.1, -1.74846e-08, 0, -0.5, 0 )
+mesh = SubResource( 6 )
+material/0 = null
+
+[node name="AttachmentSlots" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.549106, 0 )
+
+[node name="Front" type="Position3D" parent="AttachmentSlots"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.154577, -2.65497 )
+
+[node name="Front2" type="Position3D" parent="AttachmentSlots"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.294913, -2.65374 )
+
+[node name="FrontTop" type="Position3D" parent="AttachmentSlots"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.810153, -2.64882 )
+
+[node name="Left" type="Position3D" parent="AttachmentSlots"]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.898067, 0.4, 0 )
+
+[node name="Right" type="Position3D" parent="AttachmentSlots"]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.892303, 0.4, 0 )
+
+[node name="Back" type="Position3D" parent="AttachmentSlots"]
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0.4, 2.74527 )
+
+[node name="LeftFront" type="Position3D" parent="AttachmentSlots"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.00833, 0, -2.446 )
+
+[node name="RightFront" type="Position3D" parent="AttachmentSlots"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.980777, 0, -2.48073 )
+
+[node name="BuiltinAttachments" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.267129, -0.0989716, -0.81715 )
+
+[node name="Left BrushedMotor" type="Node" parent="BuiltinAttachments"]
+script = SubResource( 2 )
+extern_class = "BrusedMotor"
+forward_pin = 12
+backward_pin = 14
+enable_pin = 13
+
+[node name="Right BrushedMotor" type="Node" parent="BuiltinAttachments"]
+script = SubResource( 2 )
+extern_class = "BrusedMotor"
+forward_pin = 25
+backward_pin = 26
+enable_pin = 27
+
+[node name="Gyroscope" type="Node" parent="BuiltinAttachments"]
+script = SubResource( 3 )
+extern_class = "Gyroscope"
+node = NodePath("../..")
+
+[node name="Left Odometer" type="Spatial" parent="BuiltinAttachments"]
+script = SubResource( 4 )
+extern_class = "Odometer"
+_forward_reference = NodePath("../..")
+distance_pin = 35
+direction_pin = 34
+
+[node name="Right Odometer" type="Spatial" parent="BuiltinAttachments"]
+script = SubResource( 4 )
+extern_class = "Odometer"
+_forward_reference = NodePath("../..")
+distance_pin = 36
+direction_pin = 39
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1.75, 0, 0, 0, 2.25, 0, 0, 0, 2, 0, 1.22252, 0.194252 )
+shape = SubResource( 7 )
+
+[node name="Chassis" type="MeshInstance" parent="CollisionShape"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.261483, -0.0164912 )
+mesh = SubResource( 8 )
+skeleton = NodePath("../../..")
+material/0 = SubResource( 9 )
+
+[node name="Windshield" type="MeshInstance" parent="CollisionShape"]
+transform = Transform( 0.00218172, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00218172, 0.000720211, 0.052, -0.746268 )
+mesh = SubResource( 10 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 11 )
+
+[node name="Hood" type="MeshInstance" parent="CollisionShape"]
+transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+mesh = SubResource( 12 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 13 )
+
+[node name="Headlight1" type="MeshInstance" parent="CollisionShape"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.291261, -0.170667, -1.43398 )
+mesh = SubResource( 14 )
+material/0 = null
+
+[node name="Headlight2" type="MeshInstance" parent="CollisionShape"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.291447, -0.174214, -1.43097 )
+mesh = SubResource( 14 )
+material/0 = null
+
+[node name="Tail-light" type="MeshInstance" parent="CollisionShape"]
+transform = Transform( 0.5, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, -0.197456, 1.22601 )
+mesh = SubResource( 15 )
+material/0 = SubResource( 16 )
+
+[node name="Cabin" type="MeshInstance" parent="CollisionShape"]
+transform = Transform( 0.6, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 0, 0.0519999, 0.0469962 )
+mesh = SubResource( 17 )
+material/0 = SubResource( 18 )
+
+[node name="FL Bumper" type="MeshInstance" parent="CollisionShape"]
+transform = Transform( 0.150001, 0, 5.46392e-09, -6.55676e-09, 3.18446e-16, 0.125, 0, -0.166666, 2.38836e-16, -0.552835, -0.263384, -1.34568 )
+mesh = SubResource( 19 )
+material/0 = SubResource( 20 )
+
+[node name="FR Bumper" type="MeshInstance" parent="CollisionShape"]
+transform = Transform( 0.15, 0, 0, 0, -7.2998e-09, 0.125, 0, -0.167, -5.46392e-09, 0.554896, -0.263397, -1.3458 )
+mesh = SubResource( 21 )
+material/0 = SubResource( 22 )
+
+[node name="F Bumper" type="MeshInstance" parent="CollisionShape"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.263566, -1.32577 )
+mesh = SubResource( 23 )
+material/0 = SubResource( 24 )
