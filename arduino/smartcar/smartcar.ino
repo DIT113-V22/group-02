@@ -32,6 +32,7 @@ SR04 front{arduinoRuntime, triggerPin, echoPin, maxDistance};
 /*--- CONSTANTS ---*/
 const int SPEED_INCREMENT = 5;
 const int TURNING_INCREMENT = 10;
+const auto oneSecond = 1000UL;
 
 
 
@@ -43,28 +44,26 @@ int heading = car.getHeading();
 void setup(){
   // Move the car with 50% of its full speed
   Serial.begin(9600);
-}
-
-#ifdef __SMCE__
+  #ifdef __SMCE__
   // ================= 1
   // mqtt.begin("aerostun.dev", 1883, WiFi);
   mqtt.begin(WiFi); // Will connect to localhost
-#else
-  mqtt.begin(net);
-#endif
-  // ================= 2
-  if (mqtt.connect("arduino", "public", "public")) {
-    mqtt.subscribe("/smartcar/control/#", 1);
-    mqtt.onMessage([](String topic, String message) {
-      if (topic == "/smartcar/control/throttle") {
-        car.setSpeed(message.toInt());
-      } else if (topic == "/smartcar/control/steering") {
-        car.setAngle(message.toInt());
-      } else {
-        Serial.println(topic + " " + message);
-      }
-    });
-  }
+  #else
+    mqtt.begin(net);
+  #endif
+    // ================= 2
+    if (mqtt.connect("arduino", "public", "public")) {
+      mqtt.subscribe("/smartcar/control/#", 1);
+      mqtt.onMessage([](String topic, String message) {
+        if (topic == "/smartcar/control/throttle") {
+          car.setSpeed(message.toInt());
+        } else if (topic == "/smartcar/control/steering") {
+          car.setAngle(message.toInt());
+        } else {
+          Serial.println(topic + " " + message);
+        }
+      });
+    }
 }
 
 void loop() {
@@ -84,7 +83,6 @@ if (mqtt.connected()) {
   // Avoid over-using the CPU if we are running in the emulator
   delay(1);
 #endif
-}
 
   checkObstacles();
   handleInput();
