@@ -1,4 +1,12 @@
+#include <MQTT.h>
+#include <WiFi.h>
+
 #include <Smartcar.h>
+
+#ifndef __SMCE__
+WiFiClient net;
+#endif
+MQTTClient mqtt;
 
 ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
@@ -35,7 +43,47 @@ void setup(){
   Serial.begin(9600);
 }
 
-void loop(){
+#ifdef __SMCE__
+  // ================= 1
+  // mqtt.begin("aerostun.dev", 1883, WiFi);
+  mqtt.begin(WiFi); // Will connect to localhost
+#else
+  mqtt.begin(net);
+#endif
+  // ================= 2
+  if (mqtt.connect("arduino", "public", "public")) {
+    mqtt.subscribe("/smartcar/control/#", 1);
+    mqtt.onMessage([](String topic, String message) {
+      if (topic == "/smartcar/control/throttle") {
+        car.setSpeed(message.toInt());
+      } else if (topic == "/smartcar/control/steering") {
+        car.setAngle(message.toInt());
+      } else {
+        Serial.println(topic + " " + message);
+      }
+    });
+  }
+}
+
+void loop() {
+
+if (mqtt.connected()) {
+    mqtt.loop();
+    const auto currentTime = millis();
+    static auto previousTransmission = 0UL;
+    if (currentTime - previousTransmission >= oneSecond) {
+      previousTransmission = currentTime;
+      const auto distance = String(front.getDistance());
+      // ================= 3
+      mqtt.publish("/smartcar/ultrasound/front", distance);
+    }
+  }
+#ifdef __SMCE__
+  // Avoid over-using the CPU if we are running in the emulator
+  delay(1);
+#endif
+}
+
   checkObstacles();
   handleInput();
   #ifdef __SMCE__
