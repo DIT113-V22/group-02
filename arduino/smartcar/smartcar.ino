@@ -3,9 +3,7 @@
 
 #include <Smartcar.h>
 
-#ifndef __SMCE__
 WiFiClient net;
-#endif
 MQTTClient mqtt;
 
 ArduinoRuntime arduinoRuntime;
@@ -47,7 +45,7 @@ void setup(){
   #ifdef __SMCE__
   // ================= 1
   // mqtt.begin("aerostun.dev", 1883, WiFi);
-  mqtt.begin(WiFi); // Will connect to localhost
+  mqtt.begin("127.0.0.1", 1883, net); // Will connect to localhost
   #else
     mqtt.begin(net);
   #endif
