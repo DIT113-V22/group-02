@@ -63,7 +63,7 @@ void handleInput(){
         turnRight();
         break;
       case 'u':
-        car.setSpeed(0);
+        stopCar();
         break;
       default:
         break;
@@ -74,9 +74,8 @@ void handleInput(){
 void checkObstacles(){
   const auto distance = front.getDistance();
   // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
-  if (distance > 0 && distance < 150 && speed>0) {
-    speed = 0;
-    car.setSpeed(speed); 
+  if (distance > 0 && distance < 200 && speed>0) {
+    stopCar(); 
   }
 }
 
@@ -100,4 +99,11 @@ void turnLeft(){ // turns the car 10 degrees counter-clockwise (degrees depend o
 void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNING_INCREMENT)
   turningAngle = turningAngle+TURNING_INCREMENT;
   car.setAngle(turningAngle);
+}
+
+void stopCar(){
+  while(car.getSpeed() != 0){
+    int speed = speed > 0 ? speed-0.1 : speed+0.1;
+    car.setSpeed(speed);
+  }
 }
