@@ -13,11 +13,11 @@ export(NodePath) onready var left_motor
 export(NodePath) onready var right_motor
 "
 
-[sub_resource type="SpatialMaterial" id=5]
+[sub_resource type="SpatialMaterial" id=25]
 albedo_color = Color( 0, 0, 0, 1 )
 
 [sub_resource type="CylinderMesh" id=6]
-material = SubResource( 5 )
+material = SubResource( 25 )
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends \"res://ExternClass.gd\"
