@@ -102,9 +102,8 @@ void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNI
 }
 
 void stopCar(){
-  while(speed != 0){
-    speed = speed > 0 ? speed-1 : speed+1;
+  while(car.getSpeed() != 0){
+    int speed = speed > 0 ? speed-0.1 : speed+0.1;
     car.setSpeed(speed);
-    delay(10);
   }
 }
