@@ -42,6 +42,7 @@ const int TURNING_INCREMENT = 10;
 const auto lDist = leftIR.getDistance();
 const auto frontDist = front.getDistance();
 const auto frontLeftDist = frontLeft.getDistance();
+const auto rDist = rightIR.getDistance();
 const auto backDist = back.getDistance();
 const auto frontRightDist = frontRight.getDistance();
 
@@ -62,7 +63,6 @@ bool obsAtLeft() {
 }
 
 bool obsAtRight() {
-    const auto rDist = rightIR.getDistance();
     return (rDist > 0 && rDist <= 20);
 }
 
@@ -146,11 +146,11 @@ void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNI
 
 void autoRightPark(){ // the car is supposed to park inside a parking spot to its immediate right
     gyroscope.update();
-    // currently using these 4 timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
     int rightTimer = 0;
     int frontRightTimer = 0;
     int leftTimer = 0;
     int frontLeftTimer = 0;
+
 
     int targetAngle = 0;
     int currentAngle = gyroscope.getHeading();
@@ -159,36 +159,26 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     } else {
         targetAngle = currentAngle - 90;
     }
-    car.setAngle(70);
-    car.setSpeed(15);
-    Serial.println(targetAngle);
-    Serial.println(currentAngle);
-    Serial.println(rightTimer);
+    car.setAngle(50);
+    car.setSpeed(20);
     while (targetAngle < currentAngle){
-        gyroscope.update();
         currentAngle = gyroscope.getHeading();
         if(obsAtFrontRight) { // reduce turning angle
 
-        }
-        if(obsAtFrontLeft()) {
+        }else if(obsAtFrontLeft) {
             frontLeftTimer = 0;
 
-        }
-        if(obsAtLeft()) { // increase turning angle, opposite of AtRight
+        }else if(obsAtLeft) { // increase turning angle, opposite of AtRight
             leftTimer = 0;
 
-        }
-        if(obsAtRight() && rightTimer > 1000) { // reduce turning angle
+        }else if(obsAtRight && rightTimer > 100) { // reduce turning angle
+            car.setAngle(currentAngle - 10)
             rightTimer = 0;
-            turningAngle = turningAngle-TURNING_INCREMENT;
-            car.setAngle(turningAngle);
-            Serial.println("obstacle detected");
         }
         rightTimer++;
         frontRightTimer++;
         leftTimer++;
         frontLeftTimer++;
     }
-    car.setAngle(0);
     // here the car will have the correct angle, car will drive foward and park
 }
