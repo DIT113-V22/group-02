@@ -48,7 +48,7 @@
             "name": "Front Left Infrared",
             "props":  {
                "pin": 4,
-               "rotation_degrees": "Vector3(0,10,0)"
+               "rotation_degrees": "Vector3(0,20,0)"
             }
          },
          "RightFront":{
@@ -56,7 +56,7 @@
             "name": "Front Right Infrared",
             "props": {
                "pin": 5,
-               "rotation_degrees": "Vector3(0,-10,0)"
+               "rotation_degrees": "Vector3(0,-20,0)"
             }
          }
      },
