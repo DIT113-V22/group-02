@@ -4,10 +4,7 @@
     "slots": {
         "Front": {
            "class": "AnalogRaycast",
-           "name": "Front Infrared",
-           "props": {
-              "pin": 0
-           }
+           "name": "Front Infrared"
         },
         "Front2": {
            "class": "Camera",
@@ -17,7 +14,7 @@
            "class": "UltraSonic",
            "name": "Front UltraSonic",
            "props": {
-              "trigger_pin": 6,
+              "trigger_pin": 12,
               "echo_pin": 7,
               "rotation_degrees": "Vector3(4,0,0)"
            }
@@ -58,7 +55,23 @@
                "pin": 5,
                "rotation_degrees": "Vector3(0,-20,0)"
             }
+         },
+        "RightBack":{
+          "class": "AnalogRaycast",
+          "name": "Back Right Infrared",
+          "props": {
+            "pin": 0,
+            "rotation_degrees": "Vector3(0,110,0)"
+            }
+         },
+        "LeftBack":{
+          "class": "AnalogRaycast",
+          "name": "Back Left Infrared",
+          "props": {
+            "pin": 6,
+            "rotation_degrees": "Vector3(0,-110,0)"
          }
+      }
      },
      "builtin": {
         "Left BrushedMotor": {

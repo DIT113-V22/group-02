@@ -7,7 +7,7 @@
         { "pin": 3, "analog": true },
         { "pin": 4, "analog": true },
         { "pin": 5, "analog": true },
-        { "pin": 6, "digital": true },
+        { "pin": 6, "analog": true },
         { "pin": 7, "analog": true },
         
         { "pin": 12, "digital": true },
