@@ -15,7 +15,7 @@ SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer,rightOdometer);
 /*--- SENSOR CONFIGURATIONS ---*/
 
 // Front Ultrasonic Sensor
-const int triggerPin = 6;  //D6
+const int triggerPin = 12;  //D6
 const int echoPin = 7;  //D7
 const unsigned int maxDistance = 200;
 SR04 front{arduinoRuntime, triggerPin, echoPin, maxDistance};
