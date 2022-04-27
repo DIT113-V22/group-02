@@ -1,5 +1,7 @@
 package com.example.smartcarapplication;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,8 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int IMAGE_HEIGHT = 240;
 
     private MqttClient mMqttClient;
-    private boolean isConnected = true;
+    private boolean isConnected = false;
     private ImageView mCameraView;
 
     @Override
