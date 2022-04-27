@@ -19,7 +19,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String EXTERNAL_MQTT_BROKER = "aerostun.dev";
-    private static final String LOCALHOST = "10.0.2.2";
+    private static final String LOCALHOST = "127.0.0.1";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     private static final String THROTTLE_CONTROL = "/smartcar/control/throttle";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int IMAGE_HEIGHT = 240;
 
     private MqttClient mMqttClient;
-    private boolean isConnected = false;
+    private boolean isConnected = true;
     private ImageView mCameraView;
 
     @Override
