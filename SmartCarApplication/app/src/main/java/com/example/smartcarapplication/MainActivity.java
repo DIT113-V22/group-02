@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String EXTERNAL_MQTT_BROKER = "192.168.74.128";
     private static final String LOCALHOST = "10.0.2.2";
-    private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
+    private static final String MQTT_SERVER = "tcp://" + EXTERNAL_MQTT_BROKER + ":1883";
     private static final String SPEED_CONTROL = "/smartcar/control/speed";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
     private static final int MOVEMENT_SPEED = 70;
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void drive(int throttleSpeed, int steeringAngle, String actionDescription) {
+    void setSpeed(int speed, String actionDescription) {
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(TAG, notConnected);
@@ -135,27 +135,39 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Log.i(TAG, actionDescription);
-        mMqttClient.publish(SPEED_CONTROL, Integer.toString(throttleSpeed), QOS, null);
-        mMqttClient.publish(STEERING_CONTROL, Integer.toString(steeringAngle), QOS, null);
+        mMqttClient.publish(SPEED_CONTROL, Integer.toString(speed), QOS, null);
     }
+
+    void setAngle(int angle, String actionDescription) {
+        if (!isConnected) {
+            final String notConnected = "Not connected (yet)";
+            Log.e(TAG, notConnected);
+            Toast.makeText(getApplicationContext(), notConnected, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Log.i(TAG, actionDescription);
+        mMqttClient.publish(STEERING_CONTROL, Integer.toString(angle), QOS, null);
+    }
+
 
     public void moveForward(View view) {
-        drive(MOVEMENT_SPEED, STRAIGHT_ANGLE, "Moving forward");
+        setSpeed(MOVEMENT_SPEED, "Moving forward");
     }
 
-    public void moveForwardLeft(View view) {
-        drive(MOVEMENT_SPEED, -STEERING_ANGLE, "Moving forward left");
+    public void turnLeft(View view) {
+        setAngle(-STEERING_ANGLE, "Turning left");
     }
 
     public void stop(View view) {
-        drive(IDLE_SPEED, STRAIGHT_ANGLE, "Stopping");
+        setSpeed(IDLE_SPEED, "Stopping");
+        setAngle(STRAIGHT_ANGLE, "Straightening Angle");
     }
 
-    public void moveForwardRight(View view) {
-        drive(MOVEMENT_SPEED, STEERING_ANGLE, "Moving forward left");
+    public void turnRight(View view) {
+        setAngle(STEERING_ANGLE, "Turning right");
     }
 
     public void moveBackward(View view) {
-        drive(-MOVEMENT_SPEED, STRAIGHT_ANGLE, "Moving backward");
+        setSpeed(-MOVEMENT_SPEED, "Moving backwards");
     }
 }
