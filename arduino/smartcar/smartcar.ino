@@ -53,7 +53,7 @@ void setup(){
     if (mqtt.connect("arduino", "public", "public")) {
       mqtt.subscribe("/smartcar/control/#", 1);
       mqtt.onMessage([](String topic, String message) {
-        if (topic == "/smartcar/control/throttle") {
+        if (topic == "/smartcar/control/speed") {
           car.setSpeed(message.toInt());
         } else if (topic == "/smartcar/control/steering") {
           car.setAngle(message.toInt());
