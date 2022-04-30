@@ -108,7 +108,7 @@ void handleMQTTMessage(String topic, String message){
           setSpeed(message.toFloat());
     } else if (topic == "/smartcar/control/steering") {
           setAngle(message.toFloat());
-    else {
+    } else {
           Serial.println(topic + " " + message);
     }
 }
