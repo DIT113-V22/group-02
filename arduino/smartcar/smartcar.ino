@@ -16,17 +16,19 @@ SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer,rightOdometer);
 /*--- SENSOR CONFIGURATIONS ---*/
 
 // Front Ultrasonic Sensor
-const int triggerPin = 6;  //D6
+const int triggerPin = 12;  //D6
 const int echoPin = 7;  //D7
 const unsigned int maxDistance = 200;
 SR04 front{arduinoRuntime, triggerPin, echoPin, maxDistance};
 
 //Infrared Sensors
+const int backRightIRPin = 0;
 const int leftIRPin = 1;
 const int rightIRPin = 2;
 const int backIRPin = 3;        
 const int frontRightIRPin = 4;
 const int frontLeftIRPin = 5;
+const int backLeftIRPin = 6;
 
 typedef GP2Y0A21 infrared; //Basically a 'rename'
   infrared rightIR(arduinoRuntime, rightIRPin);
@@ -34,6 +36,8 @@ typedef GP2Y0A21 infrared; //Basically a 'rename'
   infrared back(arduinoRuntime, backIRPin);
   infrared frontLeft(arduinoRuntime, frontLeftIRPin);
   infrared frontRight(arduinoRuntime, frontRightIRPin);
+  infrared backRight(arduinoRuntime, backRightIRPin);
+  infrared backLeft(arduinoRuntime, backLeftIRPin);  
   
 /*--- CONSTANTS ---*/
 const int SPEED_INCREMENT = 5;
@@ -62,6 +66,16 @@ bool obsAtLeft() {
 bool obsAtRight() {
     const auto rDist = rightIR.getDistance();
     return (rDist > 0 && rDist <= 15);
+}
+
+bool obsAtBackRight() {
+    const auto backRightDist = backRight.getDistance();
+    return (backRightDist > 0 && backRightDist < 15);
+}
+
+bool obsAtBackLeft() {
+    const auto backLeftDist = backLeft.getDistance();
+    return (backLeftDist > 0 && backLeftDist < 15);
 }
 
 /*--- CAR INFO ---*/
@@ -112,9 +126,9 @@ void handleInput(){
 }
 
 void checkObstacles(){
-  const auto distance = front.getDistance();
+  const auto frontDistance = front.getDistance();
   // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
-  if (distance > 0 && distance < 1 && speed>0) {
+  if (frontDistance > 0 && frontDistance < 1 && speed > 0) {
     speed = 0;
     car.setSpeed(speed); 
   }
@@ -149,6 +163,9 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     int frontRightTimer = 1000;
     int leftTimer = 1000;
     int frontLeftTimer = 1000;
+    int backRightTimer = 1000;
+    int backLeftTimer = 1000;
+    int frontTimer = 1000;
 
     int targetAngle = 0;
     int currentAngle = gyroscope.getHeading();
@@ -200,10 +217,20 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
             }
             Serial.println("right obstacle detected");
         }
+        if(obsAtFront() && frontTimer > 1000){
+            frontTimer = 0;
+            turningAngle = turningAngle - TURNING_INCREMENT;
+            car.setAngle(turningAngle);
+            if (car.getSpeed() > 0){
+              car.setSpeed(15);
+            }
+            Serial.println("obstacle at front!");
+        }
         rightTimer++;
         frontRightTimer++;
         leftTimer++;
         frontLeftTimer++;
+        frontTimer++;
     }
     car.setAngle(0);
     car.setSpeed(10);
