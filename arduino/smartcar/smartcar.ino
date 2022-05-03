@@ -1,10 +1,18 @@
-#include <Smartcar.h>
+#include <vector>
 
+#include <Smartcar.h>
+#include <stdlib.h>
+#include <MQTT.h>
+#include <WiFi.h>
+#include <OV767X.h>
 ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(leftMotor, rightMotor);
-
+MQTTClient mqtt;
+#ifndef __SMCE__
+WiFiClient net;
+#endif
 GY50 gyroscope(arduinoRuntime, 37);
 const auto pulsesPerMeter = 600;
 DirectionlessOdometer leftOdometer{ arduinoRuntime,smartcarlib::pins::v2::leftOdometerPin,[]() { leftOdometer.update(); },pulsesPerMeter };
@@ -20,12 +28,69 @@ const int echoPin = 7;  //D7
 const unsigned int maxDistance = 200;
 SR04 front{arduinoRuntime, triggerPin, echoPin, maxDistance};
 
+const auto oneSecond = 1000UL;
+std::vector<char> frameBuffer;
+//Infrared Sensors
+const int backRightIRPin = 0;
+const int leftIRPin = 1;
+const int rightIRPin = 2;
+const int backIRPin = 3;        
+const int frontRightIRPin = 5;
+const int frontLeftIRPin = 4;
+const int backLeftIRPin = 6;
 
+typedef GP2Y0A21 infrared; //Basically a 'rename'
+  infrared rightIR(arduinoRuntime, rightIRPin);
+  infrared leftIR(arduinoRuntime, leftIRPin);
+  infrared back(arduinoRuntime, backIRPin);
+  infrared frontLeft(arduinoRuntime, frontLeftIRPin);
+  infrared frontRight(arduinoRuntime, frontRightIRPin);
+  infrared backRight(arduinoRuntime, backRightIRPin);
+  infrared backLeft(arduinoRuntime, backLeftIRPin);  
+  
 /*--- CONSTANTS ---*/
 const int SPEED_INCREMENT = 5;
 const int TURNING_INCREMENT = 10;
 
+bool obsAtFront() {
+    const auto frontDist = front.getDistance();
+    return (frontDist > 0 && frontDist <= 5);
+}
 
+bool obsAtFrontLong() {
+    const auto frontDist = front.getDistance();
+    return (frontDist > 0 && frontDist <= 40);
+}
+
+bool obsAtFrontLeft() {
+    const auto frontLeftDist = frontLeft.getDistance();
+    return (frontLeftDist > 0 && frontLeftDist <= 10);
+}
+
+bool obsAtFrontRight() {
+    const auto frontRightDist = frontRight.getDistance();
+    return (frontRightDist > 0 && frontRightDist < 40);
+}
+
+bool obsAtLeft() {
+    const auto lDist = leftIR.getDistance();
+    return (lDist > 0 && lDist <= 10);
+}
+
+bool obsAtRight() {
+    const auto rDist = rightIR.getDistance();
+    return (rDist > 0 && rDist <= 10);
+}
+
+bool obsAtBackRight() {
+    const auto backRightDist = backRight.getDistance();
+    return (backRightDist > 0 && backRightDist < 10);
+}
+
+bool obsAtBackLeft() {
+    const auto backLeftDist = backLeft.getDistance();
+    return (backLeftDist > 0 && backLeftDist < 12);
+}
 
 /*--- CAR INFO ---*/
 int speed = 0;
@@ -33,13 +98,36 @@ int turningAngle = 0;
 int heading = car.getHeading();
 
 void setup(){
-  // Move the car with 50% of its full speed
   Serial.begin(9600);
+  #ifdef __SMCE__
+  Camera.begin(QVGA, RGB888, 15);
+  frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
+  mqtt.begin("127.0.0.1", 1883, net);
+  #else
+  mqtt.begin(net);// Will connect to localhost
+  #endif
 }
 
 void loop(){
   checkObstacles();
   handleInput();
+  if (mqtt.connected()) {
+    mqtt.loop();
+    const auto currentTime = millis();
+    static auto previousFrame = 0UL;
+    // ================= 2
+    if (currentTime - previousFrame >= 65) {
+      previousFrame = currentTime;
+      Camera.readFrame(frameBuffer.data());
+      mqtt.publish("/smartcar/camera", frameBuffer.data(), frameBuffer.size(),
+                   false, 0);
+    }
+    static auto previousTransmission = 0UL;
+    if (currentTime - previousTransmission >= oneSecond) {
+      previousTransmission = currentTime;
+      const auto distance = String(front.getDistance());
+      mqtt.publish("/smartcar/ultrasound/front", distance);
+    }}
   #ifdef __SMCE__
     // Avoid over-using the CPU if we are running in the emulator
     delay(1);
@@ -63,7 +151,10 @@ void handleInput(){
         turnRight();
         break;
       case 'u':
-        stopCar();
+        car.setSpeed(0);
+        break;
+      case 'p':
+        autoRightPark();
         break;
       default:
         break;
@@ -72,10 +163,11 @@ void handleInput(){
 }
 
 void checkObstacles(){
-  const auto distance = front.getDistance();
+  const auto frontDistance = front.getDistance();
   // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
-  if (distance > 0 && distance < 200 && speed>0) {
-    stopCar(); 
+  if (frontDistance > 0 && frontDistance < 1 && speed > 0) {
+    speed = 0;
+    car.setSpeed(speed); 
   }
 }
 
@@ -101,9 +193,80 @@ void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNI
   car.setAngle(turningAngle);
 }
 
-void stopCar(){
-  while(car.getSpeed() != 0){
-    int speed = speed > 0 ? speed-0.1 : speed+0.1;
-    car.setSpeed(speed);
-  }
+void autoRightPark(){ // the car is supposed to park inside a parking spot to its immediate right
+    gyroscope.update();
+    // currently using these 4 timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
+    int rightTimer = 1000;
+    int frontRightTimer = 1000;
+    int leftTimer = 1000;
+    int frontLeftTimer = 1000;
+    int backRightTimer = 1000;
+    int backLeftTimer = 1000;
+    int frontTimer = 1000;
+
+    int targetAngle = 0;
+    int currentAngle = gyroscope.getHeading();
+    if (currentAngle - 90 < 0){
+        targetAngle = 360 - abs(currentAngle - 90);
+    } else {
+        targetAngle = currentAngle - 90;
+    }
+    car.setAngle(85);
+    car.setSpeed(15);
+    Serial.println(targetAngle);
+    Serial.println(currentAngle);
+    Serial.println(rightTimer);
+    while (targetAngle < currentAngle){
+        gyroscope.update();
+        currentAngle = gyroscope.getHeading();
+        if(obsAtFrontRight() && frontRightTimer > 500) { // reduce turning angle
+            frontRightTimer = 0;
+            turningAngle = 0;
+            car.setAngle(turningAngle);
+            Serial.println("front right obstacle detected");
+        }
+        if(obsAtFrontLeft() && frontLeftTimer > 500) { // increase turning angle, opposite of AtRight OR this should cause the car to reverse and invert/completely change the turning angle, depending on what works best
+            frontLeftTimer = 0;
+            turningAngle = -90;
+            if (car.getSpeed() > 0){
+              car.setSpeed(-15);
+              Serial.println("reverve!");
+            }
+            car.setAngle(turningAngle);
+            Serial.println("front left obstacle detected");
+
+        }
+        if(obsAtLeft() && leftTimer > 500) { // increase turning angle, opposite of AtRight OR this should cause the car to reverse and invert/completely change the turning angle, depending on what works best
+            leftTimer = 0;
+            turningAngle = -90;
+            car.setAngle(turningAngle);
+            if (car.getSpeed() > 0){
+              car.setSpeed(-8);
+            }
+            Serial.println("left obstacle detected");
+        }
+        if(obsAtRight() && rightTimer > 500) { // reduce turning angle
+            rightTimer = 0;
+            turningAngle = 0;
+            car.setAngle(turningAngle);
+            if (car.getSpeed() < 0){
+              car.setSpeed(8);
+            }
+            Serial.println("right obstacle detected");
+        }
+        if(obsAtFront() && frontTimer > 500){
+            frontTimer = 0;
+            car.setSpeed(0);
+            Serial.println("obstacle at front!");
+        }
+        rightTimer++;
+        frontRightTimer++;
+        leftTimer++;
+        frontLeftTimer++;
+        frontTimer++;
+    }
+    Serial.println("turning complete, driving forward");
+    car.setAngle(0);
+    car.setSpeed(10);
+    // here the car will have the correct angle, car will drive foward and park
 }
