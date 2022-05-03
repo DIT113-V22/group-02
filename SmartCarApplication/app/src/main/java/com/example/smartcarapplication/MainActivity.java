@@ -23,8 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     private static final String SPEED_CONTROL = "/smartcar/control/speed";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
-    private static final String OBSTACLE_AVOIDANCE = "/smartcar/control/checkObstacles";
-    private static final int MOVEMENT_SPEED = 70;
+    private static final int MOVEMENT_SPEED = 50;
     private static final int IDLE_SPEED = 0;
     private static final int STRAIGHT_ANGLE = 0;
     private static final int STEERING_ANGLE = 50;
@@ -80,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, successfulConnection);
                     Toast.makeText(getApplicationContext(), successfulConnection, Toast.LENGTH_SHORT).show();
 
-                    /*mMqttClient.subscribe("/smartcar/ultrasound/front", QOS, null);
-                    mMqttClient.subscribe("/smartcar/camera", QOS, null);*/
+                    mMqttClient.subscribe("/smartcar/ultrasound/front", QOS, null);
+                    mMqttClient.subscribe("/smartcar/camera", QOS, null);
                 }
 
                 @Override
@@ -150,22 +149,9 @@ public class MainActivity extends AppCompatActivity {
         mMqttClient.publish(STEERING_CONTROL, Integer.toString(angle), QOS, null);
     }
 
-    void setObstacleAvoidance(String actionDescription) {
-        if (!isConnected) {
-            final String notConnected = "Not connected (yet)";
-            Log.e(TAG, notConnected);
-            Toast.makeText(getApplicationContext(), notConnected, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Log.i(TAG, actionDescription);
-        mMqttClient.publish(OBSTACLE_AVOIDANCE, Integer.toString(0), QOS, null);
-    }
-
-
     public void moveForward(View view) {
-        setAngle(0, "Moving forward");
+        setAngle(STRAIGHT_ANGLE, "Moving forward");
         setSpeed(MOVEMENT_SPEED, "Moving forward");
-        setObstacleAvoidance("Obstacle detected!");
     }
 
     public void turnLeft(View view) {
