@@ -8,8 +8,11 @@ DifferentialControl control(leftMotor, rightMotor);
 
 GY50 gyroscope(arduinoRuntime, 37);
 const auto pulsesPerMeter = 600;
-DirectionlessOdometer leftOdometer{ arduinoRuntime,smartcarlib::pins::v2::leftOdometerPin,[]() { leftOdometer.update(); },pulsesPerMeter };
-DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
+const unsigned long LEFT_PULSES_PER_METER = 600;
+DirectionalOdometer leftOdometer{ arduinoRuntime,
+                                 smartcarlib::pins::v2::leftOdometerPins,
+                                 []() { leftOdometer.update(); },
+                                 LEFT_PULSES_PER_METER };DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
 SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer,rightOdometer);
 
 
@@ -70,7 +73,7 @@ bool obsAtLeft() {
 
 bool obsAtRight() {
     const auto rDist = rightIR.getDistance();
-    return (rDist > 0 && rDist <= 10);
+    return (rDist > 0 && rDist <= 40);
 }
 
 bool obsAtBackRight() {
@@ -133,7 +136,7 @@ void handleInput(){
 void checkObstacles(){
   const auto frontDistance = front.getDistance();
   // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
-  if (frontDistance > 0 && frontDistance < 1 && speed > 0) {
+  if (frontDistance > 0 && frontDistance < 100 && speed > 0) {
     speed = 0;
     car.setSpeed(speed); 
   }
@@ -164,13 +167,16 @@ void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNI
 void autoRightPark(){ // the car is supposed to park inside a parking spot to its immediate right
     gyroscope.update();
     // currently using these 4 timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
-    int rightTimer = 1000;
-    int frontRightTimer = 1000;
-    int leftTimer = 1000;
-    int frontLeftTimer = 1000;
-    int backRightTimer = 1000;
-    int backLeftTimer = 1000;
-    int frontTimer = 1000;
+    int rightTimer = 500;
+    int frontRightTimer = 500;
+    int leftTimer = 500;
+    int frontLeftTimer = 500;
+    int backRightTimer = 500;
+    int backLeftTimer = 500;
+    int frontTimer = 500;
+    int distanceTraveled = 0;
+    int newDistanceTraveled = 0;
+
 
     int targetAngle = 0;
     int currentAngle = gyroscope.getHeading();
@@ -186,8 +192,9 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     Serial.println(rightTimer);
     while (targetAngle < currentAngle){
         gyroscope.update();
+        newDistanceTraveled = leftOdometer.getDistance();
         currentAngle = gyroscope.getHeading();
-        if(obsAtFrontRight() && frontRightTimer > 500) { // reduce turning angle
+        if(obsAtFrontRight() && frontRightTimer > 500 && newDistanceTraveled > distanceTraveled) { // reduce turning angle
             frontRightTimer = 0;
             turningAngle = 0;
             car.setAngle(turningAngle);
@@ -213,15 +220,7 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
             }
             Serial.println("left obstacle detected");
         }
-        if(obsAtRight() && rightTimer > 500) { // reduce turning angle
-            rightTimer = 0;
-            turningAngle = 0;
-            car.setAngle(turningAngle);
-            if (car.getSpeed() < 0){
-              car.setSpeed(8);
-            }
-            Serial.println("right obstacle detected");
-        }
+        
         if(obsAtFront() && frontTimer > 500){
             frontTimer = 0;
             car.setSpeed(0);
@@ -232,6 +231,7 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
         leftTimer++;
         frontLeftTimer++;
         frontTimer++;
+        distanceTraveled = newDistanceTraveled;
     }
     Serial.println("turning complete, driving forward");
     car.setAngle(0);
