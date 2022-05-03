@@ -88,13 +88,13 @@ if (mqtt.connected()) {
 void checkObstacles(){
   const auto distance = front.getDistance();
   // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
-  if (distance > 0 && distance < 200 && speed>0) {
+  if (distance > 0 && distance < 200 && speed > 0) {
     stopCar(); 
   }
 }
 
 void stopCar(){
-  while(car.getSpeed() != 0){
+  while(car.getSpeed() > 0){
     int speed = speed > 0 ? speed-0.1 : speed+0.1;
     car.setSpeed(speed);
   }
@@ -116,6 +116,7 @@ void setSpeed(float newSpeed){
   if(newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT){
     newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
   }
+  speed = newSpeed;
   car.setSpeed(newSpeed);
 }
 
