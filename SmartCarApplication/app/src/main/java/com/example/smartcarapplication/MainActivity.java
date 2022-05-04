@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void moveForward(View view) {
-        setAngle(STRAIGHT_ANGLE, "Moving forward");
+        setAngle(STRAIGHT_ANGLE, "Setting angle straight");
         setSpeed(MOVEMENT_SPEED, "Moving forward");
     }
 
@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void moveBackward(View view) {
+        setAngle(STRAIGHT_ANGLE, "Setting angle straight");
         setSpeed(-MOVEMENT_SPEED, "Moving backwards");
     }
 }
