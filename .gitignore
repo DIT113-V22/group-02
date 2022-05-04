@@ -52,6 +52,9 @@ captures/
 *.apk
 output.json
 
+#VSCode
+.vscode/
+
 # IntelliJ
 *.iml
 .idea/

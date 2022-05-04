@@ -1,4 +1,9 @@
+#include <MQTT.h>
+#include <WiFi.h>
 #include <Smartcar.h>
+
+WiFiClient net;
+MQTTClient mqtt;
 
 ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
@@ -24,6 +29,10 @@ SR04 front{arduinoRuntime, triggerPin, echoPin, maxDistance};
 /*--- CONSTANTS ---*/
 const int SPEED_INCREMENT = 5;
 const int TURNING_INCREMENT = 10;
+const int FORWARD_SPEED_LIMIT = 150;
+const int BACKWARD_SPEED_LIMIT = -50;
+const int MAX_STEERING_ANGLE = 60;
+const auto ONE_SECOND = 1000UL;
 
 
 
@@ -35,9 +44,38 @@ int heading = car.getHeading();
 void setup(){
   // Move the car with 50% of its full speed
   Serial.begin(9600);
+  #ifdef __SMCE__
+  // ================= 1
+  // mqtt.begin("aerostun.dev", 1883, WiFi);
+  mqtt.begin("127.0.0.1", 1883, net); // Will connect to localhost
+  #else
+    mqtt.begin(net);
+  #endif
+    // ================= 2
+    if (mqtt.connect("arduino", "public", "public")) {
+      mqtt.subscribe("/smartcar/control/#", 1);
+      mqtt.onMessage([](String topic, String message) { handleMQTTMessage(topic, message); });
+    }
 }
 
-void loop(){
+void loop() {
+
+if (mqtt.connected()) {
+    mqtt.loop();
+    const auto currentTime = millis();
+    static auto previousTransmission = 0UL;
+    if (currentTime - previousTransmission >= ONE_SECOND) {
+      previousTransmission = currentTime;
+      const auto distance = String(front.getDistance());
+      // ================= 3
+      //mqtt.publish("/smartcar/ultrasound/front", distance);
+    }
+  }
+#ifdef __SMCE__
+  // Avoid over-using the CPU if we are running in the emulator
+  delay(1);
+#endif
+
   checkObstacles();
   handleInput();
   #ifdef __SMCE__
@@ -45,6 +83,52 @@ void loop(){
     delay(1);
   #endif
 }
+
+
+void checkObstacles(){
+  const auto distance = front.getDistance();
+  // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
+  if (distance > 0 && distance < 200 && speed > 0) {
+    stopCar(); 
+  }
+}
+
+void stopCar(){
+  while(car.getSpeed() > 0){
+    int speed = speed > 0 ? speed-0.1 : speed+0.1;
+    car.setSpeed(speed);
+  }
+}
+
+/*--- MQTT METHODS ---*/
+
+void handleMQTTMessage(String topic, String message){
+   if (topic == "/smartcar/control/speed") {
+          setSpeed(message.toFloat());
+    } else if (topic == "/smartcar/control/steering") {
+          setAngle(message.toFloat());
+    } else {
+          Serial.println(topic + " " + message);
+    }
+}
+
+void setSpeed(float newSpeed){
+  if(newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT){
+    newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
+  }
+  speed = newSpeed;
+  car.setSpeed(newSpeed);
+}
+
+void setAngle(float newAngle){
+  if(newAngle > MAX_STEERING_ANGLE){
+    newAngle = MAX_STEERING_ANGLE;
+  }
+  car.setAngle(newAngle);
+}
+
+
+/*--- SERIAL METHODS ---*/
 
 void handleInput(){
   if(Serial.available()){
@@ -71,14 +155,6 @@ void handleInput(){
   }
 }
 
-void checkObstacles(){
-  const auto distance = front.getDistance();
-  // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
-  if (distance > 0 && distance < 200 && speed>0) {
-    stopCar(); 
-  }
-}
-
 void increaseSpeed(){
   //sets max speed to 110
   speed = speed+SPEED_INCREMENT>=110 ? 110 : speed+SPEED_INCREMENT;
@@ -99,11 +175,4 @@ void turnLeft(){ // turns the car 10 degrees counter-clockwise (degrees depend o
 void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNING_INCREMENT)
   turningAngle = turningAngle+TURNING_INCREMENT;
   car.setAngle(turningAngle);
-}
-
-void stopCar(){
-  while(car.getSpeed() != 0){
-    int speed = speed > 0 ? speed-0.1 : speed+0.1;
-    car.setSpeed(speed);
-  }
 }
