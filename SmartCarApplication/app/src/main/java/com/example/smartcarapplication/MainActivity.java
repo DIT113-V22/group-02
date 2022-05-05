@@ -19,8 +19,6 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-
-
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     // private static final String EXTERNAL_MQTT_BROKER = "192.168.74.128";
@@ -55,21 +53,32 @@ public class MainActivity extends AppCompatActivity {
                 joystickJhr.joyY();
                 joystickJhr.angle();
                 joystickJhr.distancia();
+
                 int dir = joystickJhr.getDireccion();
-                if(dir == joystickJhr.stick_up()){
+
+                if (dir == joystickJhr.stick_up()) {
                     setAngle(STRAIGHT_ANGLE, "Setting angle straight");
                     setSpeed(MOVEMENT_SPEED, "Moving forward");
-                }else if (dir == joystickJhr.stick_down()){
+                } else if (dir == joystickJhr.stick_down()) {
                     setAngle(STRAIGHT_ANGLE, "Setting angle straight");
                     setSpeed(-MOVEMENT_SPEED, "Moving backwards");
-                }else if(dir == joystickJhr.stick_downRight()){
-                    setAngle(STRAIGHT_ANGLE,"Setting angel down right");
+                } else if (dir == joystickJhr.stick_upRight()) {
+                    setAngle(STEERING_ANGLE,"Setting angel up right");
                     setSpeed(MOVEMENT_SPEED,"Moving down right");
-                }else if(dir == joystickJhr.stick_downLeft()){
-                    setAngle(STRAIGHT_ANGLE,"Setting angel down left");
+                } else if (dir == joystickJhr.stick_upLeft()) {
+                    setAngle(-STEERING_ANGLE,"Setting angel up left");
                     setSpeed(MOVEMENT_SPEED,"Moving down left");
+                } else if (dir == joystickJhr.stick_downRight()) {
+                    setAngle(STEERING_ANGLE,"Setting angel down right");
+                    setSpeed(-MOVEMENT_SPEED,"Moving down right");
+                } else if (dir == joystickJhr.stick_downLeft()) {
+                    setAngle(-STEERING_ANGLE,"Setting angel down left");
+                    setSpeed(-MOVEMENT_SPEED,"Moving down left");
+                } else if (dir == 0) {
+                    setAngle(STRAIGHT_ANGLE, "Setting angle straight");
+                    setSpeed(IDLE_SPEED, "Stopping smartcar");
                 };
-            return true ;
+            return true;
             }
         });
         //mCameraView = findViewById(R.id.imageView);
@@ -80,20 +89,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         connectToMqttBroker();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
         mMqttClient.disconnect(new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
                 Log.i(TAG, "Disconnected from broker");
             }
-
             @Override
             public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
             }
@@ -106,15 +112,12 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     isConnected = true;
-
                     final String successfulConnection = "Connected to MQTT broker";
                     Log.i(TAG, successfulConnection);
                     Toast.makeText(getApplicationContext(), successfulConnection, Toast.LENGTH_SHORT).show();
-
                     mMqttClient.subscribe("/smartcar/ultrasound/front", QOS, null);
                     mMqttClient.subscribe("/smartcar/camera", QOS, null);
                 }
-
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     final String failedConnection = "Failed to connect to MQTT broker";
@@ -130,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.w(TAG, connectionLost);
                     Toast.makeText(getApplicationContext(), connectionLost, Toast.LENGTH_SHORT).show();
                 }
-
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
                     if (topic.equals("/smartcar/camera")) {
@@ -150,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "[MQTT] Topic: " + topic + " | Message: " + message.toString());
                     }
                 }
-
                 @Override
                 public void deliveryComplete(IMqttDeliveryToken token) {
                     Log.d(TAG, "Message delivered");
