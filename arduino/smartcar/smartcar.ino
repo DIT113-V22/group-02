@@ -60,11 +60,6 @@ bool obsAtFront() {
     return (frontDist > 0 && frontDist <= 5);
 }
 
-bool obsAtFrontLong() {
-    const auto frontDist = front.getDistance();
-    return (frontDist > 0 && frontDist <= 40);
-}
-
 bool obsAtFrontLeft() {
     const auto frontLeftDist = frontLeft.getDistance();
     return (frontLeftDist > 0 && frontLeftDist <= 10);
