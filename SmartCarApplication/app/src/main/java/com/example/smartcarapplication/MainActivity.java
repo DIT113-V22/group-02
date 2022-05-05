@@ -1,20 +1,25 @@
 package com.example.smartcarapplication;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.joystickjhr.JoystickJhr;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+
+
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
@@ -35,11 +40,38 @@ public class MainActivity extends AppCompatActivity {
     private boolean isConnected = false;
     private ImageView mCameraView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
+        final JoystickJhr joystickJhr = findViewById(R.id.joystick);
+        joystickJhr.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                joystickJhr.move(motionEvent);
+                joystickJhr.joyX();
+                joystickJhr.joyY();
+                joystickJhr.angle();
+                joystickJhr.distancia();
+                int dir = joystickJhr.getDireccion();
+                if(dir == joystickJhr.stick_up()){
+                    setAngle(STRAIGHT_ANGLE, "Setting angle straight");
+                    setSpeed(MOVEMENT_SPEED, "Moving forward");
+                }else if (dir == joystickJhr.stick_down()){
+                    setAngle(STRAIGHT_ANGLE, "Setting angle straight");
+                    setSpeed(-MOVEMENT_SPEED, "Moving backwards");
+                }else if(dir == joystickJhr.stick_downRight()){
+                    setAngle(STRAIGHT_ANGLE,"Setting angel down right");
+                    setSpeed(MOVEMENT_SPEED,"Moving down right");
+                }else if(dir == joystickJhr.stick_downLeft()){
+                    setAngle(STRAIGHT_ANGLE,"Setting angel down left");
+                    setSpeed(MOVEMENT_SPEED,"Moving down left");
+                };
+            return true ;
+            }
+        });
         //mCameraView = findViewById(R.id.imageView);
 
         connectToMqttBroker();
