@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=41 format=2]
 
 [ext_resource path="res://gridmeshlib.tres" type="MeshLibrary" id=1]
 
@@ -22,9 +22,6 @@ size = Vector3( 100, 0.5, 2 )
 
 [sub_resource type="CubeMesh" id=31]
 size = Vector3( 100, 0.5, 2 )
-
-[sub_resource type="BoxShape" id=6]
-extents = Vector3( 0.7, 0.485599, 1.35573 )
 
 [sub_resource type="CubeMesh" id=7]
 size = Vector3( 1.5, 0.3, 3 )
@@ -92,6 +89,9 @@ material = SubResource( 25 )
 top_radius = 0.75
 bottom_radius = 0.75
 
+[sub_resource type="BoxShape" id=6]
+extents = Vector3( 0.880587, 0.485599, 2.10407 )
+
 [sub_resource type="SpatialMaterial" id=32]
 albedo_color = Color( 0.870588, 0.443137, 0.0666667, 1 )
 
@@ -115,6 +115,12 @@ size = Vector3( 65, 0.5, 2 )
 
 [sub_resource type="CubeMesh" id=39]
 size = Vector3( 200, 0.5, 2 )
+
+[sub_resource type="BoxShape" id=40]
+extents = Vector3( 0.880587, 0.485599, 1.72562 )
+
+[sub_resource type="BoxShape" id=41]
+extents = Vector3( 0.880587, 0.485599, 1.94468 )
 
 [node name="Restaurant Spicy Salmon" type="Spatial"]
 transform = Transform( -0.028992, 0.121591, 0, -0.121591, -0.028992, 0, 0, 0, 0.125, 0, -0.127119, 0 )
@@ -308,568 +314,631 @@ shape = SubResource( 2 )
 [node name="StaticBody" type="StaticBody" parent="."]
 transform = Transform( -0.084708, -17.5088, -3.71097, -0.0302446, -4.17468, 15.5637, -13.9997, 0.114959, -0.0111695, 5.29562, -61.4055, 45.7128 )
 
-[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
-transform = Transform( 1, 0, 0, 1.39698e-08, 1, -4.54747e-13, 5.82077e-11, -4.54747e-13, 1, 0, 0, 0 )
-shape = SubResource( 6 )
-
-[node name="Chassis" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 1, 1.81899e-12, -2.32831e-10, 3.18323e-12, 1, 0.000196934, -0.261484, -0.263256 )
+[node name="Chassis" type="MeshInstance" parent="StaticBody"]
+transform = Transform( 1, 9.31323e-10, 2.32831e-10, 9.77889e-09, 1, 9.09495e-13, 0, 9.09495e-13, 1, 0.000156879, -0.261484, -0.213163 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../..")
+skeleton = NodePath("../../..")
 material/0 = SubResource( 8 )
 
-[node name="Windshield" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( 0.00218172, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00218172, 0.000720211, 0.052, -0.746268 )
+[node name="Windshield" type="MeshInstance" parent="StaticBody"]
+transform = Transform( 0.00218172, 0, -0.999998, 2.36469e-11, 1, -1.11759e-08, 0.999998, -2.72848e-12, 0.00218172, 0.000680208, 0.0520002, -0.696175 )
 mesh = SubResource( 9 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 10 )
 
-[node name="Hood" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+[node name="Hood" type="MeshInstance" parent="StaticBody"]
+transform = Transform( -0.00331608, 0, -0.999995, -3.72893e-11, 1, -1.07102e-08, 0.999995, -2.72848e-12, -0.00331608, -0.00210309, 0.052416, 0.843197 )
 mesh = SubResource( 11 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 12 )
 
-[node name="Headlight1" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, 0.291669, -0.170669, -1.94488 )
+[node name="Headlight1" type="MeshInstance" parent="StaticBody"]
+transform = Transform( 1, 0, 1.74623e-10, 9.77889e-09, 1, 0, 1.16415e-10, -1.36424e-12, 1, 0.291629, -0.170669, -1.89479 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Headlight2" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, -0.291035, -0.174217, -1.94672 )
+[node name="Headlight2" type="MeshInstance" parent="StaticBody"]
+transform = Transform( 1, 0, 1.74623e-10, 9.77889e-09, 1, 0, 1.16415e-10, -1.36424e-12, 1, -0.291075, -0.174217, -1.89663 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Tail-light" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( 0.5, 0, 0, -2.32831e-10, 0.05, -1.42109e-14, 2.91038e-11, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
+[node name="Tail-light" type="MeshInstance" parent="StaticBody"]
+transform = Transform( 0.5, 0, 7.27596e-12, 5.12227e-09, 0.05, -7.10543e-14, 1.45519e-10, -1.98952e-13, 0.05, -4.00543e-05, -0.197456, 1.2761 )
 mesh = SubResource( 14 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 15 )
 
-[node name="Cabin" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( 0.6, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 0, 0.0519999, 0.0469962 )
+[node name="Cabin" type="MeshInstance" parent="StaticBody"]
+transform = Transform( 0.6, 0, 2.91038e-11, 6.28643e-09, 0.2, -4.54747e-13, 1.74623e-10, -5.68434e-13, 0.5, -3.98159e-05, 0.0520001, 0.0970888 )
 mesh = SubResource( 16 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 17 )
 
-[node name="FL Bumper" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( 0.150001, 0, 5.47152e-09, -7.10133e-09, -6.25278e-13, 0.125, -9.45874e-11, -0.166666, 8.52651e-13, -0.657062, -0.262867, -1.84342 )
+[node name="FL Bumper" type="MeshInstance" parent="StaticBody"]
+transform = Transform( 0.150001, -1.45519e-11, 5.47152e-09, -5.41331e-09, -3.97904e-13, 0.125, -5.82077e-11, -0.166666, 5.11591e-13, -0.657102, -0.262867, -1.79333 )
 mesh = SubResource( 18 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 19 )
 
-[node name="FR Bumper" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( 0.15, 0, 1.16415e-10, -1.74623e-10, -7.30063e-09, 0.125, -1.09139e-10, -0.167, -5.46254e-09, 0.652947, -0.262209, -1.84105 )
+[node name="FR Bumper" type="MeshInstance" parent="StaticBody"]
+transform = Transform( 0.15, -1.45519e-11, 1.16415e-10, 1.45519e-09, -7.3004e-09, 0.125, -6.54836e-11, -0.167, -5.46282e-09, 0.652907, -0.262209, -1.79096 )
 mesh = SubResource( 20 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 21 )
 
-[node name="F Bumper" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( 1, 1.86265e-09, 2.32831e-10, -9.31323e-10, 0.999999, 5.00222e-12, -6.40284e-10, 8.18545e-12, 1, -0.00188279, -0.263557, -1.83539 )
+[node name="F Bumper" type="MeshInstance" parent="StaticBody"]
+transform = Transform( 1, 1.86265e-09, 2.32831e-10, 9.77889e-09, 0.999999, 4.09273e-12, -4.07454e-10, 5.45697e-12, 1, -0.00192285, -0.263557, -1.7853 )
 mesh = SubResource( 22 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 23 )
 
-[node name="MeshInstance" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567711, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody"]
+transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.00056771, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756899, -0.479483, -0.78051 )
 mesh = SubResource( 24 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="MeshInstance2" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567656, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
-mesh = SubResource( 26 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567704, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
+[node name="MeshInstance2" type="MeshInstance" parent="StaticBody"]
+transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567655, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729645, -0.503624, 0.583952 )
 mesh = SubResource( 26 )
 material/0 = null
 
-[node name="MeshInstance4" type="MeshInstance" parent="StaticBody/CollisionShape"]
-transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567707, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+[node name="MeshInstance3" type="MeshInstance" parent="StaticBody"]
+transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567703, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734515, -0.535103, 0.584587 )
 mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="StaticBody"]
+transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567706, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734673, -0.576116, -0.805537 )
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
+transform = Transform( 1, 9.31323e-10, 1.16415e-10, 9.77889e-09, 1, -1.36424e-12, 2.91038e-10, -3.63798e-12, 1, 0.00060606, -3.75509e-06, -0.759735 )
+shape = SubResource( 6 )
 
 [node name="StaticBody2" type="StaticBody" parent="."]
 transform = Transform( -0.084708, -17.5088, -3.71097, -0.0302446, -4.17468, 15.5637, -13.9997, 0.114959, -0.0111695, 5.27813, -61.3321, 9.98996 )
 
 [node name="CollisionShape" type="CollisionShape" parent="StaticBody2"]
-transform = Transform( 1, 0, 0, 1.39698e-08, 1, -4.54747e-13, 5.82077e-11, -4.54747e-13, 1, 0, 0, 0 )
+transform = Transform( 1, 0, 5.82077e-11, 1.16415e-08, 1, -4.54747e-13, 1.74623e-10, -1.81899e-12, 1, 0.000639439, -3.96371e-06, -0.801479 )
 shape = SubResource( 6 )
 
-[node name="Chassis" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 1, 1.81899e-12, -2.32831e-10, 3.18323e-12, 1, 0.000196934, -0.261484, -0.263256 )
+[node name="Chassis" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( 1, 9.31323e-10, 1.74623e-10, 1.21072e-08, 1, 1.36424e-12, -1.16415e-10, 2.27374e-12, 1, 0.000196993, -0.261484, -0.263256 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../..")
-material/0 = SubResource( 32 )
-
-[node name="FL Bumper" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( 0.150001, 0, 5.3551e-09, -7.15954e-09, -6.82121e-13, 0.125, -9.45874e-11, -0.166666, 9.09495e-13, -0.657062, -0.262867, -1.84342 )
-mesh = SubResource( 18 )
-material/0 = SubResource( 32 )
-
-[node name="FR Bumper" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( 0.15, 0, 1.16415e-10, -1.74623e-10, -7.30068e-09, 0.125, -1.16415e-10, -0.167, -5.46243e-09, 0.652947, -0.262209, -1.84105 )
-mesh = SubResource( 20 )
-material/0 = SubResource( 32 )
-
-[node name="F Bumper" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 0.999999, 5.45697e-12, -6.98492e-10, 9.09495e-12, 1, -0.00188279, -0.263557, -1.83539 )
-mesh = SubResource( 22 )
-material/0 = SubResource( 32 )
-
-[node name="Windshield" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( 0.00218172, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00218172, 0.000720211, 0.052, -0.746268 )
-mesh = SubResource( 9 )
 skeleton = NodePath("../../..")
+material/0 = SubResource( 32 )
+
+[node name="FL Bumper" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( 0.150001, -1.45519e-11, 5.23869e-09, -5.12227e-09, -5.11591e-13, 0.125, -8.00355e-11, -0.166666, 7.38964e-13, -0.657062, -0.262867, -1.84342 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 32 )
+
+[node name="FR Bumper" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( 0.15, -1.45519e-11, 1.16415e-10, 1.80444e-09, -7.30051e-09, 0.125, -9.45874e-11, -0.167, -5.46254e-09, 0.652947, -0.262209, -1.84105 )
+mesh = SubResource( 20 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 32 )
+
+[node name="F Bumper" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( 1, 9.31323e-10, 1.74623e-10, 1.21072e-08, 0.999999, 5.00222e-12, -5.82077e-10, 8.18545e-12, 1, -0.00188273, -0.263557, -1.83539 )
+mesh = SubResource( 22 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 32 )
+
+[node name="Windshield" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( 0.00218172, 0, -0.999998, 2.72848e-11, 1, -1.35042e-08, 0.999998, -9.09495e-13, 0.00218172, 0.000720263, 0.052, -0.746268 )
+mesh = SubResource( 9 )
+skeleton = NodePath("../..")
 material/0 = SubResource( 10 )
 
-[node name="Hood" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+[node name="Hood" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( -0.00331608, 0, -0.999995, -4.36557e-11, 1, -1.30385e-08, 0.999995, -9.09495e-13, -0.00331608, -0.00206298, 0.0524159, 0.793105 )
 mesh = SubResource( 11 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 12 )
 
-[node name="Headlight1" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, 0.291669, -0.170669, -1.94488 )
+[node name="Headlight1" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( 1, 0, 1.16415e-10, 1.21072e-08, 1, 0, 0, 4.54747e-13, 1, 0.291669, -0.170669, -1.94488 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Headlight2" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, -0.291035, -0.174217, -1.94672 )
+[node name="Headlight2" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( 1, 0, 1.16415e-10, 1.21072e-08, 1, 0, 0, 4.54747e-13, 1, -0.291035, -0.174217, -1.94672 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Tail-light" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( 0.5, 0, 0, -2.32831e-10, 0.05, -1.42109e-14, 2.91038e-11, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
+[node name="Tail-light" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( 0.5, 0, 0, 6.28643e-09, 0.05, -2.84217e-14, 8.73115e-11, -1.42109e-13, 0.05, 0, -0.197456, 1.22601 )
 mesh = SubResource( 14 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 15 )
 
-[node name="Cabin" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( 0.6, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 0, 0.0519999, 0.0469962 )
+[node name="Cabin" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( 0.6, 0, 0, 7.68341e-09, 0.2, -2.27374e-13, 8.73115e-11, -3.41061e-13, 0.5, 5.96046e-08, 0.0519999, 0.0469959 )
 mesh = SubResource( 16 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 17 )
 
-[node name="MeshInstance" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567711, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567709, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
 mesh = SubResource( 24 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="MeshInstance2" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567656, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
-mesh = SubResource( 26 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567704, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
+[node name="MeshInstance2" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567654, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
 mesh = SubResource( 26 )
 material/0 = null
 
-[node name="MeshInstance4" type="MeshInstance" parent="StaticBody2/CollisionShape"]
-transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567707, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+[node name="MeshInstance3" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567702, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
 mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="StaticBody2"]
+transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567705, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
 [node name="StaticBody3" type="StaticBody" parent="."]
 transform = Transform( -0.084708, -17.5088, -3.71097, -0.0302446, -4.17468, 15.5637, -13.9997, 0.114959, -0.0111695, 5.38946, -61.799, -25.9123 )
 
 [node name="CollisionShape" type="CollisionShape" parent="StaticBody3"]
-transform = Transform( 1, 0, 0, 1.39698e-08, 1, -4.54747e-13, 5.82077e-11, -4.54747e-13, 1, 0, 0, 0 )
+transform = Transform( 1, 0, 5.82077e-11, 1.16415e-08, 1, -4.54747e-13, 1.74623e-10, -1.81899e-12, 1, 0.00064075, -3.96371e-06, -0.802911 )
 shape = SubResource( 6 )
 
-[node name="Chassis" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 1, 1.81899e-12, -2.32831e-10, 3.18323e-12, 1, 0.000196934, -0.261484, -0.263256 )
+[node name="Chassis" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( 1, 9.31323e-10, 1.74623e-10, 1.21072e-08, 1, 1.36424e-12, -1.16415e-10, 2.27374e-12, 1, 0.000197053, -0.261484, -0.263256 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../..")
-material/0 = SubResource( 33 )
-
-[node name="FL Bumper" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( 0.150001, 0, 5.3551e-09, -7.15954e-09, -6.82121e-13, 0.125, -9.45874e-11, -0.166666, 9.09495e-13, -0.657061, -0.262866, -1.84342 )
-mesh = SubResource( 18 )
-material/0 = SubResource( 33 )
-
-[node name="FR Bumper" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( 0.15, 0, 1.16415e-10, -1.74623e-10, -7.30068e-09, 0.125, -1.16415e-10, -0.167, -5.46243e-09, 0.652947, -0.262209, -1.84105 )
-mesh = SubResource( 20 )
-material/0 = SubResource( 33 )
-
-[node name="F Bumper" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 0.999999, 5.45697e-12, -6.98492e-10, 9.09495e-12, 1, -0.00188279, -0.263557, -1.83539 )
-mesh = SubResource( 22 )
-material/0 = SubResource( 33 )
-
-[node name="Windshield" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( 0.00218172, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00218172, 0.000720211, 0.052, -0.746268 )
-mesh = SubResource( 9 )
 skeleton = NodePath("../../..")
+material/0 = SubResource( 33 )
+
+[node name="FL Bumper" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( 0.150001, -1.45519e-11, 5.23869e-09, -5.12227e-09, -5.11591e-13, 0.125, -8.00355e-11, -0.166666, 7.38964e-13, -0.657061, -0.262866, -1.84342 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 33 )
+
+[node name="FR Bumper" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( 0.15, -1.45519e-11, 1.16415e-10, 1.80444e-09, -7.30051e-09, 0.125, -9.45874e-11, -0.167, -5.46254e-09, 0.652947, -0.262209, -1.84105 )
+mesh = SubResource( 20 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 33 )
+
+[node name="F Bumper" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( 1, 9.31323e-10, 1.74623e-10, 1.21072e-08, 0.999999, 5.00222e-12, -5.82077e-10, 8.18545e-12, 1, -0.00188279, -0.263557, -1.83539 )
+mesh = SubResource( 22 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 33 )
+
+[node name="Windshield" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( 0.00218172, 0, -0.999998, 2.72848e-11, 1, -1.35042e-08, 0.999998, -9.09495e-13, 0.00218172, 0.000720263, 0.052, -0.746268 )
+mesh = SubResource( 9 )
+skeleton = NodePath("../..")
 material/0 = SubResource( 10 )
 
-[node name="Hood" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+[node name="Hood" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( -0.00331608, 0, -0.999995, -4.36557e-11, 1, -1.30385e-08, 0.999995, -9.09495e-13, -0.00331608, -0.00206292, 0.0524158, 0.793105 )
 mesh = SubResource( 11 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 12 )
 
-[node name="Headlight1" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, 0.291669, -0.170669, -1.94488 )
+[node name="Headlight1" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( 1, 0, 1.16415e-10, 1.21072e-08, 1, 0, 0, 4.54747e-13, 1, 0.291669, -0.170669, -1.94488 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Headlight2" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, -0.291035, -0.174217, -1.94672 )
+[node name="Headlight2" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( 1, 0, 1.16415e-10, 1.21072e-08, 1, 0, 0, 4.54747e-13, 1, -0.291035, -0.174217, -1.94672 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Tail-light" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( 0.5, 0, 0, -2.32831e-10, 0.05, -1.42109e-14, 2.91038e-11, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
+[node name="Tail-light" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( 0.5, 0, 0, 6.28643e-09, 0.05, -2.84217e-14, 8.73115e-11, -1.42109e-13, 0.05, 1.19209e-07, -0.197456, 1.22601 )
 mesh = SubResource( 14 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 15 )
 
-[node name="Cabin" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( 0.6, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 0, 0.0519999, 0.0469962 )
+[node name="Cabin" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( 0.6, 0, 0, 7.68341e-09, 0.2, -2.27374e-13, 8.73115e-11, -3.41061e-13, 0.5, 1.19209e-07, 0.0519999, 0.0469959 )
 mesh = SubResource( 16 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 17 )
 
-[node name="MeshInstance" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567711, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567709, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
 mesh = SubResource( 24 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="MeshInstance2" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567656, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
-mesh = SubResource( 26 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567704, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
+[node name="MeshInstance2" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567654, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
 mesh = SubResource( 26 )
 material/0 = null
 
-[node name="MeshInstance4" type="MeshInstance" parent="StaticBody3/CollisionShape"]
-transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567707, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+[node name="MeshInstance3" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567702, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
 mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="StaticBody3"]
+transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567705, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
 [node name="StaticBody4" type="StaticBody" parent="."]
 transform = Transform( -0.0665729, -17.5089, 3.71093, -0.106302, -4.17408, -15.5634, 13.9994, -0.114957, -0.10053, 7.56754, -70.9338, -66.9643 )
 
 [node name="CollisionShape" type="CollisionShape" parent="StaticBody4"]
-transform = Transform( 1, 0, 0, 1.39698e-08, 1, -4.54747e-13, 5.82077e-11, -4.54747e-13, 1, 0, 0, 0 )
+transform = Transform( 0.999983, 1.4808e-07, 0.00672184, 9.59262e-08, 0.999999, -3.33907e-05, -0.0051464, 4.22599e-05, 0.999982, 0.000892639, -4.32134e-06, 0.124324 )
 shape = SubResource( 6 )
 
-[node name="Chassis" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 1, 1.81899e-12, -2.32831e-10, 3.18323e-12, 1, 0.000196934, -0.261484, -0.263256 )
+[node name="Chassis" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( 1, -9.31323e-10, -1.86265e-09, 1.25729e-08, 1, 3.63798e-12, 0, -1.09139e-11, 1, 0.000113964, -0.261483, -0.274842 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../..")
-material/0 = SubResource( 34 )
-
-[node name="FL Bumper" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( 0.150001, 0, 5.47152e-09, -7.04313e-09, -4.54747e-13, 0.125, -1.16415e-10, -0.166666, 1.36424e-12, -0.657062, -0.262867, -1.84342 )
-mesh = SubResource( 18 )
-material/0 = SubResource( 34 )
-
-[node name="FR Bumper" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( 0.15, -2.32831e-10, 2.32831e-10, -5.82077e-11, -7.2996e-09, 0.125, -5.82077e-11, -0.167, -5.46288e-09, 0.652946, -0.262209, -1.84105 )
-mesh = SubResource( 20 )
-material/0 = SubResource( 34 )
-
-[node name="F Bumper" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( 1, 1.86265e-09, 0, -4.65661e-10, 0.999999, 3.63798e-12, 0, 1.09139e-11, 1, -0.00188303, -0.263557, -1.83539 )
-mesh = SubResource( 22 )
-material/0 = SubResource( 34 )
-
-[node name="Windshield" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( 0.00218172, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00218172, 0.000720211, 0.052, -0.746268 )
-mesh = SubResource( 9 )
 skeleton = NodePath("../../..")
+material/0 = SubResource( 34 )
+
+[node name="FL Bumper" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( 0.150001, 3.49246e-10, 5.23869e-09, -4.94765e-09, -9.09495e-13, 0.125, -1.16415e-10, -0.166666, 0, -0.657145, -0.262866, -1.85501 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 34 )
+
+[node name="FR Bumper" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( 0.15, 2.32831e-10, 1.16415e-10, 2.03727e-09, -7.30051e-09, 0.125, 0, -0.167, -5.46424e-09, 0.652863, -0.262209, -1.85264 )
+mesh = SubResource( 20 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 34 )
+
+[node name="F Bumper" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( 1, 0, -1.86265e-09, 1.30385e-08, 0.999999, 3.63798e-12, 0, 3.63798e-12, 1, -0.001966, -0.263556, -1.84698 )
+mesh = SubResource( 22 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 34 )
+
+[node name="Windshield" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( 0.00218172, -1.86265e-09, -0.999998, 3.45608e-11, 1, -1.39698e-08, 0.999998, -1.09139e-11, 0.00218172, 0.000636578, 0.0520004, -0.757854 )
+mesh = SubResource( 9 )
+skeleton = NodePath("../..")
 material/0 = SubResource( 10 )
 
-[node name="Hood" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+[node name="Hood" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( -0.00331608, -1.86265e-09, -0.999995, -4.36557e-11, 1, -1.39698e-08, 0.999995, -1.09139e-11, -0.00331608, -0.00214624, 0.0524163, 0.78152 )
 mesh = SubResource( 11 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 12 )
 
-[node name="Headlight1" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, 0.291669, -0.170669, -1.94488 )
+[node name="Headlight1" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( 1, -1.86265e-09, -1.86265e-09, 1.25729e-08, 1, 3.63798e-12, 0, -1.09139e-11, 1, 0.291586, -0.170669, -1.95647 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Headlight2" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, -0.291035, -0.174217, -1.94672 )
+[node name="Headlight2" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( 1, -1.86265e-09, -1.86265e-09, 1.25729e-08, 1, 3.63798e-12, 0, -1.09139e-11, 1, -0.291118, -0.174217, -1.95831 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Tail-light" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( 0.5, 0, 0, -2.32831e-10, 0.05, -1.42109e-14, 2.91038e-11, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
+[node name="Tail-light" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( 0.5, -5.82077e-11, -5.82077e-11, 6.51926e-09, 0.05, 1.13687e-13, 0, -4.54747e-13, 0.05, -8.34465e-05, -0.197455, 1.21442 )
 mesh = SubResource( 14 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 15 )
 
-[node name="Cabin" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( 0.6, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 0, 0.0519999, 0.0469962 )
+[node name="Cabin" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( 0.6, -2.32831e-10, -9.31323e-10, 8.3819e-09, 0.2, 0, 2.32831e-10, -1.81899e-12, 0.5, -8.34465e-05, 0.0520003, 0.0354109 )
 mesh = SubResource( 16 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 17 )
 
-[node name="MeshInstance" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567711, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567709, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756942, -0.479482, -0.842188 )
 mesh = SubResource( 24 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="MeshInstance2" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567656, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
-mesh = SubResource( 26 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567704, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
+[node name="MeshInstance2" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567654, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729602, -0.503623, 0.522274 )
 mesh = SubResource( 26 )
 material/0 = null
 
-[node name="MeshInstance4" type="MeshInstance" parent="StaticBody4/CollisionShape"]
-transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567707, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+[node name="MeshInstance3" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567702, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734558, -0.535102, 0.52291 )
 mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="StaticBody4"]
+transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567705, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.73463, -0.576115, -0.867215 )
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
 [node name="StaticBody5" type="StaticBody" parent="."]
 transform = Transform( -0.084708, -17.5088, -3.71097, -0.0302446, -4.17468, 15.5637, -13.9997, 0.114959, -0.0111695, -25.4251, 67.4355, 45.7128 )
 
 [node name="CollisionShape" type="CollisionShape" parent="StaticBody5"]
-transform = Transform( 1, 0, 0, 1.39698e-08, 1, -4.54747e-13, 5.82077e-11, -4.54747e-13, 1, 0, 0, 0 )
+transform = Transform( 1, 0, 5.82077e-11, 1.16415e-08, 1, -4.54747e-13, 1.74623e-10, -1.81899e-12, 1, -0.000110626, 6.85453e-07, 0.138181 )
 shape = SubResource( 6 )
 
-[node name="Chassis" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 1, 1.81899e-12, -2.32831e-10, 3.18323e-12, 1, 0.000196934, -0.261484, -0.263256 )
+[node name="Chassis" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( 1, 9.31323e-10, 1.74623e-10, 1.21072e-08, 1, 1.36424e-12, -1.16415e-10, 2.27374e-12, 1, 0.000196934, -0.261484, -0.263256 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../..")
+skeleton = NodePath("../../..")
 material/0 = SubResource( 35 )
 
-[node name="FL Bumper" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( 0.150001, 0, 5.3551e-09, -7.15954e-09, -6.82121e-13, 0.125, -9.45874e-11, -0.166666, 9.09495e-13, -0.657062, -0.262867, -1.84342 )
+[node name="FL Bumper" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( 0.150001, -1.45519e-11, 5.23869e-09, -5.12227e-09, -5.11591e-13, 0.125, -8.00355e-11, -0.166666, 7.38964e-13, -0.657062, -0.262867, -1.84342 )
 mesh = SubResource( 18 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 35 )
 
-[node name="FR Bumper" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( 0.15, 0, 1.16415e-10, -1.74623e-10, -7.30068e-09, 0.125, -1.16415e-10, -0.167, -5.46243e-09, 0.652947, -0.262209, -1.84105 )
+[node name="FR Bumper" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( 0.15, -1.45519e-11, 1.16415e-10, 1.80444e-09, -7.30051e-09, 0.125, -9.45874e-11, -0.167, -5.46254e-09, 0.652947, -0.262209, -1.84105 )
 mesh = SubResource( 20 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 35 )
 
-[node name="F Bumper" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 0.999999, 5.45697e-12, -6.98492e-10, 9.09495e-12, 1, -0.00188279, -0.263557, -1.83539 )
+[node name="F Bumper" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( 1, 9.31323e-10, 1.74623e-10, 1.21072e-08, 0.999999, 5.00222e-12, -5.82077e-10, 8.18545e-12, 1, -0.00188279, -0.263557, -1.83539 )
 mesh = SubResource( 22 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 35 )
 
-[node name="Windshield" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( 0.00218172, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00218172, 0.000720211, 0.052, -0.746268 )
+[node name="Windshield" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( 0.00218172, 0, -0.999998, 2.72848e-11, 1, -1.35042e-08, 0.999998, -9.09495e-13, 0.00218172, 0.000720263, 0.0520001, -0.746268 )
 mesh = SubResource( 9 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 36 )
 
-[node name="Hood" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+[node name="Hood" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( -0.00331608, 0, -0.999995, -4.36557e-11, 1, -1.30385e-08, 0.999995, -9.09495e-13, -0.00331608, -0.00206304, 0.0524159, 0.793105 )
 mesh = SubResource( 11 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 36 )
 
-[node name="Cabin" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( 0.6, 0, 2.91038e-11, -2.32831e-10, 0.2, 2.27374e-13, -2.91038e-11, 2.27374e-13, 0.5, 0, 0.0519999, 0.0469971 )
+[node name="Cabin" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( 0.6, 0, 2.91038e-11, 7.68341e-09, 0.2, -2.27374e-13, 5.82077e-11, -1.13687e-13, 0.5, 0, 0.0519998, 0.0469971 )
 mesh = SubResource( 16 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 36 )
 
-[node name="Headlight1" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, 0.291669, -0.170669, -1.94488 )
+[node name="Headlight1" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( 1, 0, 1.16415e-10, 1.21072e-08, 1, 0, 0, 4.54747e-13, 1, 0.291669, -0.170669, -1.94488 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Headlight2" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, -0.291035, -0.174217, -1.94672 )
+[node name="Headlight2" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( 1, 0, 1.16415e-10, 1.21072e-08, 1, 0, 0, 4.54747e-13, 1, -0.291035, -0.174217, -1.94672 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Tail-light" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( 0.5, 0, 0, -2.32831e-10, 0.05, -1.42109e-14, 2.91038e-11, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
+[node name="Tail-light" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( 0.5, 0, 0, 6.28643e-09, 0.05, -2.84217e-14, 8.73115e-11, -1.42109e-13, 0.05, 0, -0.197456, 1.22601 )
 mesh = SubResource( 14 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 15 )
 
-[node name="MeshInstance" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567711, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567709, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830602 )
 mesh = SubResource( 24 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="MeshInstance2" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567656, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
-mesh = SubResource( 26 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567704, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
+[node name="MeshInstance2" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567654, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.533861 )
 mesh = SubResource( 26 )
 material/0 = null
 
-[node name="MeshInstance4" type="MeshInstance" parent="StaticBody5/CollisionShape"]
-transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567707, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+[node name="MeshInstance3" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567702, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
 mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="StaticBody5"]
+transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567705, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
 [node name="StaticBody6" type="StaticBody" parent="."]
 transform = Transform( -0.079324, -17.5088, 3.711, -0.052825, -4.17452, -15.5637, 13.9997, -0.114959, -0.037699, -22.884, 56.7785, -21.7539 )
 
 [node name="CollisionShape" type="CollisionShape" parent="StaticBody6"]
-transform = Transform( 1, 0, 0, 1.39698e-08, 1, -4.54747e-13, 5.82077e-11, -4.54747e-13, 1, 0, 0, 0 )
+transform = Transform( 1, 0, 2.32831e-10, 1.49012e-08, 1, -3.63798e-12, 0, 0, 1, -0.0021857, 1.03414e-05, -0.81172 )
 shape = SubResource( 6 )
 
-[node name="Chassis" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 1, 1.81899e-12, -2.32831e-10, 3.18323e-12, 1, 0.000196934, -0.261484, -0.263256 )
+[node name="Chassis" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( 1, 9.31323e-10, 2.32831e-10, 1.35042e-08, 1, 0, -2.32831e-10, 1.81899e-12, 1, 0.000196934, -0.261484, -0.263257 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../..")
+skeleton = NodePath("../../..")
 material/0 = SubResource( 8 )
 
-[node name="Windshield" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( 0.00218172, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00218172, 0.000720211, 0.052, -0.746268 )
+[node name="Windshield" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( 0.00218172, 0, -0.999998, 2.81943e-11, 1, -1.39698e-08, 0.999998, 0, 0.00218172, 0.000720263, 0.052, -0.746268 )
 mesh = SubResource( 9 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 10 )
 
-[node name="Hood" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+[node name="Hood" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( -0.00331608, 0, -0.999995, -4.72937e-11, 1, -1.39698e-08, 0.999995, 0, -0.00331608, -0.00206292, 0.0524158, 0.793105 )
 mesh = SubResource( 11 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 12 )
 
-[node name="Headlight1" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, 0.291669, -0.170669, -1.94488 )
+[node name="Headlight1" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( 1, 0, 0, 1.35042e-08, 1, 0, 0, 0, 1, 0.291669, -0.170669, -1.94488 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Headlight2" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, -0.291035, -0.174217, -1.94672 )
+[node name="Headlight2" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( 1, 0, 0, 1.35042e-08, 1, 0, 0, 0, 1, -0.291035, -0.174217, -1.94672 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Tail-light" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( 0.5, 0, 0, -2.32831e-10, 0.05, -1.42109e-14, 2.91038e-11, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
+[node name="Tail-light" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( 0.5, -2.91038e-11, -1.45519e-11, 6.98492e-09, 0.05, -5.68434e-14, 0, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
 mesh = SubResource( 14 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 15 )
 
-[node name="Cabin" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( 0.6, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 0, 0.0519999, 0.0469962 )
+[node name="Cabin" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( 0.6, -1.16415e-10, 0, 8.14907e-09, 0.2, -9.09495e-13, 0, 0, 0.5, 0, 0.052, 0.0469959 )
 mesh = SubResource( 16 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 17 )
 
-[node name="FL Bumper" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( 0.150001, 0, 5.47152e-09, -7.10133e-09, -6.25278e-13, 0.125, -9.45874e-11, -0.166666, 8.52651e-13, -0.657062, -0.262867, -1.84342 )
+[node name="FL Bumper" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( 0.150001, 2.91038e-11, 5.47152e-09, -4.94765e-09, -4.54747e-13, 0.125, -5.82077e-11, -0.166666, 9.09495e-13, -0.657062, -0.262867, -1.84342 )
 mesh = SubResource( 18 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 19 )
 
-[node name="FR Bumper" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( 0.15, 0, 1.16415e-10, -1.74623e-10, -7.30063e-09, 0.125, -1.09139e-10, -0.167, -5.46254e-09, 0.652947, -0.262209, -1.84105 )
+[node name="FR Bumper" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( 0.15, 2.91038e-11, 1.16415e-10, 1.92085e-09, -7.30074e-09, 0.125, -1.16415e-10, -0.167, -5.4622e-09, 0.652947, -0.262209, -1.84105 )
 mesh = SubResource( 20 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 21 )
 
-[node name="F Bumper" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( 1, 1.86265e-09, 2.32831e-10, -9.31323e-10, 0.999999, 5.00222e-12, -6.40284e-10, 8.18545e-12, 1, -0.00188279, -0.263557, -1.83539 )
+[node name="F Bumper" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( 1, 1.86265e-09, 2.32831e-10, 1.35042e-08, 0.999999, 3.63798e-12, -6.98492e-10, 5.45697e-12, 1, -0.00188279, -0.263557, -1.83539 )
 mesh = SubResource( 22 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 23 )
 
-[node name="MeshInstance" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567711, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567709, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
 mesh = SubResource( 24 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="MeshInstance2" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567656, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
-mesh = SubResource( 26 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567704, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
+[node name="MeshInstance2" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567654, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
 mesh = SubResource( 26 )
 material/0 = null
 
-[node name="MeshInstance4" type="MeshInstance" parent="StaticBody6/CollisionShape"]
-transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567707, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+[node name="MeshInstance3" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567702, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
 mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="StaticBody6"]
+transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567705, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
 [node name="Domy car" type="StaticBody" parent="."]
 transform = Transform( -0.084708, -17.5088, -3.71097, -0.0302446, -4.17468, 15.5637, -13.9997, 0.114959, -0.0111695, -25.3748, 67.2249, -56.8819 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Domy car"]
-transform = Transform( 1, 0, 0, 1.39698e-08, 1, -4.54747e-13, 5.82077e-11, -4.54747e-13, 1, 0, 0, 0 )
+transform = Transform( 1, 9.31323e-10, 1.16415e-10, 9.77889e-09, 1, -1.36424e-12, 2.91038e-10, -3.63798e-12, 1, -9.01222e-05, 5.66244e-07, 0.113617 )
 shape = SubResource( 6 )
 
-[node name="Chassis" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 1, 1.81899e-12, -2.32831e-10, 3.18323e-12, 1, 0.000196934, -0.261484, -0.263256 )
+[node name="Chassis" type="MeshInstance" parent="Domy car"]
+transform = Transform( 1, 9.31323e-10, 2.32831e-10, 9.77889e-09, 1, 9.09495e-13, 0, 9.09495e-13, 1, 0.000213623, -0.261484, -0.283381 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../..")
-material/0 = SubResource( 37 )
-
-[node name="FL Bumper" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( 0.150001, 0, 5.3551e-09, -7.15954e-09, -6.82121e-13, 0.125, -9.45874e-11, -0.166666, 9.09495e-13, -0.657061, -0.262867, -1.84342 )
-mesh = SubResource( 18 )
-material/0 = SubResource( 37 )
-
-[node name="FR Bumper" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( 0.15, 0, 1.16415e-10, -1.74623e-10, -7.30068e-09, 0.125, -1.16415e-10, -0.167, -5.46243e-09, 0.652947, -0.262209, -1.84105 )
-mesh = SubResource( 20 )
-material/0 = SubResource( 37 )
-
-[node name="F Bumper" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 0.999999, 5.45697e-12, -6.98492e-10, 9.09495e-12, 1, -0.00188255, -0.263557, -1.83539 )
-mesh = SubResource( 22 )
-material/0 = SubResource( 37 )
-
-[node name="Windshield" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( 0.00218172, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00218172, 0.000720211, 0.052, -0.746268 )
-mesh = SubResource( 9 )
 skeleton = NodePath("../../..")
+material/0 = SubResource( 37 )
+
+[node name="FL Bumper" type="MeshInstance" parent="Domy car"]
+transform = Transform( 0.150001, -1.45519e-11, 5.3551e-09, -5.47152e-09, -4.54747e-13, 0.125, -5.82077e-11, -0.166666, 5.68434e-13, -0.657044, -0.262867, -1.86354 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="FR Bumper" type="MeshInstance" parent="Domy car"]
+transform = Transform( 0.15, -1.45519e-11, 1.16415e-10, 1.45519e-09, -7.30046e-09, 0.125, -7.27596e-11, -0.167, -5.46271e-09, 0.652964, -0.262209, -1.86117 )
+mesh = SubResource( 20 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="F Bumper" type="MeshInstance" parent="Domy car"]
+transform = Transform( 1, 9.31323e-10, 2.32831e-10, 9.77889e-09, 0.999999, 4.54747e-12, -4.65661e-10, 6.82121e-12, 1, -0.00186539, -0.263557, -1.85551 )
+mesh = SubResource( 22 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="Windshield" type="MeshInstance" parent="Domy car"]
+transform = Transform( 0.00218172, 0, -0.999998, 2.36469e-11, 1, -1.11759e-08, 0.999998, -2.72848e-12, 0.00218172, 0.00073719, 0.0519999, -0.766393 )
+mesh = SubResource( 9 )
+skeleton = NodePath("../..")
 material/0 = SubResource( 10 )
 
-[node name="Hood" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+[node name="Hood" type="MeshInstance" parent="Domy car"]
+transform = Transform( -0.00331608, 0, -0.999995, -3.72893e-11, 1, -1.07102e-08, 0.999995, -2.72848e-12, -0.00331608, -0.00204659, 0.0524157, 0.77298 )
 mesh = SubResource( 11 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 12 )
 
-[node name="Headlight1" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, 0.291669, -0.170669, -1.94488 )
+[node name="Headlight1" type="MeshInstance" parent="Domy car"]
+transform = Transform( 1, 0, 1.74623e-10, 9.77889e-09, 1, 0, 1.16415e-10, -1.36424e-12, 1, 0.291686, -0.170669, -1.965 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Headlight2" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, -0.291035, -0.174217, -1.94672 )
+[node name="Headlight2" type="MeshInstance" parent="Domy car"]
+transform = Transform( 1, 0, 1.74623e-10, 9.77889e-09, 1, 0, 1.16415e-10, -1.36424e-12, 1, -0.291018, -0.174217, -1.96684 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Tail-light" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( 0.5, 0, 0, -2.32831e-10, 0.05, -1.42109e-14, 2.91038e-11, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
+[node name="Tail-light" type="MeshInstance" parent="Domy car"]
+transform = Transform( 0.5, 0, 7.27596e-12, 5.12227e-09, 0.05, -7.10543e-14, 1.45519e-10, -1.98952e-13, 0.05, 1.66893e-05, -0.197456, 1.20588 )
 mesh = SubResource( 14 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 15 )
 
-[node name="Cabin" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( 0.6, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 0, 0.0519999, 0.0469962 )
+[node name="Cabin" type="MeshInstance" parent="Domy car"]
+transform = Transform( 0.6, 0, 2.91038e-11, 6.28643e-09, 0.2, -4.54747e-13, 1.74623e-10, -5.68434e-13, 0.5, 1.66893e-05, 0.0519998, 0.0268712 )
 mesh = SubResource( 16 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 17 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567711, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
+[node name="MeshInstance" type="MeshInstance" parent="Domy car"]
+transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.00056771, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756842, -0.479483, -0.850728 )
 mesh = SubResource( 24 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="MeshInstance2" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567656, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
-mesh = SubResource( 26 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567704, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
+[node name="MeshInstance2" type="MeshInstance" parent="Domy car"]
+transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567655, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729702, -0.503624, 0.513735 )
 mesh = SubResource( 26 )
 material/0 = null
 
-[node name="MeshInstance4" type="MeshInstance" parent="Domy car/CollisionShape"]
-transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567707, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+[node name="MeshInstance3" type="MeshInstance" parent="Domy car"]
+transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567703, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734458, -0.535103, 0.51437 )
 mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="Domy car"]
+transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567706, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.73473, -0.576116, -0.875755 )
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
 [node name="MeshInstance14" type="MeshInstance" parent="."]
@@ -912,81 +981,90 @@ shape = SubResource( 2 )
 transform = Transform( -1.70658, -17.4955, -3.21638, 6.77179, -4.23054, 13.4894, -12.1339, 0.0996459, 7.98062, 0.810987, -68.6868, -276.706 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Domy car2"]
-transform = Transform( 1, 0, 0, 1.39698e-08, 1, -4.54747e-13, 5.82077e-11, -4.54747e-13, 1, 0, 0, 0 )
+transform = Transform( 1, -5.12227e-09, 7.15256e-07, 2.25846e-08, 1, -9.31323e-10, -5.96046e-08, 4.42378e-09, 1, -0.0666513, 0.000330091, -0.766406 )
 shape = SubResource( 6 )
 
-[node name="Chassis" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 1, 1.81899e-12, -2.32831e-10, 3.18323e-12, 1, 0.000196934, -0.261484, -0.263256 )
+[node name="Chassis" type="MeshInstance" parent="Domy car2"]
+transform = Transform( 1, 9.31323e-10, 1.78814e-07, 1.46683e-08, 1, -2.32831e-10, -5.96046e-08, 9.31323e-10, 1, -0.0738277, -0.261116, -0.22598 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../..")
-material/0 = SubResource( 37 )
-
-[node name="FL Bumper" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( 0.150001, 0, 5.3551e-09, -7.15954e-09, -6.82121e-13, 0.125, -9.45874e-11, -0.166666, 9.09495e-13, -0.657061, -0.262867, -1.84342 )
-mesh = SubResource( 18 )
-material/0 = SubResource( 37 )
-
-[node name="FR Bumper" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( 0.15, 0, 1.16415e-10, -1.74623e-10, -7.30068e-09, 0.125, -1.16415e-10, -0.167, -5.46243e-09, 0.652947, -0.262209, -1.84105 )
-mesh = SubResource( 20 )
-material/0 = SubResource( 37 )
-
-[node name="F Bumper" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 0.999999, 5.45697e-12, -6.98492e-10, 9.09495e-12, 1, -0.00188255, -0.263557, -1.83539 )
-mesh = SubResource( 22 )
-material/0 = SubResource( 37 )
-
-[node name="Windshield" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( 0.00218172, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00218172, 0.000720211, 0.052, -0.746268 )
-mesh = SubResource( 9 )
 skeleton = NodePath("../../..")
+material/0 = SubResource( 37 )
+
+[node name="FL Bumper" type="MeshInstance" parent="Domy car2"]
+transform = Transform( 0.150001, -2.23517e-08, 5.3551e-09, -4.88944e-09, 2.91038e-11, 0.125, -1.11759e-08, -0.166666, 1.16415e-10, -0.731086, -0.262499, -1.80614 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="FR Bumper" type="MeshInstance" parent="Domy car2"]
+transform = Transform( 0.15, -2.98023e-08, 1.16415e-10, 2.21189e-09, -7.21775e-09, 0.125, -1.49012e-08, -0.167, -5.3551e-09, 0.578921, -0.261841, -1.80377 )
+mesh = SubResource( 20 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="F Bumper" type="MeshInstance" parent="Domy car2"]
+transform = Transform( 1, 1.86265e-09, 1.78814e-07, 1.46683e-08, 0.999999, -2.32831e-10, -5.96046e-08, 9.31323e-10, 1, -0.0759087, -0.263189, -1.79811 )
+mesh = SubResource( 22 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="Windshield" type="MeshInstance" parent="Domy car2"]
+transform = Transform( 0.00218192, 0, -0.999998, -2.32831e-10, 1, -1.55997e-08, 0.999998, 1.16415e-09, 0.00218177, -0.0733061, 0.0523678, -0.708992 )
+mesh = SubResource( 9 )
+skeleton = NodePath("../..")
 material/0 = SubResource( 10 )
 
-[node name="Hood" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+[node name="Hood" type="MeshInstance" parent="Domy car2"]
+transform = Transform( -0.00331596, 0, -0.999995, -2.32831e-10, 1, -1.55997e-08, 0.999995, 1.16415e-09, -0.00331602, -0.076087, 0.0527836, 0.830381 )
 mesh = SubResource( 11 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 12 )
 
-[node name="Headlight1" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, 0.291669, -0.170669, -1.94488 )
+[node name="Headlight1" type="MeshInstance" parent="Domy car2"]
+transform = Transform( 1, 0, 1.78814e-07, 1.46683e-08, 1, -2.32831e-10, -5.96046e-08, 1.16415e-09, 1, 0.217643, -0.170301, -1.9076 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Headlight2" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, -0.291035, -0.174217, -1.94672 )
+[node name="Headlight2" type="MeshInstance" parent="Domy car2"]
+transform = Transform( 1, 0, 1.78814e-07, 1.46683e-08, 1, -2.32831e-10, -5.96046e-08, 1.16415e-09, 1, -0.365061, -0.173849, -1.90944 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Tail-light" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( 0.5, 0, 0, -2.32831e-10, 0.05, -1.42109e-14, 2.91038e-11, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
+[node name="Tail-light" type="MeshInstance" parent="Domy car2"]
+transform = Transform( 0.5, 0, 9.31323e-09, 7.567e-09, 0.05, -1.45519e-11, -2.98023e-08, 5.82077e-11, 0.05, -0.0740261, -0.197088, 1.26329 )
 mesh = SubResource( 14 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 15 )
 
-[node name="Cabin" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( 0.6, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 0, 0.0519999, 0.0469962 )
+[node name="Cabin" type="MeshInstance" parent="Domy car2"]
+transform = Transform( 0.6, 0, 8.9407e-08, 9.31323e-09, 0.2, -1.16415e-10, -5.96046e-08, 2.32831e-10, 0.5, -0.0740252, 0.0523677, 0.0842724 )
 mesh = SubResource( 16 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 17 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567711, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
+[node name="MeshInstance" type="MeshInstance" parent="Domy car2"]
+transform = Transform( 0.00102167, 0.114283, 0.00327625, 0.00198195, -0.000567709, 0.399984, 0.349992, -0.000251345, -0.00287397, -0.830885, -0.479115, -0.793326 )
 mesh = SubResource( 24 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="MeshInstance2" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567656, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
-mesh = SubResource( 26 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567704, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
+[node name="MeshInstance2" type="MeshInstance" parent="Domy car2"]
+transform = Transform( -0.00512862, -0.114274, 0.00332671, 0.00201249, 0.000567654, 0.399984, -0.349964, 0.00128628, 0.00287375, 0.655661, -0.503256, 0.571136 )
 mesh = SubResource( 26 )
 material/0 = null
 
-[node name="MeshInstance4" type="MeshInstance" parent="Domy car2/CollisionShape"]
-transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567707, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+[node name="MeshInstance3" type="MeshInstance" parent="Domy car2"]
+transform = Transform( -0.00172183, 0.114283, 0.00329876, 0.00199557, -0.000567702, 0.399983, 0.34999, 0.000434604, -0.00287395, -0.808501, -0.534735, 0.571772 )
 mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="Domy car2"]
+transform = Transform( 0.00176162, 0.114282, 0.00327017, 0.00197827, -0.000567705, 0.399984, 0.34999, -0.000436343, -0.00287395, 0.660688, -0.575748, -0.818354 )
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
 [node name="MeshInstance17" type="MeshInstance" parent="."]
@@ -1017,162 +1095,180 @@ shape = SubResource( 2 )
 transform = Transform( -1.70658, -17.4955, -3.21638, 6.77179, -4.23054, 13.4894, -12.1339, 0.0996459, 7.98062, 0.810987, -68.6868, -200.725 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Domy car3"]
-transform = Transform( 1, 0, 0, 1.39698e-08, 1, -4.54747e-13, 5.82077e-11, -4.54747e-13, 1, 0, 0, 0 )
-shape = SubResource( 6 )
+transform = Transform( 1, 0, 2.38419e-07, 1.6531e-08, 1, -2.32831e-10, -5.96046e-08, 1.39698e-09, 1, 0.0069685, -3.48687e-05, -0.428502 )
+shape = SubResource( 40 )
 
-[node name="Chassis" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 1, 1.81899e-12, -2.32831e-10, 3.18323e-12, 1, 0.000196934, -0.261484, -0.263256 )
+[node name="Chassis" type="MeshInstance" parent="Domy car3"]
+transform = Transform( 1, 1.39698e-09, 5.96046e-08, 1.35042e-08, 1, 0, -2.98023e-08, 2.32831e-10, 1, 0.000197411, -0.261484, -0.263256 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../..")
-material/0 = SubResource( 37 )
-
-[node name="FL Bumper" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( 0.150001, 0, 5.3551e-09, -7.15954e-09, -6.82121e-13, 0.125, -9.45874e-11, -0.166666, 9.09495e-13, -0.657061, -0.262867, -1.84342 )
-mesh = SubResource( 18 )
-material/0 = SubResource( 37 )
-
-[node name="FR Bumper" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( 0.15, 0, 1.16415e-10, -1.74623e-10, -7.30068e-09, 0.125, -1.16415e-10, -0.167, -5.46243e-09, 0.652947, -0.262209, -1.84105 )
-mesh = SubResource( 20 )
-material/0 = SubResource( 37 )
-
-[node name="F Bumper" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 0.999999, 5.45697e-12, -6.98492e-10, 9.09495e-12, 1, -0.00188255, -0.263557, -1.83539 )
-mesh = SubResource( 22 )
-material/0 = SubResource( 37 )
-
-[node name="Windshield" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( 0.00218172, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00218172, 0.000720211, 0.052, -0.746268 )
-mesh = SubResource( 9 )
 skeleton = NodePath("../../..")
+material/0 = SubResource( 37 )
+
+[node name="FL Bumper" type="MeshInstance" parent="Domy car3"]
+transform = Transform( 0.150001, -7.45058e-09, 5.3551e-09, -5.00586e-09, 2.91038e-11, 0.125, -3.72529e-09, -0.166666, 2.91038e-11, -0.657061, -0.262867, -1.84342 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="FR Bumper" type="MeshInstance" parent="Domy car3"]
+transform = Transform( 0.15, -7.45058e-09, 1.16415e-10, 1.97906e-09, -7.30506e-09, 0.125, -7.45058e-09, -0.167, -5.44242e-09, 0.652947, -0.262209, -1.84105 )
+mesh = SubResource( 20 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="F Bumper" type="MeshInstance" parent="Domy car3"]
+transform = Transform( 1, 1.86265e-09, 5.96046e-08, 1.35042e-08, 0.999999, 0, -2.98023e-08, 2.32831e-10, 1, -0.00188351, -0.263557, -1.83539 )
+mesh = SubResource( 22 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="Windshield" type="MeshInstance" parent="Domy car3"]
+transform = Transform( 0.0021818, 0, -0.999998, -2.32831e-10, 1, -1.46683e-08, 0.999998, 4.65661e-10, 0.00218174, 0.000720024, 0.052, -0.746268 )
+mesh = SubResource( 9 )
+skeleton = NodePath("../..")
 material/0 = SubResource( 10 )
 
-[node name="Hood" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+[node name="Hood" type="MeshInstance" parent="Domy car3"]
+transform = Transform( -0.00331604, 0, -0.999995, -2.32831e-10, 1, -1.46683e-08, 0.999995, 4.65661e-10, -0.00331607, -0.0020628, 0.0524157, 0.793105 )
 mesh = SubResource( 11 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 12 )
 
-[node name="Headlight1" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, 0.291669, -0.170669, -1.94488 )
+[node name="Headlight1" type="MeshInstance" parent="Domy car3"]
+transform = Transform( 1, 0, 5.96046e-08, 1.35042e-08, 1, 0, -2.98023e-08, 4.65661e-10, 1, 0.291669, -0.170669, -1.94488 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Headlight2" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, -0.291035, -0.174217, -1.94672 )
+[node name="Headlight2" type="MeshInstance" parent="Domy car3"]
+transform = Transform( 1, 0, 5.96046e-08, 1.35042e-08, 1, 0, -2.98023e-08, 4.65661e-10, 1, -0.291036, -0.174217, -1.94672 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Tail-light" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( 0.5, 0, 0, -2.32831e-10, 0.05, -1.42109e-14, 2.91038e-11, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
+[node name="Tail-light" type="MeshInstance" parent="Domy car3"]
+transform = Transform( 0.5, 2.91038e-11, 1.86265e-09, 6.98492e-09, 0.05, 0, -1.49012e-08, 2.91038e-11, 0.05, 0, -0.197456, 1.22601 )
 mesh = SubResource( 14 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 15 )
 
-[node name="Cabin" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( 0.6, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 0, 0.0519999, 0.0469962 )
+[node name="Cabin" type="MeshInstance" parent="Domy car3"]
+transform = Transform( 0.6, 1.16415e-10, 2.98023e-08, 8.61473e-09, 0.2, 0, -2.98023e-08, 1.16415e-10, 0.5, 0, 0.0519999, 0.0469961 )
 mesh = SubResource( 16 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 17 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567711, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
+[node name="MeshInstance" type="MeshInstance" parent="Domy car3"]
+transform = Transform( 0.00102162, 0.114283, 0.00327625, 0.00198195, -0.000567709, 0.399984, 0.349992, -0.000251338, -0.00287397, -0.756859, -0.479483, -0.830603 )
 mesh = SubResource( 24 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="MeshInstance2" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567656, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
-mesh = SubResource( 26 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567704, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
+[node name="MeshInstance2" type="MeshInstance" parent="Domy car3"]
+transform = Transform( -0.00512858, -0.114274, 0.00332671, 0.00201249, 0.000567654, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729684, -0.503624, 0.53386 )
 mesh = SubResource( 26 )
 material/0 = null
 
-[node name="MeshInstance4" type="MeshInstance" parent="Domy car3/CollisionShape"]
-transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567707, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+[node name="MeshInstance3" type="MeshInstance" parent="Domy car3"]
+transform = Transform( -0.00172187, 0.114283, 0.00329876, 0.00199557, -0.000567702, 0.399983, 0.34999, 0.000434611, -0.00287395, -0.734475, -0.535103, 0.534495 )
 mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="Domy car3"]
+transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567705, 0.399984, 0.34999, -0.00043634, -0.00287395, 0.734713, -0.576116, -0.85563 )
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
 [node name="Domy car4" type="StaticBody" parent="."]
 transform = Transform( -1.70658, -17.4955, -3.21638, 6.77179, -4.23054, 13.4894, -12.1339, 0.0996459, 7.98062, 0.810987, -68.6868, -161.962 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Domy car4"]
-transform = Transform( 1, 0, 0, 1.39698e-08, 1, -4.54747e-13, 5.82077e-11, -4.54747e-13, 1, 0, 0, 0 )
-shape = SubResource( 6 )
+transform = Transform( 1, -1.39698e-09, 4.76837e-07, 1.83936e-08, 1, -6.98492e-10, -5.96046e-08, 2.56114e-09, 1, 0.00145674, -7.27177e-06, -0.647188 )
+shape = SubResource( 41 )
 
-[node name="Chassis" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 1, 1.81899e-12, -2.32831e-10, 3.18323e-12, 1, 0.000196934, -0.261484, -0.263256 )
+[node name="Chassis" type="MeshInstance" parent="Domy car4"]
+transform = Transform( 1, 1.39698e-09, 5.96046e-08, 1.35042e-08, 1, 0, -2.98023e-08, 2.32831e-10, 1, 0.000197411, -0.261484, -0.263256 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../..")
-material/0 = SubResource( 37 )
-
-[node name="FL Bumper" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( 0.150001, 0, 5.3551e-09, -7.15954e-09, -6.82121e-13, 0.125, -9.45874e-11, -0.166666, 9.09495e-13, -0.657061, -0.262867, -1.84342 )
-mesh = SubResource( 18 )
-material/0 = SubResource( 37 )
-
-[node name="FR Bumper" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( 0.15, 0, 1.16415e-10, -1.74623e-10, -7.30068e-09, 0.125, -1.16415e-10, -0.167, -5.46243e-09, 0.652947, -0.262209, -1.84105 )
-mesh = SubResource( 20 )
-material/0 = SubResource( 37 )
-
-[node name="F Bumper" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 0.999999, 5.45697e-12, -6.98492e-10, 9.09495e-12, 1, -0.00188255, -0.263557, -1.83539 )
-mesh = SubResource( 22 )
-material/0 = SubResource( 37 )
-
-[node name="Windshield" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( 0.00218172, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00218172, 0.000720211, 0.052, -0.746268 )
-mesh = SubResource( 9 )
 skeleton = NodePath("../../..")
+material/0 = SubResource( 37 )
+
+[node name="FL Bumper" type="MeshInstance" parent="Domy car4"]
+transform = Transform( 0.150001, -7.45058e-09, 5.3551e-09, -5.00586e-09, 2.91038e-11, 0.125, -3.72529e-09, -0.166666, 2.91038e-11, -0.657061, -0.262867, -1.84342 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="FR Bumper" type="MeshInstance" parent="Domy car4"]
+transform = Transform( 0.15, -7.45058e-09, 1.16415e-10, 1.97906e-09, -7.30506e-09, 0.125, -7.45058e-09, -0.167, -5.44242e-09, 0.652947, -0.262209, -1.84105 )
+mesh = SubResource( 20 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="F Bumper" type="MeshInstance" parent="Domy car4"]
+transform = Transform( 1, 1.86265e-09, 5.96046e-08, 1.35042e-08, 0.999999, 0, -2.98023e-08, 2.32831e-10, 1, -0.00188208, -0.263557, -1.83539 )
+mesh = SubResource( 22 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="Windshield" type="MeshInstance" parent="Domy car4"]
+transform = Transform( 0.0021818, 0, -0.999998, -2.32831e-10, 1, -1.46683e-08, 0.999998, 4.65661e-10, 0.00218174, 0.000720501, 0.0520001, -0.746268 )
+mesh = SubResource( 9 )
+skeleton = NodePath("../..")
 material/0 = SubResource( 10 )
 
-[node name="Hood" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+[node name="Hood" type="MeshInstance" parent="Domy car4"]
+transform = Transform( -0.00331604, 0, -0.999995, -2.32831e-10, 1, -1.46683e-08, 0.999995, 4.65661e-10, -0.00331607, -0.00206327, 0.0524158, 0.793105 )
 mesh = SubResource( 11 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 12 )
 
-[node name="Headlight1" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, 0.291669, -0.170669, -1.94488 )
+[node name="Headlight1" type="MeshInstance" parent="Domy car4"]
+transform = Transform( 1, 0, 5.96046e-08, 1.35042e-08, 1, 0, -2.98023e-08, 4.65661e-10, 1, 0.291669, -0.170669, -1.94488 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Headlight2" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, -0.291035, -0.174217, -1.94672 )
+[node name="Headlight2" type="MeshInstance" parent="Domy car4"]
+transform = Transform( 1, 0, 5.96046e-08, 1.35042e-08, 1, 0, -2.98023e-08, 4.65661e-10, 1, -0.291036, -0.174217, -1.94672 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Tail-light" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( 0.5, 0, 0, -2.32831e-10, 0.05, -1.42109e-14, 2.91038e-11, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
+[node name="Tail-light" type="MeshInstance" parent="Domy car4"]
+transform = Transform( 0.5, 2.91038e-11, 1.86265e-09, 6.98492e-09, 0.05, 0, -1.49012e-08, 2.91038e-11, 0.05, 0, -0.197456, 1.22601 )
 mesh = SubResource( 14 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 15 )
 
-[node name="Cabin" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( 0.6, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 0, 0.0519999, 0.0469962 )
+[node name="Cabin" type="MeshInstance" parent="Domy car4"]
+transform = Transform( 0.6, 1.16415e-10, 2.98023e-08, 8.61473e-09, 0.2, 0, -2.98023e-08, 1.16415e-10, 0.5, 0, 0.052, 0.0469961 )
 mesh = SubResource( 16 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 17 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567711, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
+[node name="MeshInstance" type="MeshInstance" parent="Domy car4"]
+transform = Transform( 0.00102162, 0.114283, 0.00327625, 0.00198195, -0.000567709, 0.399984, 0.349992, -0.000251338, -0.00287397, -0.756859, -0.479483, -0.830603 )
 mesh = SubResource( 24 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="MeshInstance2" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567656, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
-mesh = SubResource( 26 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567704, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
+[node name="MeshInstance2" type="MeshInstance" parent="Domy car4"]
+transform = Transform( -0.00512858, -0.114274, 0.00332671, 0.00201249, 0.000567654, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729684, -0.503624, 0.53386 )
 mesh = SubResource( 26 )
 material/0 = null
 
-[node name="MeshInstance4" type="MeshInstance" parent="Domy car4/CollisionShape"]
-transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567707, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+[node name="MeshInstance3" type="MeshInstance" parent="Domy car4"]
+transform = Transform( -0.00172187, 0.114283, 0.00329876, 0.00199557, -0.000567702, 0.399983, 0.34999, 0.000434611, -0.00287395, -0.734475, -0.535103, 0.534495 )
 mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="Domy car4"]
+transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567705, 0.399984, 0.34999, -0.00043634, -0.00287395, 0.734713, -0.576116, -0.85563 )
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
 [node name="MeshInstance19" type="MeshInstance" parent="."]
@@ -1226,83 +1322,92 @@ shape = SubResource( 2 )
 [node name="Domy car5" type="StaticBody" parent="."]
 transform = Transform( -1.75096, -17.5134, 3.10614, 7.22055, -4.15641, -13.2005, 11.8658, -0.0550997, 8.49105, -27.7144, 58.9725, -275.85 )
 
-[node name="CollisionShape" type="CollisionShape" parent="Domy car5"]
-transform = Transform( 1, 0, 0, 1.39698e-08, 1, -4.54747e-13, 5.82077e-11, -4.54747e-13, 1, 0, 0, 0 )
-shape = SubResource( 6 )
-
-[node name="Chassis" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 1, 1.81899e-12, -2.32831e-10, 3.18323e-12, 1, 0.000196934, -0.261484, -0.263256 )
+[node name="Chassis" type="MeshInstance" parent="Domy car5"]
+transform = Transform( 1, 4.65661e-10, 5.96046e-08, 1.30385e-08, 1, -1.16415e-10, 2.98023e-08, -3.49246e-10, 1, 0.000195503, -0.261484, -0.263256 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../..")
-material/0 = SubResource( 37 )
-
-[node name="FL Bumper" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( 0.150001, 0, 5.3551e-09, -7.15954e-09, -6.82121e-13, 0.125, -9.45874e-11, -0.166666, 9.09495e-13, -0.657061, -0.262867, -1.84342 )
-mesh = SubResource( 18 )
-material/0 = SubResource( 37 )
-
-[node name="FR Bumper" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( 0.15, 0, 1.16415e-10, -1.74623e-10, -7.30068e-09, 0.125, -1.16415e-10, -0.167, -5.46243e-09, 0.652947, -0.262209, -1.84105 )
-mesh = SubResource( 20 )
-material/0 = SubResource( 37 )
-
-[node name="F Bumper" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 0.999999, 5.45697e-12, -6.98492e-10, 9.09495e-12, 1, -0.00188255, -0.263557, -1.83539 )
-mesh = SubResource( 22 )
-material/0 = SubResource( 37 )
-
-[node name="Windshield" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( 0.00218165, -2.32831e-10, -0.999998, -1.16415e-10, 1, 0, 0.999998, -2.32831e-10, 0.00218168, 0.000720024, 0.052, -0.746267 )
-mesh = SubResource( 9 )
 skeleton = NodePath("../../..")
+material/0 = SubResource( 37 )
+
+[node name="FL Bumper" type="MeshInstance" parent="Domy car5"]
+transform = Transform( 0.150001, -1.49012e-08, 5.2969e-09, -5.06407e-09, 4.36557e-11, 0.125, 7.45058e-09, -0.166666, -4.36557e-11, -0.657062, -0.262867, -1.84342 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="FR Bumper" type="MeshInstance" parent="Domy car5"]
+transform = Transform( 0.15, 0, 5.82077e-11, 1.89175e-09, -7.29051e-09, 0.125, 3.72529e-09, -0.167, -5.51518e-09, 0.652946, -0.262209, -1.84105 )
+mesh = SubResource( 20 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="F Bumper" type="MeshInstance" parent="Domy car5"]
+transform = Transform( 1, 4.65661e-10, 5.96046e-08, 1.30385e-08, 0.999999, -1.16415e-10, 2.98023e-08, -3.49246e-10, 1, -0.00188255, -0.263557, -1.83539 )
+mesh = SubResource( 22 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="Windshield" type="MeshInstance" parent="Domy car5"]
+transform = Transform( 0.00218171, -6.98492e-10, -0.999998, -4.65661e-10, 1, -1.39698e-08, 0.999998, -6.98492e-10, 0.00218162, 0.00071907, 0.052, -0.746266 )
+mesh = SubResource( 9 )
+skeleton = NodePath("../..")
 material/0 = SubResource( 10 )
 
-[node name="Hood" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+[node name="Hood" type="MeshInstance" parent="Domy car5"]
+transform = Transform( -0.00331599, -4.65661e-10, -0.999995, 0, 1, -1.3737e-08, 0.999995, -3.49246e-10, -0.00331613, -0.0020628, 0.0524157, 0.793106 )
 mesh = SubResource( 11 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 12 )
 
-[node name="Headlight1" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, 0.291669, -0.170669, -1.94488 )
+[node name="Headlight1" type="MeshInstance" parent="Domy car5"]
+transform = Transform( 1, -4.65661e-10, 5.96046e-08, 1.30385e-08, 1, -1.16415e-10, 2.98023e-08, -3.49246e-10, 1, 0.291667, -0.170669, -1.94488 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Headlight2" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, -0.291035, -0.174217, -1.94672 )
+[node name="Headlight2" type="MeshInstance" parent="Domy car5"]
+transform = Transform( 1, -4.65661e-10, 5.96046e-08, 1.30385e-08, 1, -1.16415e-10, 2.98023e-08, -3.49246e-10, 1, -0.291035, -0.174217, -1.94672 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Tail-light" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( 0.5, 0, 0, -2.32831e-10, 0.05, -1.42109e-14, 2.91038e-11, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
+[node name="Tail-light" type="MeshInstance" parent="Domy car5"]
+transform = Transform( 0.5, -4.36557e-11, 1.86265e-09, 6.75209e-09, 0.05, -1.45519e-11, 1.49012e-08, -2.18279e-11, 0.05, -1.90735e-06, -0.197456, 1.22601 )
 mesh = SubResource( 14 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 15 )
 
-[node name="Cabin" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( 0.6, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 0, 0.0519999, 0.0469962 )
+[node name="Cabin" type="MeshInstance" parent="Domy car5"]
+transform = Transform( 0.6, -1.74623e-10, 2.98023e-08, 8.26549e-09, 0.2, -5.82077e-11, 1.49012e-08, -8.73115e-11, 0.5, 0, 0.0519999, 0.0469961 )
 mesh = SubResource( 16 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 17 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567711, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
+[node name="MeshInstance" type="MeshInstance" parent="Domy car5"]
+transform = Transform( 0.00102161, 0.114283, 0.00327625, 0.00198195, -0.000567709, 0.399984, 0.349992, -0.00025133, -0.00287397, -0.756861, -0.479483, -0.830604 )
 mesh = SubResource( 24 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="MeshInstance2" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567656, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
-mesh = SubResource( 26 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567704, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
+[node name="MeshInstance2" type="MeshInstance" parent="Domy car5"]
+transform = Transform( -0.00512859, -0.114274, 0.00332671, 0.00201249, 0.000567654, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729684, -0.503624, 0.53386 )
 mesh = SubResource( 26 )
 material/0 = null
 
-[node name="MeshInstance4" type="MeshInstance" parent="Domy car5/CollisionShape"]
-transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567707, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+[node name="MeshInstance3" type="MeshInstance" parent="Domy car5"]
+transform = Transform( -0.00172184, 0.114283, 0.00329876, 0.00199557, -0.000567702, 0.399983, 0.34999, 0.000434622, -0.00287395, -0.734476, -0.535103, 0.534495 )
 mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="Domy car5"]
+transform = Transform( 0.0017616, 0.114282, 0.00327017, 0.00197827, -0.000567705, 0.399984, 0.34999, -0.000436332, -0.00287395, 0.734711, -0.576116, -0.85563 )
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="Domy car5"]
+transform = Transform( 1, -3.49246e-09, 3.57628e-07, 1.53668e-08, 1, -1.16415e-10, 1.19209e-07, -1.62981e-09, 1, 0.00523663, 0.00176233, -0.791972 )
+shape = SubResource( 6 )
 
 [node name="MeshInstance23" type="MeshInstance" parent="."]
 transform = Transform( 0.199867, 0.972949, -0.115895, -0.841807, 0.231038, 0.487844, 0.501421, 5.7371e-05, 0.865204, -16.4751, 65.8952, -220.42 )
@@ -1332,162 +1437,180 @@ shape = SubResource( 2 )
 transform = Transform( -1.66799, -17.4841, 3.29094, 6.82105, -4.27856, -13.445, 12.1116, 0.00172857, 8.02516, -26.7365, 60.2057, -237.032 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Domy car6"]
-transform = Transform( 1, 0, 0, 1.39698e-08, 1, -4.54747e-13, 5.82077e-11, -4.54747e-13, 1, 0, 0, 0 )
+transform = Transform( 1, 1.29512e-09, 2.98023e-08, 1.38243e-08, 1, -1.32059e-09, 2.98023e-08, -1.19326e-09, 1, -0.00182438, -0.00369984, -0.805059 )
 shape = SubResource( 6 )
 
-[node name="Chassis" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 1, 1.81899e-12, -2.32831e-10, 3.18323e-12, 1, 0.000196934, -0.261484, -0.263256 )
+[node name="Chassis" type="MeshInstance" parent="Domy car6"]
+transform = Transform( 1, 1.28784e-09, 2.98023e-08, 1.2893e-08, 1, -3.85626e-10, 2.98023e-08, -4.94765e-10, 1, 0.000197411, -0.261484, -0.263256 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../..")
-material/0 = SubResource( 37 )
-
-[node name="FL Bumper" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( 0.150001, 0, 5.3551e-09, -7.15954e-09, -6.82121e-13, 0.125, -9.45874e-11, -0.166666, 9.09495e-13, -0.657061, -0.262867, -1.84342 )
-mesh = SubResource( 18 )
-material/0 = SubResource( 37 )
-
-[node name="FR Bumper" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( 0.15, 0, 1.16415e-10, -1.74623e-10, -7.30068e-09, 0.125, -1.16415e-10, -0.167, -5.46243e-09, 0.652947, -0.262209, -1.84105 )
-mesh = SubResource( 20 )
-material/0 = SubResource( 37 )
-
-[node name="F Bumper" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 0.999999, 5.45697e-12, -6.98492e-10, 9.09495e-12, 1, -0.00188255, -0.263557, -1.83539 )
-mesh = SubResource( 22 )
-material/0 = SubResource( 37 )
-
-[node name="Windshield" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( 0.00218172, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00218172, 0.000720211, 0.052, -0.746268 )
-mesh = SubResource( 9 )
 skeleton = NodePath("../../..")
+material/0 = SubResource( 37 )
+
+[node name="FL Bumper" type="MeshInstance" parent="Domy car6"]
+transform = Transform( 0.150001, -7.45058e-09, 5.36329e-09, -5.10227e-09, -2.41016e-11, 0.125, 0, -0.166666, 6.82121e-12, -0.65706, -0.262867, -1.84342 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="FR Bumper" type="MeshInstance" parent="Domy car6"]
+transform = Transform( 0.15, -7.45058e-09, 1.59162e-10, 1.93359e-09, -7.24276e-09, 0.125, 0, -0.167, -5.51017e-09, 0.652947, -0.262209, -1.84105 )
+mesh = SubResource( 20 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="F Bumper" type="MeshInstance" parent="Domy car6"]
+transform = Transform( 1, 1.18598e-09, 2.98023e-08, 1.2893e-08, 0.999999, -3.85626e-10, 2.98023e-08, -5.45697e-10, 1, -0.0018816, -0.263557, -1.83539 )
+mesh = SubResource( 22 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="Windshield" type="MeshInstance" parent="Domy car6"]
+transform = Transform( 0.00218177, 3.56522e-10, -0.999998, 7.63976e-11, 1, -1.39771e-08, 0.999998, -3.81988e-10, 0.00218171, 0.000720978, 0.052, -0.746267 )
+mesh = SubResource( 9 )
+skeleton = NodePath("../..")
 material/0 = SubResource( 10 )
 
-[node name="Hood" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+[node name="Hood" type="MeshInstance" parent="Domy car6"]
+transform = Transform( -0.00331602, 3.56522e-10, -0.999995, -4.00178e-11, 1, -1.38825e-08, 0.999995, -3.81988e-10, -0.00331607, -0.00206184, 0.0524158, 0.793105 )
 mesh = SubResource( 11 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 12 )
 
-[node name="Headlight1" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, 0.291669, -0.170669, -1.94488 )
+[node name="Headlight1" type="MeshInstance" parent="Domy car6"]
+transform = Transform( 1, 3.56522e-10, 2.98023e-08, 1.2893e-08, 1, -3.85626e-10, 2.98023e-08, -3.81988e-10, 1, 0.29167, -0.170669, -1.94488 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Headlight2" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, -0.291035, -0.174217, -1.94672 )
+[node name="Headlight2" type="MeshInstance" parent="Domy car6"]
+transform = Transform( 1, 3.56522e-10, 2.98023e-08, 1.2893e-08, 1, -3.85626e-10, 2.98023e-08, -3.81988e-10, 1, -0.291035, -0.174217, -1.94672 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Tail-light" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( 0.5, 0, 0, -2.32831e-10, 0.05, -1.42109e-14, 2.91038e-11, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
+[node name="Tail-light" type="MeshInstance" parent="Domy car6"]
+transform = Transform( 0.5, 1.22782e-11, 1.86265e-09, 6.67933e-09, 0.05, -1.04592e-11, 1.49012e-08, -3.63798e-11, 0.05, 0, -0.197456, 1.22601 )
 mesh = SubResource( 14 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 15 )
 
-[node name="Cabin" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( 0.6, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 0, 0.0519999, 0.0469962 )
+[node name="Cabin" type="MeshInstance" parent="Domy car6"]
+transform = Transform( 0.6, 4.91127e-11, 1.49012e-08, 8.43283e-09, 0.2, -1.92813e-10, 0, -1.45519e-10, 0.5, 9.53674e-07, 0.0519998, 0.0469961 )
 mesh = SubResource( 16 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 17 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567711, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
+[node name="MeshInstance" type="MeshInstance" parent="Domy car6"]
+transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567709, 0.399984, 0.349992, -0.000251327, -0.00287397, -0.756858, -0.479483, -0.830603 )
 mesh = SubResource( 24 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="MeshInstance2" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567656, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
-mesh = SubResource( 26 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567704, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
+[node name="MeshInstance2" type="MeshInstance" parent="Domy car6"]
+transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567654, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729686, -0.503624, 0.53386 )
 mesh = SubResource( 26 )
 material/0 = null
 
-[node name="MeshInstance4" type="MeshInstance" parent="Domy car6/CollisionShape"]
-transform = Transform( 0.00176154, 0.114282, 0.00327017, 0.00197827, -0.000567707, 0.399984, 0.34999, -0.000436336, -0.00287395, 0.734713, -0.576116, -0.855631 )
+[node name="MeshInstance3" type="MeshInstance" parent="Domy car6"]
+transform = Transform( -0.00172186, 0.114283, 0.00329876, 0.00199557, -0.000567702, 0.399983, 0.34999, 0.000434615, -0.00287395, -0.734475, -0.535103, 0.534494 )
 mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="Domy car6"]
+transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567705, 0.399984, 0.34999, -0.000436332, -0.00287395, 0.734714, -0.576116, -0.855631 )
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
 [node name="Domy car7" type="StaticBody" parent="."]
 transform = Transform( -1.74018, -17.4975, 3.18404, 6.92496, -4.22216, -13.3895, 12.0423, -0.100524, 8.15979, -27.9872, 59.1689, -160.087 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Domy car7"]
-transform = Transform( 1, 0, 0, 1.39698e-08, 1, -4.54747e-13, 5.82077e-11, -4.54747e-13, 1, 0, 0, 0 )
+transform = Transform( 0.999998, 1.30385e-08, -8.9407e-07, 1.60653e-08, 1, -1.86265e-09, -4.17233e-07, 9.31323e-10, 0.999999, -0.00174618, 0.000373721, -0.791896 )
 shape = SubResource( 6 )
 
-[node name="Chassis" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 1, 1.81899e-12, -2.32831e-10, 3.18323e-12, 1, 0.000196934, -0.261484, -0.263256 )
+[node name="Chassis" type="MeshInstance" parent="Domy car7"]
+transform = Transform( 1, 9.31323e-10, -1.78814e-07, 1.35042e-08, 1, 0, 0, 2.32831e-10, 1, 0.000197411, -0.261484, -0.263255 )
 mesh = SubResource( 7 )
-skeleton = NodePath("../../../..")
-material/0 = SubResource( 37 )
-
-[node name="FL Bumper" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( 0.150001, 0, 5.3551e-09, -7.15954e-09, -6.82121e-13, 0.125, -9.45874e-11, -0.166666, 9.09495e-13, -0.657061, -0.262867, -1.84342 )
-mesh = SubResource( 18 )
-material/0 = SubResource( 37 )
-
-[node name="FR Bumper" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( 0.15, 0, 1.16415e-10, -1.74623e-10, -7.30068e-09, 0.125, -1.16415e-10, -0.167, -5.46243e-09, 0.652947, -0.262209, -1.84105 )
-mesh = SubResource( 20 )
-material/0 = SubResource( 37 )
-
-[node name="F Bumper" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( 1, 9.31323e-10, 2.32831e-10, -9.31323e-10, 0.999999, 5.45697e-12, -6.98492e-10, 9.09495e-12, 1, -0.00188255, -0.263557, -1.83539 )
-mesh = SubResource( 22 )
-material/0 = SubResource( 37 )
-
-[node name="Windshield" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( 0.00218172, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00218172, 0.000720211, 0.052, -0.746268 )
-mesh = SubResource( 9 )
 skeleton = NodePath("../../..")
+material/0 = SubResource( 37 )
+
+[node name="FL Bumper" type="MeshInstance" parent="Domy car7"]
+transform = Transform( 0.150001, 2.98023e-08, 5.2969e-09, -4.94765e-09, 0, 0.125, -7.45058e-09, -0.166666, 0, -0.65706, -0.262867, -1.84342 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="FR Bumper" type="MeshInstance" parent="Domy car7"]
+transform = Transform( 0.15, 2.23517e-08, 1.16415e-10, 1.97906e-09, -7.27596e-09, 0.125, -3.72529e-09, -0.167, -5.44242e-09, 0.652946, -0.262209, -1.84105 )
+mesh = SubResource( 20 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="F Bumper" type="MeshInstance" parent="Domy car7"]
+transform = Transform( 1, 4.65661e-10, -1.78814e-07, 1.35042e-08, 0.999999, 0, 0, 2.32831e-10, 1, -0.0018816, -0.263557, -1.83539 )
+mesh = SubResource( 22 )
+skeleton = NodePath("../CollisionShape")
+material/0 = SubResource( 37 )
+
+[node name="Windshield" type="MeshInstance" parent="Domy car7"]
+transform = Transform( 0.00218159, 0, -0.999998, 0, 1, -1.44355e-08, 0.999998, 0, 0.00218177, 0.000720978, 0.052, -0.746266 )
+mesh = SubResource( 9 )
+skeleton = NodePath("../..")
 material/0 = SubResource( 10 )
 
-[node name="Hood" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( -0.00331608, 0, -0.999995, 0, 1, 0, 0.999995, 0, -0.00331608, -0.00206304, 0.0524158, 0.793105 )
+[node name="Hood" type="MeshInstance" parent="Domy car7"]
+transform = Transform( -0.00331628, 0, -0.999995, 2.32831e-10, 1, -1.46683e-08, 0.999995, 0, -0.00331604, -0.00206327, 0.0524158, 0.793105 )
 mesh = SubResource( 11 )
-skeleton = NodePath("../../..")
+skeleton = NodePath("../..")
 material/0 = SubResource( 12 )
 
-[node name="Headlight1" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, 0.291669, -0.170669, -1.94488 )
+[node name="Headlight1" type="MeshInstance" parent="Domy car7"]
+transform = Transform( 1, 0, -1.78814e-07, 1.35042e-08, 1, 0, 0, 0, 1, 0.29167, -0.170669, -1.94488 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Headlight2" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( 1, 0, 1.16415e-10, -9.31323e-10, 1, 9.09495e-13, -1.16415e-10, 1.36424e-12, 1, -0.291035, -0.174217, -1.94672 )
+[node name="Headlight2" type="MeshInstance" parent="Domy car7"]
+transform = Transform( 1, 0, -1.78814e-07, 1.35042e-08, 1, 0, 0, 0, 1, -0.291035, -0.174217, -1.94672 )
 mesh = SubResource( 13 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="Tail-light" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( 0.5, 0, 0, -2.32831e-10, 0.05, -1.42109e-14, 2.91038e-11, -5.68434e-14, 0.05, 0, -0.197456, 1.22601 )
+[node name="Tail-light" type="MeshInstance" parent="Domy car7"]
+transform = Transform( 0.5, -2.91038e-11, -9.31323e-09, 6.98492e-09, 0.05, 1.45519e-11, 0, 0, 0.05, 0, -0.197456, 1.22601 )
 mesh = SubResource( 14 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 15 )
 
-[node name="Cabin" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( 0.6, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 0, 0.0519999, 0.0469962 )
+[node name="Cabin" type="MeshInstance" parent="Domy car7"]
+transform = Transform( 0.6, -1.16415e-10, -8.9407e-08, 8.61473e-09, 0.2, 0, -1.49012e-08, 0, 0.5, 0, 0.0519999, 0.0469971 )
 mesh = SubResource( 16 )
+skeleton = NodePath("../CollisionShape")
 material/0 = SubResource( 17 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( 0.00102159, 0.114283, 0.00327625, 0.00198195, -0.000567711, 0.399984, 0.349992, -0.000251329, -0.00287397, -0.756859, -0.479483, -0.830603 )
+[node name="MeshInstance" type="MeshInstance" parent="Domy car7"]
+transform = Transform( 0.00102153, 0.114283, 0.00327625, 0.00198195, -0.000567709, 0.399984, 0.349992, -0.00025133, -0.00287397, -0.756858, -0.479483, -0.830602 )
 mesh = SubResource( 24 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
-[node name="MeshInstance2" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( -0.00512856, -0.114274, 0.00332671, 0.00201249, 0.000567656, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
-mesh = SubResource( 26 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="MeshInstance3" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( -0.00172188, 0.114283, 0.00329876, 0.00199557, -0.000567704, 0.399983, 0.34999, 0.000434617, -0.00287395, -0.734475, -0.535103, 0.534495 )
+[node name="MeshInstance2" type="MeshInstance" parent="Domy car7"]
+transform = Transform( -0.0051285, -0.114274, 0.00332671, 0.00201249, 0.000567654, 0.399984, -0.349964, 0.00128627, 0.00287375, 0.729685, -0.503624, 0.53386 )
 mesh = SubResource( 26 )
 material/0 = null
 
-[node name="MeshInstance4" type="MeshInstance" parent="Domy car7/CollisionShape"]
-transform = Transform( 0.00176157, 0.114282, 0.00327017, 0.00197827, -0.000567707, 0.399984, 0.34999, -0.00043633, -0.00287395, 0.734713, -0.576116, -0.85563 )
+[node name="MeshInstance3" type="MeshInstance" parent="Domy car7"]
+transform = Transform( -0.00172195, 0.114283, 0.00329876, 0.00199557, -0.000567702, 0.399983, 0.34999, 0.000434615, -0.00287395, -0.734474, -0.535103, 0.534495 )
 mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
+material/0 = null
+
+[node name="MeshInstance4" type="MeshInstance" parent="Domy car7"]
+transform = Transform( 0.00176151, 0.114282, 0.00327017, 0.00197827, -0.000567705, 0.399984, 0.34999, -0.000436332, -0.00287395, 0.734713, -0.576116, -0.85563 )
+mesh = SubResource( 26 )
+skeleton = NodePath("../CollisionShape")
 material/0 = null
 
 [node name="MeshInstance25" type="MeshInstance" parent="."]
