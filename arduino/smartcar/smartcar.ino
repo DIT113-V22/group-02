@@ -1,24 +1,28 @@
 #include <vector>
 
-#include <Smartcar.h>
-#include <stdlib.h>
 #include <MQTT.h>
 #include <WiFi.h>
+
+#include <stdlib.h>
+#ifdef __SMCE__
 #include <OV767X.h>
+#endif
+
+#include <Smartcar.h>
+
+WiFiClient net;
+MQTTClient mqtt;
+
 ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(leftMotor, rightMotor);
-MQTTClient mqtt;
-#ifndef __SMCE__
-WiFiClient net;
-#endif
+
 GY50 gyroscope(arduinoRuntime, 37);
 const auto pulsesPerMeter = 600;
 DirectionlessOdometer leftOdometer{ arduinoRuntime,smartcarlib::pins::v2::leftOdometerPin,[]() { leftOdometer.update(); },pulsesPerMeter };
 DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
 SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer,rightOdometer);
-
 
 /*--- SENSOR CONFIGURATIONS ---*/
 
@@ -28,8 +32,6 @@ const int echoPin = 7;  //D7
 const unsigned int maxDistance = 200;
 SR04 front{arduinoRuntime, triggerPin, echoPin, maxDistance};
 
-const auto oneSecond = 1000UL;
-std::vector<char> frameBuffer;
 //Infrared Sensors
 const int backRightIRPin = 0;
 const int leftIRPin = 1;
@@ -51,6 +53,17 @@ typedef GP2Y0A21 infrared; //Basically a 'rename'
 /*--- CONSTANTS ---*/
 const int SPEED_INCREMENT = 5;
 const int TURNING_INCREMENT = 10;
+const int FORWARD_SPEED_LIMIT = 150;
+const int BACKWARD_SPEED_LIMIT = -50;
+const int MAX_STEERING_ANGLE = 60;
+const auto oneSecond = 1000UL;
+
+/*--- CAR INFO ---*/
+int speed = 0;
+int turningAngle = 0;
+int heading = car.getHeading();
+
+std::vector<char> frameBuffer;
 
 bool obsAtFront() {
     const auto frontDist = front.getDistance();
@@ -92,20 +105,19 @@ bool obsAtBackLeft() {
     return (backLeftDist > 0 && backLeftDist < 12);
 }
 
-/*--- CAR INFO ---*/
-int speed = 0;
-int turningAngle = 0;
-int heading = car.getHeading();
-
 void setup(){
-  Serial.begin(9600);
   #ifdef __SMCE__
+  Serial.begin(9600);
   Camera.begin(QVGA, RGB888, 15);
   frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
   mqtt.begin("127.0.0.1", 1883, net);
   #else
   mqtt.begin(net);// Will connect to localhost
   #endif
+  if (mqtt.connect("arduino", "public", "public")) {
+      mqtt.subscribe("/smartcar/control/#", 1);
+      mqtt.onMessage([](String topic, String message) { handleMQTTMessage(topic, message); });
+  }
 }
 
 void loop(){
@@ -114,6 +126,7 @@ void loop(){
   if (mqtt.connected()) {
     mqtt.loop();
     const auto currentTime = millis();
+    #ifdef __SMCE__
     static auto previousFrame = 0UL;
     // ================= 2
     if (currentTime - previousFrame >= 65) {
@@ -122,12 +135,14 @@ void loop(){
       mqtt.publish("/smartcar/camera", frameBuffer.data(), frameBuffer.size(),
                    false, 0);
     }
+    #endif
     static auto previousTransmission = 0UL;
     if (currentTime - previousTransmission >= oneSecond) {
       previousTransmission = currentTime;
       const auto distance = String(front.getDistance());
       mqtt.publish("/smartcar/ultrasound/front", distance);
-    }}
+    }
+  }
   #ifdef __SMCE__
     // Avoid over-using the CPU if we are running in the emulator
     delay(1);
@@ -169,6 +184,31 @@ void checkObstacles(){
     speed = 0;
     car.setSpeed(speed); 
   }
+}
+
+void handleMQTTMessage(String topic, String message){
+   if (topic == "/smartcar/control/speed") {
+          setSpeed(message.toFloat());
+    } else if (topic == "/smartcar/control/steering") {
+          setAngle(message.toFloat());
+    } else {
+          Serial.println(topic + " " + message);
+    }
+}
+
+void setSpeed(float newSpeed){
+  if(newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT){
+    newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
+  }
+  speed = newSpeed;
+  car.setSpeed(newSpeed);
+}
+
+void setAngle(float newAngle){
+  if(newAngle > MAX_STEERING_ANGLE){
+    newAngle = MAX_STEERING_ANGLE;
+  }
+  car.setAngle(newAngle);
 }
 
 void increaseSpeed(){
