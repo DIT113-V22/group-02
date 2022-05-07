@@ -63,22 +63,22 @@ public class MainActivity extends AppCompatActivity {
                     setAngle(STRAIGHT_ANGLE, "Setting angle straight");
                     setSpeed(-MOVEMENT_SPEED, "Moving backwards");
                 } else if (dir == joystickJhr.stick_upRight()) {
-                    setAngle(STEERING_ANGLE,"Setting angel up right");
-                    setSpeed(MOVEMENT_SPEED,"Moving down right");
+                    setAngle(STEERING_ANGLE, "Setting angel up right");
+                    setSpeed(MOVEMENT_SPEED, "Moving down right");
                 } else if (dir == joystickJhr.stick_upLeft()) {
-                    setAngle(-STEERING_ANGLE,"Setting angel up left");
-                    setSpeed(MOVEMENT_SPEED,"Moving down left");
+                    setAngle(-STEERING_ANGLE, "Setting angel up left");
+                    setSpeed(MOVEMENT_SPEED, "Moving down left");
                 } else if (dir == joystickJhr.stick_downRight()) {
-                    setAngle(STEERING_ANGLE,"Setting angel down right");
-                    setSpeed(-MOVEMENT_SPEED,"Moving down right");
+                    setAngle(STEERING_ANGLE, "Setting angel down right");
+                    setSpeed(-MOVEMENT_SPEED, "Moving down right");
                 } else if (dir == joystickJhr.stick_downLeft()) {
-                    setAngle(-STEERING_ANGLE,"Setting angel down left");
-                    setSpeed(-MOVEMENT_SPEED,"Moving down left");
+                    setAngle(-STEERING_ANGLE, "Setting angel down left");
+                    setSpeed(-MOVEMENT_SPEED, "Moving down left");
                 } else if (dir == 0) {
                     setAngle(STRAIGHT_ANGLE, "Setting angle straight");
                     setSpeed(IDLE_SPEED, "Stopping smartcar");
-                };
-            return true;
+                }
+                return true;
             }
         });
         //mCameraView = findViewById(R.id.imageView);
@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(IMqttToken asyncActionToken) {
                 Log.i(TAG, "Disconnected from broker");
             }
+
             @Override
             public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
             }
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     mMqttClient.subscribe("/smartcar/ultrasound/front", QOS, null);
                     mMqttClient.subscribe("/smartcar/camera", QOS, null);
                 }
+
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     final String failedConnection = "Failed to connect to MQTT broker";
@@ -133,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.w(TAG, connectionLost);
                     Toast.makeText(getApplicationContext(), connectionLost, Toast.LENGTH_SHORT).show();
                 }
+
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
                     if (topic.equals("/smartcar/camera")) {
@@ -152,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "[MQTT] Topic: " + topic + " | Message: " + message.toString());
                     }
                 }
+
                 @Override
                 public void deliveryComplete(IMqttDeliveryToken token) {
                     Log.d(TAG, "Message delivered");
@@ -180,28 +184,5 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.i(TAG, actionDescription);
         mMqttClient.publish(STEERING_CONTROL, Integer.toString(angle), QOS, null);
-    }
-
-    public void moveForward(View view) {
-        setAngle(STRAIGHT_ANGLE, "Setting angle straight");
-        setSpeed(MOVEMENT_SPEED, "Moving forward");
-    }
-
-    public void turnLeft(View view) {
-        setAngle(-STEERING_ANGLE, "Turning left");
-    }
-
-    public void stop(View view) {
-        setSpeed(IDLE_SPEED, "Stopping");
-        setAngle(STRAIGHT_ANGLE, "Straightening Angle");
-    }
-
-    public void turnRight(View view) {
-        setAngle(STEERING_ANGLE, "Turning right");
-    }
-
-    public void moveBackward(View view) {
-        setAngle(STRAIGHT_ANGLE, "Setting angle straight");
-        setSpeed(-MOVEMENT_SPEED, "Moving backwards");
     }
 }
