@@ -1,6 +1,7 @@
 #include <MQTT.h>
 #include <WiFi.h>
 #include <Smartcar.h>
+#include <stdlib.h>
 
 WiFiClient net;
 MQTTClient mqtt;
@@ -12,8 +13,11 @@ DifferentialControl control(leftMotor, rightMotor);
 
 GY50 gyroscope(arduinoRuntime, 37);
 const auto pulsesPerMeter = 600;
-DirectionlessOdometer leftOdometer{ arduinoRuntime,smartcarlib::pins::v2::leftOdometerPin,[]() { leftOdometer.update(); },pulsesPerMeter };
-DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
+const unsigned long LEFT_PULSES_PER_METER = 600;
+DirectionalOdometer leftOdometer{ arduinoRuntime,
+                                 smartcarlib::pins::v2::leftOdometerPins,
+                                 []() { leftOdometer.update(); },
+                                 LEFT_PULSES_PER_METER };DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
 SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer,rightOdometer);
 
 
@@ -25,7 +29,24 @@ const int echoPin = 7;  //D7
 const unsigned int maxDistance = 200;
 SR04 front{arduinoRuntime, triggerPin, echoPin, maxDistance};
 
+//Infrared Sensors
+const int backRightIRPin = 0;
+const int leftIRPin = 1;
+const int rightIRPin = 2;
+const int backIRPin = 3;        
+const int frontRightIRPin = 5;
+const int frontLeftIRPin = 4;
+const int backLeftIRPin = 6;
 
+typedef GP2Y0A21 infrared; //Basically a 'rename'
+  infrared rightIR(arduinoRuntime, rightIRPin);
+  infrared leftIR(arduinoRuntime, leftIRPin);
+  infrared back(arduinoRuntime, backIRPin);
+  infrared frontLeft(arduinoRuntime, frontLeftIRPin);
+  infrared frontRight(arduinoRuntime, frontRightIRPin);
+  infrared backRight(arduinoRuntime, backRightIRPin);
+  infrared backLeft(arduinoRuntime, backLeftIRPin);  
+  
 /*--- CONSTANTS ---*/
 const int SPEED_INCREMENT = 5;
 const int TURNING_INCREMENT = 10;
@@ -34,7 +55,40 @@ const int BACKWARD_SPEED_LIMIT = -50;
 const int MAX_STEERING_ANGLE = 60;
 const auto ONE_SECOND = 1000UL;
 
+bool obsAtFront() {
+    const auto frontDist = front.getDistance();
+    return (frontDist > 0 && frontDist <= 5);
+}
 
+bool obsAtFrontLeft() {
+    const auto frontLeftDist = frontLeft.getDistance();
+    return (frontLeftDist > 0 && frontLeftDist <= 10);
+}
+
+bool obsAtFrontRight() {
+    const auto frontRightDist = frontRight.getDistance();
+    return (frontRightDist > 0 && frontRightDist < 40);
+}
+
+bool obsAtLeft() {
+    const auto lDist = leftIR.getDistance();
+    return (lDist > 0 && lDist <= 10);
+}
+
+bool obsAtRight() {
+    const auto rDist = rightIR.getDistance();
+    return (rDist > 0 && rDist <= 40);
+}
+
+bool obsAtBackRight() {
+    const auto backRightDist = backRight.getDistance();
+    return (backRightDist > 0 && backRightDist < 10);
+}
+
+bool obsAtBackLeft() {
+    const auto backLeftDist = backLeft.getDistance();
+    return (backLeftDist > 0 && backLeftDist < 12);
+}
 
 /*--- CAR INFO ---*/
 int speed = 0;
@@ -89,7 +143,7 @@ void checkObstacles(){
   const auto distance = front.getDistance();
   // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
   if (distance > 0 && distance < 200 && speed > 0) {
-    stopCar(); 
+    stopCar();
   }
 }
 
@@ -149,6 +203,9 @@ void handleInput(){
       case 'u':
         stopCar();
         break;
+      case 'p':
+        autoRightPark();
+        break;
       default:
         break;
     }
@@ -175,4 +232,79 @@ void turnLeft(){ // turns the car 10 degrees counter-clockwise (degrees depend o
 void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNING_INCREMENT)
   turningAngle = turningAngle+TURNING_INCREMENT;
   car.setAngle(turningAngle);
+}
+
+void autoRightPark(){ // the car is supposed to park inside a parking spot to its immediate right
+    gyroscope.update();
+    // currently using these 4 timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
+    int rightTimer = 500;
+    int frontRightTimer = 500;
+    int leftTimer = 500;
+    int frontLeftTimer = 500;
+    int backRightTimer = 500;
+    int backLeftTimer = 500;
+    int frontTimer = 500;
+    int distanceTraveled = 0;
+    int newDistanceTraveled = 0;
+
+
+    int targetAngle = 0;
+    int currentAngle = gyroscope.getHeading();
+    if (currentAngle - 90 < 0){
+        targetAngle = 360 - abs(currentAngle - 90);
+    } else {
+        targetAngle = currentAngle - 90;
+    }
+    car.setAngle(85);
+    car.setSpeed(15);
+    Serial.println(targetAngle);
+    Serial.println(currentAngle);
+    Serial.println(rightTimer);
+    while (targetAngle < currentAngle){
+        gyroscope.update();
+        newDistanceTraveled = leftOdometer.getDistance();
+        currentAngle = gyroscope.getHeading();
+        if(obsAtFrontRight() && frontRightTimer > 500 && newDistanceTraveled > distanceTraveled) { // reduce turning angle
+            frontRightTimer = 0;
+            turningAngle = 0;
+            car.setAngle(turningAngle);
+            Serial.println("front right obstacle detected");
+        }
+        if(obsAtFrontLeft() && frontLeftTimer > 500) { // increase turning angle, opposite of AtRight OR this should cause the car to reverse and invert/completely change the turning angle, depending on what works best
+            frontLeftTimer = 0;
+            turningAngle = -90;
+            if (car.getSpeed() > 0){
+              car.setSpeed(-15);
+              Serial.println("reverve!");
+            }
+            car.setAngle(turningAngle);
+            Serial.println("front left obstacle detected");
+
+        }
+        if(obsAtLeft() && leftTimer > 500) { // increase turning angle, opposite of AtRight OR this should cause the car to reverse and invert/completely change the turning angle, depending on what works best
+            leftTimer = 0;
+            turningAngle = -90;
+            car.setAngle(turningAngle);
+            if (car.getSpeed() > 0){
+              car.setSpeed(-8);
+            }
+            Serial.println("left obstacle detected");
+        }
+        
+        if(obsAtFront() && frontTimer > 500){
+            frontTimer = 0;
+            car.setSpeed(0);
+            Serial.println("obstacle at front!");
+        }
+        rightTimer++;
+        frontRightTimer++;
+        leftTimer++;
+        frontLeftTimer++;
+        frontTimer++;
+        distanceTraveled = newDistanceTraveled;
+    }
+    Serial.println("turning complete, driving forward");
+    car.setAngle(0);
+    car.setSpeed(10);
+    // here the car will have the correct angle, car will drive foward and park
 }
