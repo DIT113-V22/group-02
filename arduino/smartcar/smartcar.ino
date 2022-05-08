@@ -55,6 +55,21 @@ const int BACKWARD_SPEED_LIMIT = -50;
 const int MAX_STEERING_ANGLE = 60;
 const auto ONE_SECOND = 1000UL;
 
+/*--- INTERNAL MAP SETUP---*/
+
+enum BoxType{Path, Parking, Occupied};
+
+class GridBox{
+  public:
+    const int width = 35;
+    const int height = 35;
+    bool hasCar;
+    BoxType type;
+    GridBox(BoxType boxType){
+      type = boxType;
+    }
+};
+
 bool obsAtFront() {
     const auto frontDist = front.getDistance();
     return (frontDist > 0 && frontDist <= 5);
