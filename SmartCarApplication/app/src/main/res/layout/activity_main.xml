@@ -20,6 +20,17 @@
         app:layout_constraintVertical_bias="0.962"
         app:radioCircle="0.35"
         app:relleno="false">
+        app:colorFirst="#2962ff"
+        app:colorSecond="#90caf9"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.969"
+        app:radioCircle="0.35"
+        app:relleno="false">
+
     </com.example.joystickjhr.JoystickJhr>
 
     <ImageView

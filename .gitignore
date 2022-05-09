@@ -52,6 +52,9 @@ captures/
 *.apk
 output.json
 
+#VSCode
+.vscode/
+
 # IntelliJ
 *.iml
 .idea/
@@ -68,3 +71,8 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Mac OS
+.DS_Store
+arduino/.DS_Store
+arduino/smartcar/.DS_Store
