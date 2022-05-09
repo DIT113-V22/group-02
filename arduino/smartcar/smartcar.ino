@@ -137,9 +137,7 @@ if (mqtt.connected()) {
 #endif
 
   checkObstacles();
-  if (obsAtFront()){
-    stopCar();
-  }
+
   handleInput();
   if (mqtt.connected()) {
     mqtt.loop();
