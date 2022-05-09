@@ -131,6 +131,9 @@ if (mqtt.connected()) {
 #endif
 
   checkObstacles();
+  if (obsAtFront()){
+    stopCar();
+  }
   handleInput();
   #ifdef __SMCE__
     // Avoid over-using the CPU if we are running in the emulator
