@@ -129,7 +129,7 @@ void loop(){
     #ifdef __SMCE__
     static auto previousFrame = 0UL;
     // ================= 2
-    if (currentTime - previousFrame >= 65) {
+    if (currentTime - previousFrame >= 95) {
       previousFrame = currentTime;
       Camera.readFrame(frameBuffer.data());
       mqtt.publish("/smartcar/camera", frameBuffer.data(), frameBuffer.size(),
