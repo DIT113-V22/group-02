@@ -9,7 +9,6 @@
 #endif
 
 #include <Smartcar.h>
-#include <stdlib.h>
 
 WiFiClient net;
 MQTTClient mqtt;
@@ -236,49 +235,11 @@ void handleInput(){
       case 'p':
         autoRightPark();
         break;
-      case 'p':
-        autoRightPark();
-        break;
       default:
         break;
     }
   }
 }
-
-void checkObstacles(){
-  const auto frontDistance = front.getDistance();
-  // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
-  if (frontDistance > 0 && frontDistance < 1 && speed > 0) {
-    speed = 0;
-    car.setSpeed(speed); 
-  }
-}
-
-void handleMQTTMessage(String topic, String message){
-   if (topic == "/smartcar/control/speed") {
-          setSpeed(message.toFloat());
-    } else if (topic == "/smartcar/control/steering") {
-          setAngle(message.toFloat());
-    } else {
-          Serial.println(topic + " " + message);
-    }
-}
-
-void setSpeed(float newSpeed){
-  if(newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT){
-    newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
-  }
-  speed = newSpeed;
-  car.setSpeed(newSpeed);
-}
-
-void setAngle(float newAngle){
-  if(newAngle > MAX_STEERING_ANGLE){
-    newAngle = MAX_STEERING_ANGLE;
-  }
-  car.setAngle(newAngle);
-}
-
 
 void increaseSpeed(){
   //sets max speed to 110
