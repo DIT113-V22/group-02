@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -38,10 +39,12 @@ public class MainActivity extends AppCompatActivity {
     private boolean isConnected = false;
     private ImageView mCameraView;
 
+    private TextView mSpeedLog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSpeedLog = findViewById(R.id.speed_log);
         setContentView(R.layout.activity_main);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         final JoystickJhr joystickJhr = findViewById(R.id.joystick);
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                     setSpeed(MOVEMENT_SPEED, "Moving forward");
                 } else if (dir == joystickJhr.stick_down()) {
                     setAngle(STRAIGHT_ANGLE, "Setting angle straight");
-                    setSpeed(-MOVEMENT_SPEED, "Moving backwards");
+                    setSpeed(-MOVEMENT_SPEED, "Moving backward");
                 } else if (dir == joystickJhr.stick_upRight()) {
                     setAngle(STEERING_ANGLE, "Setting angel up right");
                     setSpeed(MOVEMENT_SPEED, "Moving down right");
@@ -81,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-        //mCameraView = findViewById(R.id.imageView);
-
         connectToMqttBroker();
     }
 
@@ -116,8 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     final String successfulConnection = "Connected to MQTT broker";
                     Log.i(TAG, successfulConnection);
                     Toast.makeText(getApplicationContext(), successfulConnection, Toast.LENGTH_SHORT).show();
-                    mMqttClient.subscribe("/smartcar/ultrasound/front", QOS, null);
-                    mMqttClient.subscribe("/smartcar/camera", QOS, null);
+                    mMqttClient.subscribe("/smartcar/#", QOS, null);
                 }
 
                 @Override
@@ -151,6 +151,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                         bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
                         mCameraView.setImageBitmap(bm);
+
+                    } else if (topic.equals("/smartcar/info/speed")) {
+                        speedLog(Integer.parseInt(message.toString()));
+
                     } else {
                         Log.i(TAG, "[MQTT] Topic: " + topic + " | Message: " + message.toString());
                     }
@@ -184,5 +188,10 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.i(TAG, actionDescription);
         mMqttClient.publish(STEERING_CONTROL, Integer.toString(angle), QOS, null);
+    }
+
+    void speedLog(int speed) {
+        System.out.println("kladdkaka23");
+        mSpeedLog.setText(String.valueOf(speed) + " km/h");
     }
 }

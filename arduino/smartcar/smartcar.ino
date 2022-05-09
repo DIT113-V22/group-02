@@ -143,7 +143,7 @@ if (mqtt.connected()) {
 void checkObstacles(){
   const auto distance = front.getDistance();
   // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
-  if (distance > 0 && distance < 200 && speed > 0) {
+  if (distance > 0 && distance < 50 && speed > 0) {
     stopCar();
   }
 }
@@ -167,15 +167,16 @@ void handleMQTTMessage(String topic, String message){
     }
 }
 
-void setSpeed(float newSpeed){
-  if(newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT){
+void setSpeed(float newSpeed) {
+  if (newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT) {
     newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
   }
   speed = newSpeed;
+  mqtt.publish("/smartcar/info/speed", String(speed));
   car.setSpeed(newSpeed);
 }
 
-void setAngle(float newAngle){
+void setAngle(float newAngle) {
   if(newAngle > MAX_STEERING_ANGLE){
     newAngle = MAX_STEERING_ANGLE;
   }
@@ -185,8 +186,8 @@ void setAngle(float newAngle){
 
 /*--- SERIAL METHODS ---*/
 
-void handleInput(){
-  if(Serial.available()){
+void handleInput() {
+  if (Serial.available()) {
     char input = Serial.read();
     switch(input){
       case 'i':
@@ -213,29 +214,29 @@ void handleInput(){
   }
 }
 
-void increaseSpeed(){
+void increaseSpeed() {
   //sets max speed to 110
   speed = speed+SPEED_INCREMENT>=110 ? 110 : speed+SPEED_INCREMENT;
   car.setSpeed(speed);
 }
 
-void decreaseSpeed(){
+void decreaseSpeed() {
   //sets max speed to 110
   speed = speed-SPEED_INCREMENT;
   car.setSpeed(speed);
 }
 
-void turnLeft(){ // turns the car 10 degrees counter-clockwise (degrees depend on TURNING_INCREMENT)
+void turnLeft() { // turns the car 10 degrees counter-clockwise (degrees depend on TURNING_INCREMENT)
   turningAngle = turningAngle-TURNING_INCREMENT;
   car.setAngle(turningAngle);
 }
 
-void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNING_INCREMENT)
+void turnRight() { // turns the car 10 degrees clockwise (degrees depend on TURNING_INCREMENT)
   turningAngle = turningAngle+TURNING_INCREMENT;
   car.setAngle(turningAngle);
 }
 
-void autoRightPark(){ // the car is supposed to park inside a parking spot to its immediate right
+void autoRightPark() { // the car is supposed to park inside a parking spot to its immediate right
     gyroscope.update();
     // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
     int rightTimer = 500;
@@ -262,19 +263,19 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     car.setSpeed(15);
     Serial.println(targetAngle);
     Serial.println(currentAngle);
-    while (targetAngle <= currentAngle){
+    while (targetAngle <= currentAngle) {
         gyroscope.update();
         newDistanceTraveled = leftOdometer.getDistance();
         currentAngle = gyroscope.getHeading();
 
-        if(obsAtFrontRight() && frontRightTimer > 500 && newDistanceTraveled > distanceTraveled) { // reduce turning angle
+        if (obsAtFrontRight() && frontRightTimer > 500 && newDistanceTraveled > distanceTraveled) { // reduce turning angle
             frontRightTimer = 0;
             turningAngle = 5;
             car.setAngle(turningAngle);
             car.setSpeed(10);
             Serial.println("front right obstacle detected");
         }
-        if(obsAtFrontLeft() && frontLeftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
+        if (obsAtFrontLeft() && frontLeftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
             frontLeftTimer = 0;
             turningAngle = -90;
             if (car.getSpeed() > 0){
@@ -285,7 +286,7 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
             Serial.println("front left obstacle detected");
 
         }
-        if(obsAtLeft() && leftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
+        if (obsAtLeft() && leftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
             leftTimer = 0;
             turningAngle = -90;
             car.setAngle(turningAngle);
@@ -295,7 +296,7 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
             Serial.println("left obstacle detected");
         }
         
-        if(obsAtFront() && frontTimer > 500){ // reverses car and changes the turning angle to the opposite direction
+        if (obsAtFront() && frontTimer > 500){ // reverses car and changes the turning angle to the opposite direction
             frontTimer = 0;
             turningAngle = -90;
             car.setAngle(turningAngle);
@@ -313,5 +314,5 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     }
     car.setAngle(0);
     car.setSpeed(10);
-    // here the car will have the correct angle, car will drive foward and park
+    // here the car will have the correct angle, car will drive forward and park
 }
