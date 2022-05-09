@@ -35,11 +35,11 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="335dp"
+        android:layout_width="450dp"
         android:layout_height="342dp"
         app:srcCompat="@android:drawable/divider_horizontal_bright"
-        tools:layout_editor_absoluteX="38dp"
-        tools:layout_editor_absoluteY="59dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-20dp"
+        tools:layout_editor_absoluteY="35dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
