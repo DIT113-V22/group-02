@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     private static final String SPEED_CONTROL = "/smartcar/control/speed";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
+    private static final String AUTO_PARK = "/smartcar/autorightpark";
     private static final int MOVEMENT_SPEED = 50;
     private static final int IDLE_SPEED = 0;
     private static final int STRAIGHT_ANGLE = 0;
@@ -184,5 +185,15 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, actionDescription);
         mMqttClient.publish(STEERING_CONTROL, Integer.toString(angle), QOS, null);
 
+    }
+    public void parkTheCar(View view){
+       if (!isConnected){
+           final String notConnected = "Not connected (yet)";
+           Log.e(TAG, notConnected);
+           Toast.makeText(getApplicationContext(), notConnected, Toast.LENGTH_SHORT).show();
+           return;
+       }
+       Log.i(TAG, "AutoPark initiated");
+       mMqttClient.publish(AUTO_PARK, "Parking", 2, null);
     }
 }
