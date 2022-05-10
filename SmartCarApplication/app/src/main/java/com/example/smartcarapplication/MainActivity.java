@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     private static final String SPEED_CONTROL = "/smartcar/control/speed";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
-    private static final String AUTO_PARK = "/smartcar/autorightpark";
+    private static final String AUTO_PARK = "/smartcar/park";
     private static final int MOVEMENT_SPEED = 50;
     private static final int IDLE_SPEED = 0;
     private static final int STRAIGHT_ANGLE = 0;

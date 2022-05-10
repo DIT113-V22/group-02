@@ -162,9 +162,15 @@ void handleMQTTMessage(String topic, String message){
           setSpeed(message.toFloat());
     } else if (topic == "/smartcar/control/steering") {
           setAngle(message.toFloat());
+    } else if (topic == "/smartcar/park"){
+          park();
     } else {
           Serial.println(topic + " " + message);
     }
+}
+
+void park(){
+  // parking code
 }
 
 void setSpeed(float newSpeed){
