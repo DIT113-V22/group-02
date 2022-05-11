@@ -195,12 +195,7 @@ if (mqtt.connected()) {
   // Avoid over-using the CPU if we are running in the emulator
   delay(1);
 #endif
-
-  /*checkObstacles();
-  if (obsAtFront()){
-    stopCar();
-  }*/
-  gyroscope.update();
+  checkObstacles();
   handleInput();
   #ifdef __SMCE__
     // Avoid over-using the CPU if we are running in the emulator
