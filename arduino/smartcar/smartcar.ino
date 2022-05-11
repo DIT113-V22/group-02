@@ -89,7 +89,6 @@ GridBox parkingLot[PARKING_ROWS][PARKING_COLS] = {
 };
 
 void park(){
-    Serial.println("start parking");
     for(int i = 0; i < PARKING_ROWS; i++){
         for(int j = 0; j<PARKING_COLS; j++){
             if(parkingLot[i][j].type == Unoccupied){
@@ -100,22 +99,22 @@ void park(){
 }
 
 void move(int r1, int c1, int r2, int c2){
-    Serial.println("start moving");
     int parkingR = r2+1;
     int parkingC = 1;
-    Serial.println("moving to " + String(parkingR) + " " + String(parkingC));
-    Serial.println(getAngle());
-    if(getAngle() == 0){
-        int diffR = parkingR - r1;
+    int currentAngle = getAngle();
+    if(currentAngle > 178 && currentAngle < 182){
+       // add one to take the distance of the entrace box into account
+        int diffR = r1-parkingR+1;
+        Serial.println(diffR);
         int distance = diffR * BOX_HEIGHT;
         move(distance);
     }
 }
 
 void move(int distance){
-    Serial.println("moving again "+String(distance));
     leftOdometer.reset();
     while(leftOdometer.getDistance() < distance){
+
         car.setSpeed(10);
     }
     car.setSpeed(0);
