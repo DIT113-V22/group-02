@@ -123,7 +123,7 @@ extents = Vector3( 0.880587, 0.485599, 1.72562 )
 extents = Vector3( 0.880587, 0.485599, 1.94468 )
 
 [node name="Restaurant Spicy Salmon" type="Spatial"]
-transform = Transform( -0.028992, 0.121591, 0, -0.121591, -0.028992, 0, 0, 0, 0.125, 0, -0.127119, 0 )
+transform = Transform( 0.0289918, -0.121591, -1.09278e-08, -0.121591, -0.0289917, 0, -2.53454e-09, 1.06298e-08, -0.125, 0, 2, -15 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 0.811752, -1.71369, -7.77205, -1.71368, 7.59148, -1.85286, 7.77203, 1.85285, 0.403209, -51.2071, 11.9867, 25.428 )
@@ -1636,3 +1636,6 @@ transform = Transform( 1, -1.16415e-10, 0, 1.16415e-10, 1, 0, 0, 0, 1, 0, 0, 0 )
 [node name="CollisionShape" type="CollisionShape" parent="MeshInstance26/StaticBody"]
 transform = Transform( 1.99997, 1.99245e-07, -0.0117987, -4.71657e-07, 1, -1.23625e-05, 0.0117983, 6.18296e-06, 1.99996, 0, 0, 0 )
 shape = SubResource( 2 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 8.00002, -1.43051e-06, 0, 1.43051e-06, 8.00002, 0, 0, 0, 8, 0, 3, 0 )

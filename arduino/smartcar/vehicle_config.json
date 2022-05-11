@@ -8,7 +8,10 @@
         },
         "Front2": {
            "class": "Camera",
-           "name": "Front Camera"
+           "name": "Front Camera",
+           "props":{
+              "far": 1000
+           }
         },
         "FrontTop": {
            "class": "UltraSonic",
