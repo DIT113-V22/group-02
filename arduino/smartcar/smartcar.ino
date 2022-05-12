@@ -75,6 +75,10 @@ class GridBox{
     }
 };
 
+// This is the representation of the parking lot in terms of code
+// The code here works for a parking lot that has infinite rows but only three columns
+// i.e a parking lot of 5x3 works just as well as a parking lot of 30x3, as long as 
+// the middle column remains to be the path.
 GridBox parkingLot[PARKING_ROWS][PARKING_COLS] = {
     //00                01             02
     {GridBox(Occupied), GridBox(Path), GridBox(Occupied)},
@@ -93,6 +97,7 @@ void park(){
         for(int j = 0; j<PARKING_COLS; j++){
             if(parkingLot[i][j].type == Unoccupied){
                 move(ENTRANCE_R, ENTRANCE_C, i, j);
+                parkingLot[i][j].type = Occupied;
             }
         }
     }
