@@ -10,7 +10,8 @@
            "class": "Camera",
            "name": "Front Camera",
            "props":{
-              "far": 1000
+              "far": 1000,
+              "rotation_degrees": "Vector3(-10,0,0)"
            }
         },
         "FrontTop": {
