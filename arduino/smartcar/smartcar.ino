@@ -260,8 +260,8 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     }
     car.setAngle(85);
     car.setSpeed(15);
-    Serial.println(targetAngle);
     Serial.println(currentAngle);
+    Serial.println(targetAngle);
     while (targetAngle <= currentAngle){
         gyroscope.update();
         newDistanceTraveled = leftOdometer.getDistance();
@@ -269,8 +269,7 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
 
         if(obsAtFrontRight() && frontRightTimer > 500 && newDistanceTraveled > distanceTraveled) { // reduce turning angle
             frontRightTimer = 0;
-            turningAngle = 5;
-            car.setAngle(turningAngle);
+            car.setAngle(5);
             car.setSpeed(10);
             Serial.println("front right obstacle detected");
         }
@@ -280,25 +279,25 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
             if (car.getSpeed() > 0){
               car.setSpeed(-10);
             }
-            delay(200);
-            car.setAngle(turningAngle);
+            delay(200); // delay is included to make sure newDistanceTraveled > distanceTraveled is not true before the car starts reversing
+            car.setAngle(-90);
             Serial.println("front left obstacle detected");
 
         }
         if(obsAtLeft() && leftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
             leftTimer = 0;
             turningAngle = -90;
-            car.setAngle(turningAngle);
+            car.setAngle(-90);
             if (car.getSpeed() > 0){
               car.setSpeed(-10);
             }
             Serial.println("left obstacle detected");
         }
-        
+
         if(obsAtFront() && frontTimer > 500){ // reverses car and changes the turning angle to the opposite direction
             frontTimer = 0;
             turningAngle = -90;
-            car.setAngle(turningAngle);
+            car.setAngle(-90);
             if (car.getSpeed() > 0){
               car.setSpeed(-10);
             }
@@ -311,6 +310,83 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
         frontTimer++;
         distanceTraveled = newDistanceTraveled;
     }
+    car.setAngle(0);
+    car.setSpeed(10);
+    // here the car will have the correct angle, car will drive foward and park
+}
+
+void autoLeftPark(){ // the car is supposed to park inside a parking spot to its immediate right
+    gyroscope.update();
+    // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
+    int rightTimer = 500;
+    int frontRightTimer = 500;
+    int leftTimer = 500;
+    int frontLeftTimer = 500;
+    int backRightTimer = 500;
+    int backLeftTimer = 500;
+    int frontTimer = 500;
+
+    // these are used so that if obsAtFrontLeft() is true, the car does not stop turning while reversing
+    int distanceTraveled = 0;
+    int newDistanceTraveled = 0;
+
+    int targetAngle = 0;
+    int currentAngle = gyroscope.getHeading();
+    if (currentAngle + 90 > 360){
+        targetAngle = 0 + abs(currentAngle - 360);
+    } else {
+        targetAngle = currentAngle + 90;
+    }
+    car.setAngle(-85);
+    car.setSpeed(15);
+    Serial.println(currentAngle);
+    Serial.println(targetAngle);
+    while (targetAngle >= currentAngle){
+        gyroscope.update();
+        newDistanceTraveled = leftOdometer.getDistance();
+        currentAngle = gyroscope.getHeading();
+
+        if(obsAtFrontLeft() && frontRightTimer > 500 && newDistanceTraveled > distanceTraveled) { // reduce turning angle
+            frontRightTimer = 0;
+            car.setAngle(-5);
+            car.setSpeed(10);
+            Serial.println("front left obstacle detected");
+        }
+        if(obsAtFrontRight() && frontLeftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
+            frontLeftTimer = 0;
+            if (car.getSpeed() > 0){
+                car.setSpeed(-10);
+            }
+            delay(200); // delay is included to make sure newDistanceTraveled > distanceTraveled is not true before the car starts reversing
+            car.setAngle(90);
+            Serial.println("front right obstacle detected");
+
+        }
+        if(obsAtRight() && leftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
+            leftTimer = 0;
+            car.setAngle(90);
+            if (car.getSpeed() > 0){
+                car.setSpeed(-10);
+            }
+            Serial.println("right obstacle detected");
+        }
+
+        if(obsAtFront() && frontTimer > 500){ // reverses car and changes the turning angle to the opposite direction
+            frontTimer = 0;
+            car.setAngle(90);
+            if (car.getSpeed() > 0){
+                car.setSpeed(-10);
+            }
+            Serial.println("front obstacle detected");
+        }
+        rightTimer++;
+        frontRightTimer++;
+        leftTimer++;
+        frontLeftTimer++;
+        frontTimer++;
+        distanceTraveled = newDistanceTraveled;
+    }
+    Serial.println("done!");
     car.setAngle(0);
     car.setSpeed(10);
     // here the car will have the correct angle, car will drive foward and park
