@@ -55,6 +55,7 @@ const int BACKWARD_SPEED_LIMIT = -50;
 const int MAX_STEERING_ANGLE = 60;
 const auto ONE_SECOND = 1000UL;
 
+const int PARKING_SPEED = 20;
 const int BOX_WIDTH = 70;
 const int BOX_HEIGHT = 35;
 const int PARKING_ROWS = 5;
@@ -108,19 +109,25 @@ void move(int r1, int c1, int r2, int c2){
     int parkingC = 1;
     int currentAngle = getAngle();
     if(currentAngle > 178 && currentAngle < 182){
-       // add one to take the distance of the entrace box into account
-        int diffR = r1-parkingR+1;
+        // add 1.46 to take the distance of the entrance box into account
+        // and the slight movement into the parking space
+        float diffR = r1-parkingR+1.46;
         Serial.println(diffR);
-        int distance = diffR * BOX_HEIGHT;
+        float distance = (diffR * BOX_HEIGHT);
         move(distance);
+        // assuming this is never true: c2=c1
+        if(c2 < c1){
+            autoLeftPark();
+        } else{
+            autoRightPark();
+        }
     }
 }
 
-void move(int distance){
+void move(float distance){
     leftOdometer.reset();
     while(leftOdometer.getDistance() < distance){
-
-        car.setSpeed(10);
+        car.setSpeed(PARKING_SPEED);
     }
     car.setSpeed(0);
 }
@@ -331,7 +338,7 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     } else {
         targetAngle = currentAngle - 90;
     }
-    car.setAngle(85);
+    car.setAngle(83);
     car.setSpeed(15);
     Serial.println(currentAngle);
     Serial.println(targetAngle);
