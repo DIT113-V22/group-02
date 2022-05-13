@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/speed_log"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#1C2761"
@@ -28,27 +27,22 @@
     </com.example.joystickjhr.JoystickJhr>
 
     <TextView
-        android:id="@+id/speed_log"
+        android:id="@+id/speedlog"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_marginStart="149dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="149dp"
         android:layout_marginBottom="45dp"
-        android:autoText="true"
-        android:background="#773FDD"
-        android:contentDescription="@string/speed_log"
-        android:text="@string/speed_log"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:visibility="visible"
+        android:background="@color/white"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/black"
+        android:digits="@string/speed_log"
         app:layout_constraintBottom_toTopOf="@+id/joystick"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="DuplicateIds"
-        tools:text="@string/speed_log"
-        tools:visibility="visible" />
+        app:layout_constraintVertical_bias="1.0"></TextView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

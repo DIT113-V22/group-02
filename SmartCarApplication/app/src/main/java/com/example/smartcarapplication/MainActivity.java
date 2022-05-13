@@ -1,5 +1,9 @@
 package com.example.smartcarapplication;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -39,12 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean isConnected = false;
     private ImageView mCameraView;
 
-    private TextView mSpeedLog;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSpeedLog = findViewById(R.id.speed_log);
         setContentView(R.layout.activity_main);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         final JoystickJhr joystickJhr = findViewById(R.id.joystick);
@@ -153,8 +154,9 @@ public class MainActivity extends AppCompatActivity {
                         mCameraView.setImageBitmap(bm);
 
                     } else if (topic.equals("/smartcar/info/speed")) {
-                        speedLog(Integer.parseInt(message.toString()));
-
+                        final String speed = message.toString();
+                        TextView view = (TextView) findViewById(R.id.speedlog);
+                        view.setText(speed);
                     } else {
                         Log.i(TAG, "[MQTT] Topic: " + topic + " | Message: " + message.toString());
                     }
@@ -188,10 +190,5 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.i(TAG, actionDescription);
         mMqttClient.publish(STEERING_CONTROL, Integer.toString(angle), QOS, null);
-    }
-
-    void speedLog(int speed) {
-        System.out.println("kladdkaka23");
-        mSpeedLog.setText(String.valueOf(speed) + " km/h");
     }
 }

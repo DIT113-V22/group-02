@@ -100,7 +100,6 @@ void setup(){
   Serial.begin(9600);
   #ifdef __SMCE__
   // ================= 1
-  // mqtt.begin("aerostun.dev", 1883, WiFi);
   mqtt.begin("127.0.0.1", 1883, net); // Will connect to localhost
   #else
     mqtt.begin(net);
@@ -172,8 +171,8 @@ void setSpeed(float newSpeed) {
     newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
   }
   speed = newSpeed;
-  mqtt.publish("/smartcar/info/speed", String(speed));
   car.setSpeed(newSpeed);
+  mqtt.publish("/smartcar/info/speed", String(speed));
 }
 
 void setAngle(float newAngle) {
