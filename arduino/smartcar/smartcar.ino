@@ -6,6 +6,8 @@
 WiFiClient net;
 MQTTClient mqtt;
 
+/*-------------------------------------- CONFIGURATIONS --------------------------------------*/
+
 ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
@@ -19,8 +21,6 @@ DirectionalOdometer leftOdometer{ arduinoRuntime,
                                  []() { leftOdometer.update(); },
                                  LEFT_PULSES_PER_METER };DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
 SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer,rightOdometer);
-
-/*--- SENSOR CONFIGURATIONS ---*/
 
 // Front Ultrasonic Sensor
 const int triggerPin = 12;  //D6
@@ -37,22 +37,17 @@ const int frontRightIRPin = 5;
 const int frontLeftIRPin = 4;
 const int backLeftIRPin = 6;
 
-typedef GP2Y0A21 infrared; //Basically a 'rename'
-  infrared rightIR(arduinoRuntime, rightIRPin);
-  infrared leftIR(arduinoRuntime, leftIRPin);
-  infrared back(arduinoRuntime, backIRPin);
-  infrared frontLeft(arduinoRuntime, frontLeftIRPin);
-  infrared frontRight(arduinoRuntime, frontRightIRPin);
-  infrared backRight(arduinoRuntime, backRightIRPin);
-  infrared backLeft(arduinoRuntime, backLeftIRPin);
-
-                                          /*--- CAR INFO ---*/
-// current speed
-int speed = 0;
-// current turning angle of the car
-int turningAngle = 0;
+typedef GP2Y0A21 Infrared; //Basically a 'rename'
+  Infrared rightIR(arduinoRuntime, rightIRPin);
+  Infrared leftIR(arduinoRuntime, leftIRPin);
+  Infrared back(arduinoRuntime, backIRPin);
+  Infrared frontLeft(arduinoRuntime, frontLeftIRPin);
+  Infrared frontRight(arduinoRuntime, frontRightIRPin);
+  Infrared backRight(arduinoRuntime, backRightIRPin);
+  Infrared backLeft(arduinoRuntime, backLeftIRPin);
   
-                                        /*--- CONSTANTS ---*/
+
+/*-------------------------------------- CONSTANTS --------------------------------------*/
                                         
 const int SPEED_INCREMENT = 5;
 const int TURNING_INCREMENT = 10;
@@ -69,7 +64,79 @@ const int PARKING_COLS = 3;
 const int ENTRANCE_R = 4;
 const int ENTRANCE_C = 1;
 
-                                        /*--- OBSTACLE DETECTION ---*/
+/*-------------------------------------- SETUP AND LOOP --------------------------------------*/
+
+void setup(){
+
+  // Move the car with 50% of its full speed
+  Serial.begin(9600);
+  #ifdef __SMCE__
+    mqtt.begin("127.0.0.1", 1883, net); // Will connect to localhost
+  #else
+    mqtt.begin(net);
+  #endif
+    if (mqtt.connect("arduino", "public", "public")) {
+      mqtt.subscribe("/smartcar/control/#", 1);
+      mqtt.onMessage([](String topic, String message) { handleMQTTMessage(topic, message); });
+    }
+}
+
+void loop() {
+
+if (mqtt.connected()) {
+    mqtt.loop();
+    const auto currentTime = millis();
+    static auto previousTransmission = 0UL;
+    if (currentTime - previousTransmission >= ONE_SECOND) {
+      previousTransmission = currentTime;
+      const auto distance = String(front.getDistance());
+    }
+  }
+#ifdef __SMCE__
+  // Avoid over-using the CPU if we are running in the emulator
+  delay(1);
+#endif
+  checkObstacles();
+  handleInput();
+  #ifdef __SMCE__
+    // Avoid over-using the CPU if we are running in the emulator
+    delay(1);
+  #endif
+}
+
+/*-------------------------------------- MQTT METHODS --------------------------------------*/
+
+void handleMQTTMessage(String topic, String message){
+   if (topic == "/smartcar/control/speed") {
+          setSpeed(message.toFloat());
+    } else if (topic == "/smartcar/control/steering") {
+          setAngle(message.toFloat());
+    } else {
+          Serial.println(topic + " " + message);
+    }
+}
+
+void setSpeed(float newSpeed){
+  if(newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT){
+    newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
+  }
+  speed = newSpeed;
+  car.setSpeed(newSpeed);
+}
+
+void setAngle(float newAngle){
+  if(newAngle > MAX_STEERING_ANGLE){
+    newAngle = MAX_STEERING_ANGLE;
+  }
+  car.setAngle(newAngle);
+}
+
+int getAngle(){
+    gyroscope.update();
+    return gyroscope.getHeading();
+}
+
+/*-------------------------------------- OBSTACLE DETECTION --------------------------------------*/
 
 bool isObsAtFront() {
     const auto frontDist = front.getDistance();
@@ -115,139 +182,7 @@ void checkObstacles(){
   }
 }
 
-void stopCar(){
-  while(car.getSpeed() > 0){
-    int speed = speed > 0 ? speed-0.1 : speed+0.1;
-    car.setSpeed(speed);
-  }
-}
-                                        /*--- SETUP AND LOOP ---*/
-
-void setup(){
-
-  // Move the car with 50% of its full speed
-  Serial.begin(9600);
-  #ifdef __SMCE__
-  // ================= 1
-  // mqtt.begin("aerostun.dev", 1883, WiFi);
-  mqtt.begin("127.0.0.1", 1883, net); // Will connect to localhost
-  #else
-    mqtt.begin(net);
-  #endif
-    // ================= 2
-    if (mqtt.connect("arduino", "public", "public")) {
-      mqtt.subscribe("/smartcar/control/#", 1);
-      mqtt.onMessage([](String topic, String message) { handleMQTTMessage(topic, message); });
-    }
-}
-
-void loop() {
-
-if (mqtt.connected()) {
-    mqtt.loop();
-    const auto currentTime = millis();
-    static auto previousTransmission = 0UL;
-    if (currentTime - previousTransmission >= ONE_SECOND) {
-      previousTransmission = currentTime;
-      const auto distance = String(front.getDistance());
-      // ================= 3
-      //mqtt.publish("/smartcar/ultrasound/front", distance);
-    }
-  }
-#ifdef __SMCE__
-  // Avoid over-using the CPU if we are running in the emulator
-  delay(1);
-#endif
-  checkObstacles();
-  handleInput();
-  #ifdef __SMCE__
-    // Avoid over-using the CPU if we are running in the emulator
-    delay(1);
-  #endif
-}
-                                        /*--- MQTT METHODS ---*/
-
-void handleMQTTMessage(String topic, String message){
-   if (topic == "/smartcar/control/speed") {
-          setSpeed(message.toFloat());
-    } else if (topic == "/smartcar/control/steering") {
-          setAngle(message.toFloat());
-    } else {
-          Serial.println(topic + " " + message);
-    }
-}
-
-void setSpeed(float newSpeed){
-  if(newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT){
-    newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
-  }
-  speed = newSpeed;
-  car.setSpeed(newSpeed);
-}
-
-void setAngle(float newAngle){
-  if(newAngle > MAX_STEERING_ANGLE){
-    newAngle = MAX_STEERING_ANGLE;
-  }
-  car.setAngle(newAngle);
-}
-
-int getAngle(){
-    gyroscope.update();
-    return gyroscope.getHeading();
-}
-                                        /*--- SERIAL METHODS ---*/
-
-void handleInput(){
-  if(Serial.available()){
-    char input = Serial.read();
-    switch(input){
-      case 'i':
-        increaseSpeed();
-        break;
-      case 'k': 
-        decreaseSpeed();
-        break;
-      case 'j': 
-        turnLeft();
-        break;
-      case 'l': 
-        turnRight();
-        break;
-      case 'u':
-        stopCar();
-        break;
-      case 'p':
-        park();
-        break;
-      default:
-        break;
-    }
-  }
-}
-
-void increaseSpeed(){
-  //sets max speed to 110
-  speed = speed+SPEED_INCREMENT>=110 ? 110 : speed+SPEED_INCREMENT;
-  car.setSpeed(speed);
-}
-
-void decreaseSpeed(){
-  //sets max speed to 110
-  speed = speed-SPEED_INCREMENT;
-  car.setSpeed(speed);
-}
-
-void turnLeft(){ // turns the car 10 degrees counter-clockwise (degrees depend on TURNING_INCREMENT)
-  turningAngle = turningAngle-TURNING_INCREMENT;
-  car.setAngle(turningAngle);
-}
-
-void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNING_INCREMENT)
-  turningAngle = turningAngle+TURNING_INCREMENT;
-  car.setAngle(turningAngle);
-}
-                                        /*--- INTERNAL MAP SETUP ---*/
+/*-------------------------------------- INTERNAL MAP SETUP --------------------------------------*/
 
 // the different types types that a parking lot has
 enum BoxType{Path, Unoccupied, Occupied, Start, notParking};
@@ -316,7 +251,8 @@ void move(float distance){
     }
     car.setSpeed(0);
 }
-                                        /*--- AUTO PARKING ---*/
+
+/*-------------------------------------- AUTO PARKING --------------------------------------*/
 
 void autoRightPark(){ // the car is supposed to park inside a parking spot to its immediate right
     gyroscope.update();
@@ -478,4 +414,68 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
     car.setAngle(0);
     car.setSpeed(PARKING_SPEED);
     // here the car will have the correct angle, car will drive foward and park
+}
+
+/*-------------------------------------- SERIAL METHODS --------------------------------------*/
+
+// current speed
+int speed = 0;
+// current turning angle of the car
+int turningAngle = 0;
+
+void handleInput(){
+  if(Serial.available()){
+    char input = Serial.read();
+    switch(input){
+      case 'i':
+        increaseSpeed();
+        break;
+      case 'k': 
+        decreaseSpeed();
+        break;
+      case 'j': 
+        turnLeft();
+        break;
+      case 'l': 
+        turnRight();
+        break;
+      case 'u':
+        stopCar();
+        break;
+      case 'p':
+        park();
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+void increaseSpeed(){
+  //sets max speed to 110
+  speed = speed+SPEED_INCREMENT>=110 ? 110 : speed+SPEED_INCREMENT;
+  car.setSpeed(speed);
+}
+
+void decreaseSpeed(){
+  //sets max speed to 110
+  speed = speed-SPEED_INCREMENT;
+  car.setSpeed(speed);
+}
+
+void turnLeft(){ // turns the car 10 degrees counter-clockwise (degrees depend on TURNING_INCREMENT)
+  turningAngle = turningAngle-TURNING_INCREMENT;
+  car.setAngle(turningAngle);
+}
+
+void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNING_INCREMENT)
+  turningAngle = turningAngle+TURNING_INCREMENT;
+  car.setAngle(turningAngle);
+}
+
+void stopCar(){
+  while(car.getSpeed() > 0){
+    int speed = speed > 0 ? speed-0.1 : speed+0.1;
+    car.setSpeed(speed);
+  }
 }
