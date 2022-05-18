@@ -81,8 +81,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-        //mCameraView = findViewById(R.id.imageView);
-
         connectToMqttBroker();
     }
 
