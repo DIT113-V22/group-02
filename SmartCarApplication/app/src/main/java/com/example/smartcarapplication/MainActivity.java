@@ -50,34 +50,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 joystickJhr.move(motionEvent);
-                joystickJhr.joyX();
-                joystickJhr.joyY();
-                joystickJhr.angle();
-                joystickJhr.distancia();
-
                 int dir = joystickJhr.getDireccion();
-
                 if (dir == joystickJhr.stick_up()) {
                     setAngle(STRAIGHT_ANGLE, "Setting angle straight");
                     setSpeed(MOVEMENT_SPEED, "Moving forward");
-                } else if (dir == joystickJhr.stick_down()) {
-                    setAngle(STRAIGHT_ANGLE, "Setting angle straight");
-                    setSpeed(-MOVEMENT_SPEED, "Moving backwards");
-                } else if (dir == joystickJhr.stick_upRight()) {
-                    setAngle(STEERING_ANGLE,"Setting angel up right");
-                    setSpeed(MOVEMENT_SPEED,"Moving down right");
-                } else if (dir == joystickJhr.stick_upLeft()) {
-                    setAngle(-STEERING_ANGLE,"Setting angel up left");
-                    setSpeed(MOVEMENT_SPEED,"Moving down left");
-                } else if (dir == joystickJhr.stick_downRight()) {
-                    setAngle(STEERING_ANGLE,"Setting angel down right");
-                    setSpeed(-MOVEMENT_SPEED,"Moving down right");
-                } else if (dir == joystickJhr.stick_downLeft()) {
-                    setAngle(-STEERING_ANGLE,"Setting angel down left");
-                    setSpeed(-MOVEMENT_SPEED,"Moving down left");
-                } else if (dir == 0) {
-                    setAngle(STRAIGHT_ANGLE, "Setting angle straight");
-                    setSpeed(IDLE_SPEED, "Stopping smartcar");
                 };
             return true;
             }
