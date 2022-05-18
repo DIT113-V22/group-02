@@ -50,12 +50,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 joystickJhr.move(motionEvent);
-                int dir = joystickJhr.getDireccion();
-                if (dir == joystickJhr.stick_up()) {
-                    setAngle(STRAIGHT_ANGLE, "Setting angle straight");
-                    setSpeed(MOVEMENT_SPEED, "Moving forward");
-                };
-            return true;
+                float speed = (joystickJhr.joyY() / 150) * 100;
+                setSpeed(speed, "setting speed");
+                return true;
             }
         });
         mCameraView = findViewById(R.id.imageView);
@@ -140,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void setSpeed(int speed, String actionDescription) {
+    void setSpeed(float speed, String actionDescription) {
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(TAG, notConnected);
@@ -148,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Log.i(TAG, actionDescription);
-        mMqttClient.publish(SPEED_CONTROL, Integer.toString(speed), QOS, null);
+        mMqttClient.publish(SPEED_CONTROL, Float.toString(speed), QOS, null);
     }
 
     void setAngle(int angle, String actionDescription) {
