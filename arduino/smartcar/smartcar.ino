@@ -269,7 +269,7 @@ GridBox parkingLot[PARKING_ROWS][PARKING_COLS] = {
     //00                01             02
     {GridBox(Occupied), GridBox(Path), GridBox(Occupied)},
     //10                11             12
-    {GridBox(Unoccupied), GridBox(Path), GridBox(Occupied)},
+    {GridBox(Unoccupied),GridBox(Path), GridBox(Occupied)},
     //20                21             22
     {GridBox(Occupied), GridBox(Path), GridBox(Occupied)},
     //30                31             32
@@ -341,7 +341,7 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     } else {
         targetAngle = currentAngle - 90;
     }
-    car.setAngle(83);
+    car.setAngle(85);
     car.setSpeed(15);
     Serial.println(currentAngle);
     Serial.println(targetAngle);
@@ -399,7 +399,7 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     // here the car will have the correct angle, car will drive foward and park
 }
 
-void autoLeftPark(){ // the car is supposed to park inside a parking spot to its immediate right
+void autoLeftPark(){ // the car is supposed to park inside a parking spot to its immediate left
     gyroscope.update();
     // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
     int rightTimer = 500;
