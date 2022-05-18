@@ -47,6 +47,10 @@ typedef GP2Y0A21 Infrared; //Basically a 'rename'
   Infrared backLeft(arduinoRuntime, backLeftIRPin);
   
 
+  // Car Info
+  int speed = 0;
+  int turningAngle = 0;
+
 /*-------------------------------------- CONSTANTS --------------------------------------*/
                                         
 const int SPEED_INCREMENT = 5;
@@ -417,11 +421,6 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
 }
 
 /*-------------------------------------- SERIAL METHODS --------------------------------------*/
-
-// current speed
-int speed = 0;
-// current turning angle of the car
-int turningAngle = 0;
 
 void handleInput(){
   if(Serial.available()){
