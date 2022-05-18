@@ -61,6 +61,76 @@ const int BACKWARD_SPEED_LIMIT = -50;
 const int MAX_STEERING_ANGLE = 60;
 const auto oneSecond = 1000UL;
 
+const int BOX_WIDTH = 70;
+const int BOX_HEIGHT = 35;
+const int PARKING_ROWS = 5;
+const int PARKING_COLS = 3;
+const int ENTRANCE_R = 4;
+const int ENTRANCE_C = 1;
+
+/*--- INTERNAL MAP SETUP---*/
+
+enum BoxType{Path, Unoccupied, Occupied, Start, NaP};
+
+class GridBox{
+  public:
+    bool hasCar;
+    BoxType type;
+    GridBox(BoxType boxType){
+      type = boxType;
+    }
+};
+
+// This is the representation of the parking lot in terms of code
+// The code here works for a parking lot that has infinite rows but only three columns
+// i.e a parking lot of 5x3 works just as well as a parking lot of 30x3, as long as 
+// the middle column remains to be the path.
+GridBox parkingLot[PARKING_ROWS][PARKING_COLS] = {
+    //00                01             02
+    {GridBox(Occupied), GridBox(Path), GridBox(Occupied)},
+    //10                11             12
+    {GridBox(Unoccupied), GridBox(Path), GridBox(Occupied)},
+    //20                21             22
+    {GridBox(Occupied), GridBox(Path), GridBox(Occupied)},
+    //30                31             32
+    {GridBox(Occupied), GridBox(Path), GridBox(Occupied)},
+    //40                41             42
+    {GridBox(NaP),      GridBox(Start),GridBox(NaP)},
+};
+
+void park(){
+    for(int i = 0; i < PARKING_ROWS; i++){
+        for(int j = 0; j<PARKING_COLS; j++){
+            if(parkingLot[i][j].type == Unoccupied){
+                move(ENTRANCE_R, ENTRANCE_C, i, j);
+                parkingLot[i][j].type = Occupied;
+            }
+        }
+    }
+}
+
+void move(int r1, int c1, int r2, int c2){
+    int parkingR = r2+1;
+    int parkingC = 1;
+    int currentAngle = getAngle();
+    if(currentAngle > 178 && currentAngle < 182){
+       // add one to take the distance of the entrace box into account
+        int diffR = r1-parkingR+1;
+        Serial.println(diffR);
+        int distance = diffR * BOX_HEIGHT;
+        move(distance);
+    }
+}
+
+void move(int distance){
+    leftOdometer.reset();
+    while(leftOdometer.getDistance() < distance){
+
+        car.setSpeed(10);
+    }
+    car.setSpeed(0);
+}
+
 bool obsAtFront() {
     const auto frontDist = front.getDistance();
     return (frontDist > 0 && frontDist <= 8);
@@ -135,9 +205,7 @@ if (mqtt.connected()) {
   // Avoid over-using the CPU if we are running in the emulator
   delay(1);
 #endif
-
   checkObstacles();
-
   handleInput();
   if (mqtt.connected()) {
     mqtt.loop();
@@ -208,6 +276,11 @@ void setAngle(float newAngle){
   car.setAngle(newAngle);
 }
 
+int getAngle(){
+    gyroscope.update();
+    return gyroscope.getHeading();
+}
+
 
 /*--- SERIAL METHODS ---*/
 
@@ -231,7 +304,7 @@ void handleInput(){
         car.setSpeed(0);
         break;
       case 'p':
-        autoRightPark();
+        park();
         break;
       default:
         break;
