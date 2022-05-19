@@ -237,10 +237,6 @@ void handleMQTTMessage(String topic, String message){
     }
 }
 
-void park(){
-  // parking code
-}
-
 void setSpeed(float newSpeed){
   if(newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT){
     newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
