@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         joystickJhr.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                joystickJhr.move(motionEvent);
                 joystickJhr.joyY();
                 joystickJhr.angle();
                 joystickJhr.distancia();
