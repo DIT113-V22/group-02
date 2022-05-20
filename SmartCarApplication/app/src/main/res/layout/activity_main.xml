@@ -25,15 +25,40 @@
 
     </com.example.joystickjhr.JoystickJhr>
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/parkright"
+        android:layout_width="130dp"
+        android:layout_height="70dp"
+        android:onClick="parkTheCar"
+        android:text="P"
+        android:textColor="#B8E9FF"
+        android:textSize="40dp"
+        app:backgroundTint="#0000FF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.644" />
+
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="450dp"
-        android:layout_height="400dp"
-        android:background="#6891CBFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.041"
+        android:layout_width="405dp"
+        android:layout_height="330dp"
+        android:background="#BFD4F6"
+        android:translationY="50dp"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-20dp" />
+        tools:layout_editor_absoluteX="3dp"
+        tools:layout_editor_absoluteY="-3dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

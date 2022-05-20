@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     private static final String SPEED_CONTROL = "/smartcar/control/speed";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
+    private static final String AUTO_PARK = "/smartcar/park";
     private static final int MOVEMENT_SPEED = 50;
     private static final int IDLE_SPEED = 0;
     private static final int STRAIGHT_ANGLE = 0;
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 joystickJhr.move(motionEvent);
-                joystickJhr.joyX();
                 joystickJhr.joyY();
                 joystickJhr.angle();
                 joystickJhr.distancia();
@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), successfulConnection, Toast.LENGTH_SHORT).show();
                     mMqttClient.subscribe("/smartcar/ultrasound/front", QOS, null);
                     mMqttClient.subscribe("/smartcar/camera", QOS, null);
+                    mMqttClient.subscribe("/smartcar/park", QOS, null);
                 }
 
                 @Override
@@ -163,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void setSpeed(int speed, String actionDescription) {
+    void setSpeed(float speed, String actionDescription) {
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(TAG, notConnected);
@@ -171,18 +172,29 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Log.i(TAG, actionDescription);
-        mMqttClient.publish(SPEED_CONTROL, Integer.toString(speed), QOS, null);
+        mMqttClient.publish(SPEED_CONTROL, Float.toString(speed), QOS, null);
     }
 
-    void setAngle(int angle, String actionDescription) {
+    void setAngle(float angle, String actionDescription) {
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(TAG, notConnected);
             Toast.makeText(getApplicationContext(), notConnected, Toast.LENGTH_SHORT).show();
             return;
         }
+        Toast.makeText(getApplicationContext(),Float.toString(angle),Toast.LENGTH_SHORT).show();
         Log.i(TAG, actionDescription);
-        mMqttClient.publish(STEERING_CONTROL, Integer.toString(angle), QOS, null);
+        mMqttClient.publish(STEERING_CONTROL, Float.toString(angle), QOS, null);
 
+    }
+    public void parkTheCar(View view){
+       if (!isConnected){
+           final String notConnected = "Not connected (yet)";
+           Log.e(TAG, notConnected);
+           Toast.makeText(getApplicationContext(), notConnected, Toast.LENGTH_SHORT).show();
+           return;
+       }
+       Log.i(TAG, "AutoPark initiated");
+       mMqttClient.publish(AUTO_PARK, "Parking", 2, null);
     }
 }
