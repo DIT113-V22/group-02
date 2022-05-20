@@ -49,16 +49,39 @@ public class MainActivity extends AppCompatActivity {
         joystickJhr.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                joystickJhr.move(motionEvent);
+                joystickJhr.joyY();
+                joystickJhr.angle();
+                joystickJhr.distancia();
+
                 int dir = joystickJhr.getDireccion();
+
                 if (dir == joystickJhr.stick_up()) {
                     setAngle(STRAIGHT_ANGLE, "Setting angle straight");
                     setSpeed(MOVEMENT_SPEED, "Moving forward");
-                };
-            return true;
+                } else if (dir == joystickJhr.stick_down()) {
+                    setAngle(STRAIGHT_ANGLE, "Setting angle straight");
+                    setSpeed(-MOVEMENT_SPEED, "Moving backwards");
+                } else if (dir == joystickJhr.stick_upRight()) {
+                    setAngle(STEERING_ANGLE, "Setting angel up right");
+                    setSpeed(MOVEMENT_SPEED, "Moving down right");
+                } else if (dir == joystickJhr.stick_upLeft()) {
+                    setAngle(-STEERING_ANGLE, "Setting angel up left");
+                    setSpeed(MOVEMENT_SPEED, "Moving down left");
+                } else if (dir == joystickJhr.stick_downRight()) {
+                    setAngle(STEERING_ANGLE, "Setting angel down right");
+                    setSpeed(-MOVEMENT_SPEED, "Moving down right");
+                } else if (dir == joystickJhr.stick_downLeft()) {
+                    setAngle(-STEERING_ANGLE, "Setting angel down left");
+                    setSpeed(-MOVEMENT_SPEED, "Moving down left");
+                } else if (dir == 0) {
+                    setAngle(STRAIGHT_ANGLE, "Setting angle straight");
+                    setSpeed(IDLE_SPEED, "Stopping smartcar");
+                }
+                return true;
             }
         });
-        mCameraView = findViewById(R.id.imageView);
+        //mCameraView = findViewById(R.id.imageView);
+
         connectToMqttBroker();
     }
 
@@ -140,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void setSpeed(int speed, String actionDescription) {
+    void setSpeed(float speed, String actionDescription) {
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(TAG, notConnected);
@@ -148,18 +171,19 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Log.i(TAG, actionDescription);
-        mMqttClient.publish(SPEED_CONTROL, Integer.toString(speed), QOS, null);
+        mMqttClient.publish(SPEED_CONTROL, Float.toString(speed), QOS, null);
     }
 
-    void setAngle(int angle, String actionDescription) {
+    void setAngle(float angle, String actionDescription) {
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(TAG, notConnected);
             Toast.makeText(getApplicationContext(), notConnected, Toast.LENGTH_SHORT).show();
             return;
         }
+        Toast.makeText(getApplicationContext(),Float.toString(angle),Toast.LENGTH_SHORT).show();
         Log.i(TAG, actionDescription);
-        mMqttClient.publish(STEERING_CONTROL, Integer.toString(angle), QOS, null);
+        mMqttClient.publish(STEERING_CONTROL, Float.toString(angle), QOS, null);
 
     }
     public void parkTheCar(View view){
