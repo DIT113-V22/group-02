@@ -4,7 +4,7 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/parking"
-        android:label="@string/app_name"
+        android:label="Go Park Yourself!"
         android:roundIcon="@mipmap/parking"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCarApplication">

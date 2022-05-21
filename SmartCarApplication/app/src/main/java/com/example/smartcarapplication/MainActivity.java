@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     private static final String SPEED_CONTROL = "/smartcar/control/speed";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
-    private static final int MOVEMENT_SPEED = 50;
     private static final int IDLE_SPEED = 0;
     private static final int STRAIGHT_ANGLE = 0;
     private static final int STEERING_ANGLE = 50;
@@ -53,35 +52,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 joystickJhr.move(motionEvent);
-                joystickJhr.joyX();
-                joystickJhr.joyY();
-                joystickJhr.angle();
-                joystickJhr.distancia();
 
-                int dir = joystickJhr.getDireccion();
+                // division of 2 adds more sensitivity to joystick throttle
+                setSpeed((int)joystickJhr.joyY() / 2, "setting speed");
 
-                if (dir == joystickJhr.stick_up()) {
-                    setAngle(STRAIGHT_ANGLE, "Setting angle straight");
-                    setSpeed(MOVEMENT_SPEED, "Moving forward");
-                } else if (dir == joystickJhr.stick_down()) {
-                    setAngle(STRAIGHT_ANGLE, "Setting angle straight");
-                    setSpeed(-MOVEMENT_SPEED, "Moving backward");
-                } else if (dir == joystickJhr.stick_upRight()) {
-                    setAngle(STEERING_ANGLE, "Setting angel up right");
-                    setSpeed(MOVEMENT_SPEED, "Moving down right");
-                } else if (dir == joystickJhr.stick_upLeft()) {
-                    setAngle(-STEERING_ANGLE, "Setting angel up left");
-                    setSpeed(MOVEMENT_SPEED, "Moving down left");
-                } else if (dir == joystickJhr.stick_downRight()) {
-                    setAngle(STEERING_ANGLE, "Setting angel down right");
-                    setSpeed(-MOVEMENT_SPEED, "Moving down right");
-                } else if (dir == joystickJhr.stick_downLeft()) {
-                    setAngle(-STEERING_ANGLE, "Setting angel down left");
-                    setSpeed(-MOVEMENT_SPEED, "Moving down left");
-                } else if (dir == 0) {
-                    setAngle(STRAIGHT_ANGLE, "Setting angle straight");
-                    setSpeed(IDLE_SPEED, "Stopping smartcar");
-                }
+                // division of 2 adds more sensitivity to joystick steering
+                setAngle((int)joystickJhr.joyX() / 2, "setting angle");
+
                 return true;
             }
         });
@@ -153,10 +130,18 @@ public class MainActivity extends AppCompatActivity {
                         bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
                         mCameraView.setImageBitmap(bm);
 
+                        // display speed in km/h on mobile device if message "/smartcar/info/speed"
                     } else if (topic.equals("/smartcar/info/speed")) {
                         final String speed = message.toString();
                         TextView view = (TextView) findViewById(R.id.speedlog);
-                        view.setText(speed);
+                        view.setText(speed + " km/h");
+
+                        // display distance in meters on mobile device if message "/smartcar/ultrasound/front"
+                    } else if (topic.equals("/smartcar/ultrasound/front")) {
+                            final String distance = message.toString();
+                            TextView view = (TextView) findViewById(R.id.distance);
+                            view.setText(distance + " m");
+
                     } else {
                         Log.i(TAG, "[MQTT] Topic: " + topic + " | Message: " + message.toString());
                     }

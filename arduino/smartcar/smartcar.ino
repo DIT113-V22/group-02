@@ -50,10 +50,10 @@ typedef GP2Y0A21 infrared; //Basically a 'rename'
 /*--- CONSTANTS ---*/
 const int SPEED_INCREMENT = 5;
 const int TURNING_INCREMENT = 10;
-const int FORWARD_SPEED_LIMIT = 150;
+const int FORWARD_SPEED_LIMIT = 75;
 const int BACKWARD_SPEED_LIMIT = -50;
 const int MAX_STEERING_ANGLE = 60;
-const auto ONE_SECOND = 1000UL;
+const auto ONE_SECOND = 10UL;
 
 bool obsAtFront() {
     const auto frontDist = front.getDistance();
@@ -121,7 +121,7 @@ if (mqtt.connected()) {
       previousTransmission = currentTime;
       const auto distance = String(front.getDistance());
       // ================= 3
-      //mqtt.publish("/smartcar/ultrasound/front", distance);
+      mqtt.publish("/smartcar/ultrasound/front", distance);
     }
   }
 #ifdef __SMCE__
@@ -166,7 +166,7 @@ void handleMQTTMessage(String topic, String message){
     }
 }
 
-void setSpeed(float newSpeed) {
+void setSpeed(int newSpeed) {
   if (newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT) {
     newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
   }
