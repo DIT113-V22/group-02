@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String SPEED_CONTROL = "/smartcar/control/speed";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
     private static final String AUTO_PARK = "/smartcar/park";
+    private static final String CRUISE_CONTROL = "/smartcar/cruisecontrol";
     private static final int MOVEMENT_SPEED = 50;
     private static final int IDLE_SPEED = 0;
     private static final int STRAIGHT_ANGLE = 0;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 joystickJhr.move(motionEvent);
                 float speed = (joystickJhr.joyY() / 150) * 100;
                 setSpeed(speed, "setting speed");
+                setAngle(joystickJhr.joyX(), "setting angle");
                 return true;
             }
         });
@@ -64,16 +66,9 @@ public class MainActivity extends AppCompatActivity {
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(compoundButton.isChecked()){
-                    float speed = (joystickJhr.joyY() / 150) * 100;
-                    setSpeed(speed, "Your car is on cruise control");
-
-                }else{
-                    return ;
-                }
-
-                }
-            });
+               mMqttClient.publish(CRUISE_CONTROL, Boolean.toString(b), 2, null);
+            }
+        });
 
 
 
@@ -112,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), successfulConnection, Toast.LENGTH_SHORT).show();
                     mMqttClient.subscribe("/smartcar/ultrasound/front", QOS, null);
                     mMqttClient.subscribe("/smartcar/camera", QOS, null);
+                    mMqttClient.subscribe("/smartcar/cruiseControl",QOS,null);
                 }
 
                 @Override
@@ -169,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         mMqttClient.publish(SPEED_CONTROL, Float.toString(speed), QOS, null);
     }
 
-    void setAngle(int angle, String actionDescription) {
+    void setAngle(float angle, String actionDescription) {
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(TAG, notConnected);
@@ -177,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Log.i(TAG, actionDescription);
-        mMqttClient.publish(STEERING_CONTROL, Integer.toString(angle), QOS, null);
+        mMqttClient.publish(STEERING_CONTROL, Float.toString(angle), QOS, null);
 
     }
     public void parkTheCar(View view){

@@ -164,6 +164,7 @@ bool obsAtBackLeft() {
 int speed = 0;
 int turningAngle = 0;
 int heading = car.getHeading();
+bool cruiseControlOn = false;
 
 void setup(){
   // Move the car with 50% of its full speed
@@ -177,7 +178,7 @@ void setup(){
   #endif
     // ================= 2
     if (mqtt.connect("arduino", "public", "public")) {
-      mqtt.subscribe("/smartcar/control/#", 1);
+      mqtt.subscribe("/smartcar/#", 1);
       mqtt.onMessage([](String topic, String message) { handleMQTTMessage(topic, message); });
     }
 }
@@ -232,12 +233,15 @@ void handleMQTTMessage(String topic, String message){
           setAngle(message.toFloat());
     } else if (topic == "/smartcar/park"){
           park();
-    } else {
+    }else if (topic == "/smartcar/cruisecontrol"){
+          cruiseControlOn = !cruiseControlOn;
+    }else {
           Serial.println(topic + " " + message);
     }
 }
 
 void setSpeed(float newSpeed){
+  if(cruiseControlOn) return;
   if(newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT){
     newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
   }
