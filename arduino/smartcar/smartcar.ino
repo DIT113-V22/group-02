@@ -83,6 +83,7 @@ void setup(){
       mqtt.subscribe("/smartcar/control/#", 1);
       mqtt.onMessage([](String topic, String message) { handleMQTTMessage(topic, message); });
     }
+    Serial.println(getAngle());
 }
 
 void loop() {
@@ -142,14 +143,29 @@ int getAngle(){
 
 /*-------------------------------------- OBSTACLE DETECTION --------------------------------------*/
 
+bool isObsAtFront(float obsDistance) {
+    const auto frontDist = front.getDistance();
+    return (frontDist > 0 && frontDist <= obsDistance);
+}
+
 bool isObsAtFront() {
     const auto frontDist = front.getDistance();
-    return (frontDist > 0 && frontDist <= 12);
+    return (frontDist > 0 && frontDist <= 15);
+}
+
+bool isObsAtFrontLeft(float obsDistance) {
+    const auto frontLeftDist = frontLeft.getDistance();
+    return (frontLeftDist > 0 && frontLeftDist <= obsDistance);
 }
 
 bool isObsAtFrontLeft() {
     const auto frontLeftDist = frontLeft.getDistance();
-    return (frontLeftDist > 0 && frontLeftDist <= 8);
+    return (frontLeftDist > 0 && frontLeftDist <= 15);
+}
+
+bool isObsAtFrontRight(float obsDistance) {
+    const auto frontRightDist = frontRight.getDistance();
+    return (frontRightDist > 0 && frontRightDist < obsDistance);
 }
 
 bool isObsAtFrontRight() {
@@ -157,24 +173,43 @@ bool isObsAtFrontRight() {
     return (frontRightDist > 0 && frontRightDist < 15);
 }
 
+bool isObsAtLeft(float obsDistance) {
+    const auto lDist = leftIR.getDistance();
+    return (lDist > 0 && lDist <= obsDistance);
+}
+
 bool isObsAtLeft() {
     const auto lDist = leftIR.getDistance();
-    return (lDist > 0 && lDist <= 10);
+    return (lDist > 0 && lDist <= 15);
+}
+
+bool isObsAtRight(float obsDistance) {
+    const auto rDist = rightIR.getDistance();
+    return (rDist > 0 && rDist <= obsDistance);
 }
 
 bool isObsAtRight() {
     const auto rDist = rightIR.getDistance();
-    return (rDist > 0 && rDist <= 40);
+    return (rDist > 0 && rDist <= 15);
 }
 
+bool isObsAtBackRight(float obsDistance) {
+    const auto backRightDist = backRight.getDistance();
+    return (backRightDist > 0 && backRightDist < obsDistance);
+}
 bool isObsAtBackRight() {
     const auto backRightDist = backRight.getDistance();
-    return (backRightDist > 0 && backRightDist < 10);
+    return (backRightDist > 0 && backRightDist < 15);
+}
+
+bool isObsAtBackLeft(float obsDistance) {
+    const auto backLeftDist = backLeft.getDistance();
+    return (backLeftDist > 0 && backLeftDist < obsDistance);
 }
 
 bool isObsAtBackLeft() {
     const auto backLeftDist = backLeft.getDistance();
-    return (backLeftDist > 0 && backLeftDist < 12);
+    return (backLeftDist > 0 && backLeftDist < 15);
 }
 
 void checkObstacles(){
@@ -204,12 +239,14 @@ class GridBox{
     }
 };
 
+boolean isParked = false;
 GridBox parkedAt;
 
 // This is the representation of the parking lot in terms of code
 // The code here works for a parking lot that has infinite rows but only three columns
 // i.e a parking lot of 5x3 works just as well as a parking lot of 30x3, as long as
 // the middle column remains to be the path.
+// c = column, r = row
 GridBox parkingLot[PARKING_ROWS][PARKING_COLS] = {
     {GridBox(0, 0, Occupied),  GridBox(0, 1, Path), GridBox(0, 2, Occupied)},
     {GridBox(1, 0, Unoccupied),GridBox(1, 1, Path), GridBox(1, 2, Occupied)},
@@ -220,29 +257,53 @@ GridBox parkingLot[PARKING_ROWS][PARKING_COLS] = {
 
 void park(){
     for(int i = 0; i < PARKING_ROWS; i++){
-        for(int j = 0; j<PARKING_COLS; j++){
+        for(int j = 0; j < PARKING_COLS; j++){
             if(parkingLot[i][j].type == Unoccupied){
                 move(ENTRANCE_R, ENTRANCE_C, i, j);
-                if(ENTRANCE_C < j){
+                if(j < ENTRANCE_C){
                     autoLeftPark();
                 } else{
                     autoRightPark();
                 }
                 parkingLot[i][j].type = Occupied;
                 parkedAt = parkingLot[i][j];
+                isParked = true;
+                return;
             }
         }
     }
 }
 
+void retrieve(){
+    int r = parkedAt.row;
+    int c = parkedAt.col;
+    if(c < ENTRANCE_C){
+        autoRightReverse();
+    } else{
+        autoLeftReverse();
+    }
+    move(r, c, ENTRANCE_R, ENTRANCE_C);
+    isParked = false;
+}
+
+// move(parkedAt.row, parkedAt.col, ENTRANCE_R, ENTRANCE_C);
+// 1,0,4,1
 void move(int r1, int c1, int r2, int c2){
-    int parkingR = r2+1;
-    int parkingC = 1;
-    // add 1.46 to take the distance of the entrance box into account
-    // and the slight movement into the parking space
-    float diffR = r1-parkingR+1.46;
+    float distance;
+    float diffR;
+    int parkingR;
+    if(!isParked){
+        parkingR = r2+1;
+        int parkingC = 1;
+        int currentAngle = getAngle();
+        // add 1.46 to take the distance of the entrance box into account
+        // and the slight movement into the parking space
+        diffR = r1-parkingR+1.46;
+    }  else {
+        diffR = abs(r1-r2-2.0);
+    }
     Serial.println(diffR);
-    float distance = (diffR * BOX_HEIGHT);
+    distance = (diffR * BOX_HEIGHT);
     move(distance);
 }
 
@@ -257,6 +318,7 @@ void move(float distance){
 /*-------------------------------------- AUTO PARKING --------------------------------------*/
 
 void autoRightPark(){ // the car is supposed to park inside a parking spot to its immediate right
+    Serial.println("auto right park");
     gyroscope.update();
     // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
     int rightTimer = 500;
@@ -338,6 +400,7 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
 }
 
 void autoLeftPark(){ // the car is supposed to park inside a parking spot to its immediate left
+    Serial.println("auto left park");
     gyroscope.update();
     // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
     int rightTimer = 500;
@@ -361,7 +424,7 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
     }
     car.setAngle(-85);
     car.setSpeed(PARKING_SPEED);
-    Serial.println(currentAngle);
+    Serial.println("currentAngle: " + currentAngle);
     Serial.println(targetAngle);
     while (targetAngle-3 >= currentAngle){
         gyroscope.update();
@@ -370,7 +433,7 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
 
         if(isObsAtFrontLeft() && frontRightTimer > 500 && newDistanceTraveled > distanceTraveled) { // reduce turning angle
             frontRightTimer = 0;
-            turningAngle = -5;
+            turningAngle = -85;
             car.setAngle(turningAngle);
             car.setSpeed(PARKING_SPEED);
             Serial.println("front left obstacle detected");
@@ -419,6 +482,7 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
 }
 
 void autoRightReverse(){ // the car is supposed to park inside a parking spot to its immediate right
+    Serial.println("reverse right!");
     gyroscope.update();
     // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
     int rightTimer = 500;
@@ -434,12 +498,14 @@ void autoRightReverse(){ // the car is supposed to park inside a parking spot to
     int newDistanceTraveled = 0;
     int targetAngle = 0;
     int currentAngle = getAngle();
+
     if (currentAngle - 90 < 0){
         targetAngle = 360 - abs(currentAngle - 90);
     } else {
         targetAngle = currentAngle - 90;
     }
-    Serial.println(currentAngle);
+
+    Serial.println("currentAngle: " + currentAngle);
     Serial.println(targetAngle);
     car.setSpeed(-PARKING_SPEED);
     leftOdometer.reset();
@@ -447,28 +513,28 @@ void autoRightReverse(){ // the car is supposed to park inside a parking spot to
         distanceTraveled = leftOdometer.getDistance();
         Serial.println(distanceTraveled);
     }
-    car.setAngle(85);
+
+    turningAngle = 85;
+    car.setAngle(turningAngle);
     while (targetAngle <= getAngle()){
         newDistanceTraveled = leftOdometer.getDistance();
         currentAngle = gyroscope.getHeading();
 
         if(isObsAtFrontRight() && frontRightTimer > 500 && newDistanceTraveled > distanceTraveled) { // reduce turning angle
             frontRightTimer = 0;
-            turningAngle = 5;
+            turningAngle = 85;
             car.setAngle(turningAngle);
             car.setSpeed(PARKING_SPEED);
             Serial.println("front right obstacle detected");
         }
-        if(isObsAtFrontLeft() && frontLeftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
+        if(isObsAtFrontLeft(10) && frontLeftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
             frontLeftTimer = 0;
-            if (car.getSpeed() > 0){
-              car.setSpeed(-PARKING_SPEED);
-            }
-            delay(200); // delay is included to make sure newDistanceTraveled > distanceTraveled is not true before the car starts reversing
-            turningAngle = -85;
-            car.setAngle(turningAngle);
             Serial.println("front left obstacle detected");
-
+            Serial.println(turningAngle);
+            turningAngle = turningAngle - 5;
+            car.setAngle(turningAngle);
+            Serial.println(turningAngle);
+            car.setSpeed(-(PARKING_SPEED)-5);
         }
         if(isObsAtLeft() && leftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
             leftTimer = 0;
@@ -496,12 +562,13 @@ void autoRightReverse(){ // the car is supposed to park inside a parking spot to
         frontTimer++;
         distanceTraveled = newDistanceTraveled;
     }
+    Serial.println("done!");
     car.setAngle(0);
-    move(parkedAt.row, parkedAt.col, ENTRANCE_R, ENTRANCE_C);
     // here the car will have the correct angle, car will drive foward and park
 }
 
 void autoLeftReverse(){ // the car is supposed to park inside a parking spot to its immediate left
+    Serial.println("reverse left!");
     gyroscope.update();
     // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
     int rightTimer = 500;
@@ -523,11 +590,17 @@ void autoLeftReverse(){ // the car is supposed to park inside a parking spot to 
     } else {
         targetAngle = currentAngle + 90;
     }
-    car.setAngle(-85);
-    car.setSpeed(-PARKING_SPEED);
-    Serial.println(currentAngle);
+    Serial.println("currentAngle: " + currentAngle);
     Serial.println(targetAngle);
-    while (targetAngle-3 >= currentAngle){
+    car.setSpeed(-PARKING_SPEED);
+    leftOdometer.reset();
+    while (distanceTraveled > -50){
+        distanceTraveled = leftOdometer.getDistance();
+        Serial.println(distanceTraveled);
+    }
+    turningAngle = -85;
+    car.setAngle(turningAngle);
+    while (targetAngle >= currentAngle){
         gyroscope.update();
         newDistanceTraveled = leftOdometer.getDistance();
         currentAngle = gyroscope.getHeading();
@@ -578,7 +651,6 @@ void autoLeftReverse(){ // the car is supposed to park inside a parking spot to 
     }
     Serial.println("done!");
     car.setAngle(0);
-    car.setSpeed(PARKING_SPEED);
     // here the car will have the correct angle, car will drive forward and park
 }
 
@@ -605,6 +677,9 @@ void handleInput(){
         break;
       case 'p':
         park();
+        break;
+      case 'r':
+        retrieve();
         break;
       default:
         break;
