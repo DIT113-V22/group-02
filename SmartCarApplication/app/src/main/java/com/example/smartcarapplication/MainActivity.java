@@ -50,18 +50,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         speedSelector = findViewById(R.id.cruisecontrol);
-        speedSelector.setMaxValue(15);
+        speedSelector.setMaxValue(13);
         speedSelector.setMinValue(0);
-        speedOptions = new String[]{"0","10","20","30","40","50","60","70","80","90","100","110","120","130","140","150"};
+        speedOptions = new String[]{"0","30","40","50","60","70","80","90","100","110","120","130","140","150"};
         speedSelector.setDisplayedValues(speedOptions);
+        speedSelector.setWrapSelectorWheel(false);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         final JoystickJhr joystickJhr = findViewById(R.id.joystick);
         joystickJhr.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                ToggleButton toggle = (ToggleButton) findViewById(R.id.btnPlay);
                 joystickJhr.move(motionEvent);
                 float speed = (joystickJhr.joyY() / 150) * 100;
-                setSpeed(speed, "setting speed");
+                if(!toggle.isChecked()){
+                    setSpeed(speed, "setting speed");
+                }
                 setAngle(joystickJhr.joyX(), "setting angle");
                 return true;
             }
@@ -92,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     toggle.setChecked(false);
                 }
+                setSpeed(Float.parseFloat(speedOptions[value]), "setting cruise control speed");
             }
         });
 
