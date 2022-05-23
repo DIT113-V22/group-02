@@ -527,14 +527,12 @@ void autoRightReverse(){ // the car is supposed to park inside a parking spot to
             car.setSpeed(PARKING_SPEED);
             Serial.println("front right obstacle detected");
         }
-        if(isObsAtFrontLeft(10) && frontLeftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
+        if(isObsAtFrontLeft(5) && frontLeftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
             frontLeftTimer = 0;
             Serial.println("front left obstacle detected");
-            Serial.println(turningAngle);
             turningAngle = turningAngle - 5;
-            car.setAngle(turningAngle);
             Serial.println(turningAngle);
-            car.setSpeed(-(PARKING_SPEED)-5);
+            car.setSpeed(-(PARKING_SPEED)+5);
         }
         if(isObsAtLeft() && leftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
             leftTimer = 0;
