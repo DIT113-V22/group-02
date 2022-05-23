@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -41,12 +42,18 @@ public class MainActivity extends AppCompatActivity {
     private MqttClient mMqttClient;
     private boolean isConnected = false;
     private ImageView mCameraView;
-
+    private NumberPicker speedSelector;
+    private String[] speedOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        speedSelector = findViewById(R.id.cruisecontrol);
+        speedSelector.setMaxValue(15);
+        speedSelector.setMinValue(0);
+        speedOptions = new String[]{"0","10","20","30","40","50","60","70","80","90","100","110","120","130","140","150"};
+        speedSelector.setDisplayedValues(speedOptions);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         final JoystickJhr joystickJhr = findViewById(R.id.joystick);
         joystickJhr.setOnTouchListener(new View.OnTouchListener() {
@@ -66,7 +73,25 @@ public class MainActivity extends AppCompatActivity {
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-               mMqttClient.publish(CRUISE_CONTROL, Boolean.toString(b), 2, null);
+                Log.i(TAG, "Cruise Control On");
+                mMqttClient.publish(CRUISE_CONTROL, Boolean.toString(b), 2, null);
+                if(!toggle.isChecked()){
+                    speedSelector.setValue(0);
+                }
+            }
+        });
+
+        speedSelector.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                int value = speedSelector.getValue();
+                Log.i("Chosen speed", speedOptions[value]);
+                if (Integer.parseInt(speedOptions[value]) > 0) {
+                    toggle.setChecked(true);
+                }
+                else {
+                    toggle.setChecked(false);
+                }
             }
         });
 
