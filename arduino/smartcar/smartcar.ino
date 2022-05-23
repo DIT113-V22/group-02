@@ -274,7 +274,6 @@ void park(){
 }
 
 void retrieve(){
-    parkingLot[i][j].type = Unoccupied;
     int r = parkedAt.row;
     int c = parkedAt.col;
     if(c < ENTRANCE_C){
@@ -284,6 +283,8 @@ void retrieve(){
     }
     move(r, c, ENTRANCE_R, ENTRANCE_C);
     isParked = false;
+    parkingLot[r][c].type = Unoccupied;
+
 }
 
 // move(parkedAt.row, parkedAt.col, ENTRANCE_R, ENTRANCE_C);
