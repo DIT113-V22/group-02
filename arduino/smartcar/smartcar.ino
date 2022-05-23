@@ -274,6 +274,7 @@ void park(){
 }
 
 void retrieve(){
+    parkingLot[i][j].type = Unoccupied;
     int r = parkedAt.row;
     int c = parkedAt.col;
     if(c < ENTRANCE_C){
