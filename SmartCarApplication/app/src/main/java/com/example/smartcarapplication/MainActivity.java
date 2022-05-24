@@ -63,26 +63,25 @@ public class MainActivity extends AppCompatActivity {
                     setAngle(STRAIGHT_ANGLE, "Setting angle straight");
                     setSpeed(-MOVEMENT_SPEED, "Moving backwards");
                 } else if (dir == joystickJhr.stick_upRight()) {
-                    setAngle(STEERING_ANGLE, "Setting angel up right");
-                    setSpeed(MOVEMENT_SPEED, "Moving down right");
+                    setAngle(STEERING_ANGLE,"Setting angel up right");
+                    setSpeed(MOVEMENT_SPEED,"Moving down right");
                 } else if (dir == joystickJhr.stick_upLeft()) {
-                    setAngle(-STEERING_ANGLE, "Setting angel up left");
-                    setSpeed(MOVEMENT_SPEED, "Moving down left");
+                    setAngle(-STEERING_ANGLE,"Setting angel up left");
+                    setSpeed(MOVEMENT_SPEED,"Moving down left");
                 } else if (dir == joystickJhr.stick_downRight()) {
-                    setAngle(STEERING_ANGLE, "Setting angel down right");
-                    setSpeed(-MOVEMENT_SPEED, "Moving down right");
+                    setAngle(STEERING_ANGLE,"Setting angel down right");
+                    setSpeed(-MOVEMENT_SPEED,"Moving down right");
                 } else if (dir == joystickJhr.stick_downLeft()) {
-                    setAngle(-STEERING_ANGLE, "Setting angel down left");
-                    setSpeed(-MOVEMENT_SPEED, "Moving down left");
+                    setAngle(-STEERING_ANGLE,"Setting angel down left");
+                    setSpeed(-MOVEMENT_SPEED,"Moving down left");
                 } else if (dir == 0) {
                     setAngle(STRAIGHT_ANGLE, "Setting angle straight");
                     setSpeed(IDLE_SPEED, "Stopping smartcar");
-                }
-                return true;
+                };
+            return true;
             }
         });
-        //mCameraView = findViewById(R.id.imageView);
-
+        mCameraView = findViewById(R.id.imageView);
         connectToMqttBroker();
     }
 
