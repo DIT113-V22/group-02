@@ -80,7 +80,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "Cruise Control On");
                 mMqttClient.publish(CRUISE_CONTROL, Boolean.toString(b), 2, null);
                 if(!toggle.isChecked()){
+                    mMqttClient.publish(CRUISE_CONTROL, Boolean.toString(b), 2, null);
                     speedSelector.setValue(0);
+                    setSpeed(0,"cruise control is OFF now");
                 }
             }
         });
