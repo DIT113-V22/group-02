@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -197,5 +198,9 @@ public class MainActivity extends AppCompatActivity {
        }
        Log.i(TAG, "AutoPark initiated");
        mMqttClient.publish(AUTO_PARK, "Parking", 2, null);
+    }
+
+    public void togglePark(View view){
+        Toast.makeText(getApplicationContext(), "button Pressed", Toast.LENGTH_SHORT).show();
     }
 }
