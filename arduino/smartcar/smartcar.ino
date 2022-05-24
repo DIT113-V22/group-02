@@ -85,7 +85,7 @@ void setup(){
     mqtt.begin(net);
   #endif
     if (mqtt.connect("arduino", "public", "public")) {
-      mqtt.subscribe("/smartcar/control/#", 1);
+      mqtt.subscribe("/smartcar/#", 1);
       mqtt.onMessage([](String topic, String message) { handleMQTTMessage(topic, message); });
     }
     Serial.println(getAngle());
@@ -122,6 +122,8 @@ void handleMQTTMessage(String topic, String message){
           setSpeed(message.toFloat());
     } else if (topic == "/smartcar/control/steering") {
           setAngle(message.toFloat());
+    } else if (topic == "/smartcar/park") {
+          park();
     } else {
           Serial.println(topic + " " + message);
     }
