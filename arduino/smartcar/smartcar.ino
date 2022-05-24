@@ -19,7 +19,8 @@ const unsigned long LEFT_PULSES_PER_METER = 600;
 DirectionalOdometer leftOdometer{ arduinoRuntime,
                                  smartcarlib::pins::v2::leftOdometerPins,
                                  []() { leftOdometer.update(); },
-                                 LEFT_PULSES_PER_METER };DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
+                                 LEFT_PULSES_PER_METER }; DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
+
 SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer,rightOdometer);
 
 // Front Ultrasonic Sensor
@@ -57,7 +58,7 @@ const int SPEED_INCREMENT = 5;
 const int TURNING_INCREMENT = 10;
 const int FORWARD_SPEED_LIMIT = 150;
 const int BACKWARD_SPEED_LIMIT = -50;
-const int MAX_STEERING_ANGLE = 60;
+const int MAX_STEERING_ANGLE = 90;
 const auto ONE_SECOND = 1000UL;
 
 const int PARKING_SPEED = 15;
@@ -83,11 +84,13 @@ void setup(){
       mqtt.subscribe("/smartcar/#", 1);
       mqtt.onMessage([](String topic, String message) { handleMQTTMessage(topic, message); });
     }
+    Serial.println(getAngle());
 }
 
 void loop() {
 
 if (mqtt.connected()) {
+    rightOdometer.update();
     mqtt.loop();
     const auto currentTime = millis();
     static auto previousTransmission = 0UL;
@@ -144,14 +147,29 @@ int getAngle(){
 
 /*-------------------------------------- OBSTACLE DETECTION --------------------------------------*/
 
+bool isObsAtFront(float obsDistance) {
+    const auto frontDist = front.getDistance();
+    return (frontDist > 0 && frontDist <= obsDistance);
+}
+
 bool isObsAtFront() {
     const auto frontDist = front.getDistance();
-    return (frontDist > 0 && frontDist <= 12);
+    return (frontDist > 0 && frontDist <= 15);
+}
+
+bool isObsAtFrontLeft(float obsDistance) {
+    const auto frontLeftDist = frontLeft.getDistance();
+    return (frontLeftDist > 0 && frontLeftDist <= obsDistance);
 }
 
 bool isObsAtFrontLeft() {
     const auto frontLeftDist = frontLeft.getDistance();
-    return (frontLeftDist > 0 && frontLeftDist <= 8);
+    return (frontLeftDist > 0 && frontLeftDist <= 15);
+}
+
+bool isObsAtFrontRight(float obsDistance) {
+    const auto frontRightDist = frontRight.getDistance();
+    return (frontRightDist > 0 && frontRightDist < obsDistance);
 }
 
 bool isObsAtFrontRight() {
@@ -159,31 +177,49 @@ bool isObsAtFrontRight() {
     return (frontRightDist > 0 && frontRightDist < 15);
 }
 
+bool isObsAtLeft(float obsDistance) {
+    const auto lDist = leftIR.getDistance();
+    return (lDist > 0 && lDist <= obsDistance);
+}
+
 bool isObsAtLeft() {
     const auto lDist = leftIR.getDistance();
-    return (lDist > 0 && lDist <= 10);
+    return (lDist > 0 && lDist <= 15);
+}
+
+bool isObsAtRight(float obsDistance) {
+    const auto rDist = rightIR.getDistance();
+    return (rDist > 0 && rDist <= obsDistance);
 }
 
 bool isObsAtRight() {
     const auto rDist = rightIR.getDistance();
-    return (rDist > 0 && rDist <= 40);
+    return (rDist > 0 && rDist <= 15);
 }
 
+bool isObsAtBackRight(float obsDistance) {
+    const auto backRightDist = backRight.getDistance();
+    return (backRightDist > 0 && backRightDist < obsDistance);
+}
 bool isObsAtBackRight() {
     const auto backRightDist = backRight.getDistance();
-    return (backRightDist > 0 && backRightDist < 10);
+    return (backRightDist > 0 && backRightDist < 15);
+}
+
+bool isObsAtBackLeft(float obsDistance) {
+    const auto backLeftDist = backLeft.getDistance();
+    return (backLeftDist > 0 && backLeftDist < obsDistance);
 }
 
 bool isObsAtBackLeft() {
     const auto backLeftDist = backLeft.getDistance();
-    return (backLeftDist > 0 && backLeftDist < 12);
+    return (backLeftDist > 0 && backLeftDist < 15);
 }
 
 void checkObstacles(){
   const auto distance = front.getDistance();
-  // The car starts coming to a stop if the Front UltraSonic reads a distance of 1.5 metres or lower.
+  //
   if (isObsAtFront()) {
-    Serial.println("stopping");
     stopCar();
   }
 }
@@ -195,59 +231,85 @@ enum BoxType{Path, Unoccupied, Occupied, Start, notParking};
 
 class GridBox{
   public:
-    bool hasCar;
+    int row;
+    int col;
     BoxType type;
-    GridBox(BoxType boxType){
+    GridBox(){}
+    GridBox(int r, int c, BoxType boxType){
+      row = r;
+      col = c;
       type = boxType;
     }
 };
+
+boolean isParked = false;
+GridBox parkedAt;
 
 // This is the representation of the parking lot in terms of code
 // The code here works for a parking lot that has infinite rows but only three columns
 // i.e a parking lot of 5x3 works just as well as a parking lot of 30x3, as long as
 // the middle column remains to be the path.
+// c = column, r = row
 GridBox parkingLot[PARKING_ROWS][PARKING_COLS] = {
-    //00                01             02
-    {GridBox(Occupied), GridBox(Path), GridBox(Occupied)},
-    //10                11             12
-    {GridBox(Unoccupied),GridBox(Path), GridBox(Occupied)},
-    //20                21             22
-    {GridBox(Occupied), GridBox(Path), GridBox(Occupied)},
-    //30                31             32
-    {GridBox(Occupied), GridBox(Path), GridBox(Occupied)},
-    //40                41             42
-    {GridBox(notParking),GridBox(Start),GridBox(notParking)},
+    {GridBox(0, 0, Occupied),  GridBox(0, 1, Path), GridBox(0, 2, Occupied)},
+    {GridBox(1, 0, Unoccupied),GridBox(1, 1, Path), GridBox(1, 2, Occupied)},
+    {GridBox(2, 0, Occupied),  GridBox(2, 2, Path), GridBox(2, 2, Unoccupied)},
+    {GridBox(3, 0, Occupied),  GridBox(3, 2, Path), GridBox(3, 2, Occupied)},
+    {GridBox(4, 0, notParking),GridBox(4, 1, Start),GridBox(4, 2, notParking)},
 };
 
 void park(){
     for(int i = 0; i < PARKING_ROWS; i++){
-        for(int j = 0; j<PARKING_COLS; j++){
+        for(int j = 0; j < PARKING_COLS; j++){
             if(parkingLot[i][j].type == Unoccupied){
                 move(ENTRANCE_R, ENTRANCE_C, i, j);
+                if(j < ENTRANCE_C){
+                    autoLeftPark();
+                } else{
+                    autoRightPark();
+                }
                 parkingLot[i][j].type = Occupied;
+                parkedAt = parkingLot[i][j];
+                isParked = true;
+                return;
             }
         }
     }
 }
 
+void retrieve(){
+    int r = parkedAt.row;
+    int c = parkedAt.col;
+    if(c < ENTRANCE_C){
+        autoRightReverse();
+    } else{
+        autoLeftReverse();
+    }
+    move(r, c, ENTRANCE_R, ENTRANCE_C);
+    isParked = false;
+    parkingLot[r][c].type = Unoccupied;
+
+}
+
+// move(parkedAt.row, parkedAt.col, ENTRANCE_R, ENTRANCE_C);
+// 1,0,4,1
 void move(int r1, int c1, int r2, int c2){
-    int parkingR = r2+1;
-    int parkingC = 1;
-    int currentAngle = getAngle();
-    if(currentAngle > 178 && currentAngle < 182){
+    float distance;
+    float diffR;
+    int parkingR;
+    if(!isParked){
+        parkingR = r2+1;
+        int parkingC = 1;
+        int currentAngle = getAngle();
         // add 1.46 to take the distance of the entrance box into account
         // and the slight movement into the parking space
-        float diffR = r1-parkingR+1.46;
-        Serial.println(diffR);
-        float distance = (diffR * BOX_HEIGHT);
-        move(distance);
-        // assuming this is never true: c2=c1
-        if(c2 < c1){
-            autoLeftPark();
-        } else{
-            autoRightPark();
-        }
+        diffR = r1-parkingR+1.46;
+    }  else {
+        diffR = abs(r1-r2-2.0);
     }
+    Serial.println(diffR);
+    distance = (diffR * BOX_HEIGHT);
+    move(distance);
 }
 
 void move(float distance){
@@ -261,6 +323,7 @@ void move(float distance){
 /*-------------------------------------- AUTO PARKING --------------------------------------*/
 
 void autoRightPark(){ // the car is supposed to park inside a parking spot to its immediate right
+    Serial.println("auto right park");
     gyroscope.update();
     // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
     int rightTimer = 500;
@@ -291,13 +354,12 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
         gyroscope.update();
         newDistanceTraveled = leftOdometer.getDistance();
         currentAngle = gyroscope.getHeading();
-
+        // newDistanceTraveled > distanceTraveled is there to check that this does not trigger while the car is reversing
         if(isObsAtFrontRight() && frontRightTimer > 500 && newDistanceTraveled > distanceTraveled) { // reduce turning angle
             frontRightTimer = 0;
             turningAngle = 5;
             car.setAngle(turningAngle);
             car.setSpeed(PARKING_SPEED);
-            Serial.println("front right obstacle detected");
         }
         if(isObsAtFrontLeft() && frontLeftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
             frontLeftTimer = 0;
@@ -307,7 +369,6 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
             delay(200); // delay is included to make sure newDistanceTraveled > distanceTraveled is not true before the car starts reversing
             turningAngle = -85;
             car.setAngle(turningAngle);
-            Serial.println("front left obstacle detected");
 
         }
         if(isObsAtLeft() && leftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
@@ -317,7 +378,6 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
             if (car.getSpeed() > 0){
               car.setSpeed(-PARKING_SPEED);
             }
-            Serial.println("left obstacle detected");
         }
 
         if(isObsAtFront() && frontTimer > 500){ // reverses car and changes the turning angle to the opposite direction
@@ -327,7 +387,6 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
             if (car.getSpeed() > 0){
               car.setSpeed(-PARKING_SPEED);
             }
-            Serial.println("front obstacle detected");
         }
         rightTimer++;
         frontRightTimer++;
@@ -338,10 +397,11 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     }
     car.setAngle(0);
     car.setSpeed(10);
-    // here the car will have the correct angle, car will drive foward and park
+    // here the car will have the correct angle, car will drive forward and park
 }
 
 void autoLeftPark(){ // the car is supposed to park inside a parking spot to its immediate left
+    Serial.println("auto left park");
     gyroscope.update();
     // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
     int rightTimer = 500;
@@ -365,8 +425,6 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
     }
     car.setAngle(-85);
     car.setSpeed(PARKING_SPEED);
-    Serial.println(currentAngle);
-    Serial.println(targetAngle);
     while (targetAngle-3 >= currentAngle){
         gyroscope.update();
         newDistanceTraveled = leftOdometer.getDistance();
@@ -374,10 +432,9 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
 
         if(isObsAtFrontLeft() && frontRightTimer > 500 && newDistanceTraveled > distanceTraveled) { // reduce turning angle
             frontRightTimer = 0;
-            turningAngle = -5;
+            turningAngle = -85;
             car.setAngle(turningAngle);
             car.setSpeed(PARKING_SPEED);
-            Serial.println("front left obstacle detected");
         }
         if(isObsAtFrontRight() && frontLeftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
             frontLeftTimer = 0;
@@ -385,29 +442,26 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
                 car.setSpeed(-PARKING_SPEED);
             }
             delay(200); // delay is included to make sure newDistanceTraveled > distanceTraveled is not true before the car starts reversing
-            turningAngle = 90;
+            turningAngle = 85;
             car.setAngle(turningAngle);
-            Serial.println("front right obstacle detected");
 
         }
         if(isObsAtRight() && leftTimer > 500) { // reverses car and changes the turning angle to the opposite direction
-            leftTimer = 0;
-            turningAngle = 90;
+            rightTimer = 0;
+            turningAngle = 85;
             car.setAngle(turningAngle);
             if (car.getSpeed() > 0){
                 car.setSpeed(-PARKING_SPEED);
             }
-            Serial.println("right obstacle detected");
         }
 
         if(isObsAtFront() && frontTimer > 500){ // reverses car and changes the turning angle to the opposite direction
             frontTimer = 0;
-            turningAngle = 90;
+            turningAngle = 85;
             car.setAngle(turningAngle);
             if (car.getSpeed() > 0){
                 car.setSpeed(-PARKING_SPEED);
             }
-            Serial.println("front obstacle detected");
         }
         rightTimer++;
         frontRightTimer++;
@@ -419,6 +473,206 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
     Serial.println("done!");
     car.setAngle(0);
     car.setSpeed(PARKING_SPEED);
+    // here the car will have the correct angle, car will drive foward and park
+}
+
+void autoRightReverse(){ // When the car is supposed to turn right out of a parking spot
+    Serial.println("reverse right!");
+    gyroscope.update();
+    // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
+    int rightTimer = 500;
+    int frontRightTimer = 500;
+    int leftTimer = 500;
+    int frontLeftTimer = 500;
+    int backRightTimer = 500;
+    int backLeftTimer = 500;
+    int frontTimer = 500;
+
+    int distanceTraveled = 0;
+    int targetAngle = 0;
+    int currentAngle = getAngle();
+
+    if (currentAngle - 90 < 0){
+        targetAngle = 360 - abs(currentAngle - 90);
+    } else {
+        targetAngle = currentAngle - 90;
+    }
+
+    Serial.println(targetAngle);
+    car.setSpeed(-PARKING_SPEED);
+    leftOdometer.reset();
+    while (distanceTraveled > -50){
+        distanceTraveled = leftOdometer.getDistance();
+    }
+
+    turningAngle = 85;
+    car.setAngle(turningAngle);
+    while (targetAngle <= getAngle()){
+        currentAngle = gyroscope.getHeading();
+        // during reversing all obstacle detection causes the car to stop turning for a small distance to get the car away from the obstacle
+        if(isObsAtFrontRight() && frontRightTimer > 500) {
+            frontRightTimer = 0;
+            turningAngle = 0;
+            car.setAngle(turningAngle);
+            leftOdometer.reset();
+            distanceTraveled = 0;
+            while (distanceTraveled > -5){
+                distanceTraveled = leftOdometer.getDistance();
+                Serial.println(distanceTraveled);
+            }
+            turningAngle = 85;
+            car.setAngle(turningAngle);
+            car.setSpeed(-PARKING_SPEED);
+        }
+        if(isObsAtFrontLeft() && frontLeftTimer > 500) {
+            frontLeftTimer = 0;
+            turningAngle = 0;
+            car.setAngle(turningAngle);
+            leftOdometer.reset();
+            distanceTraveled = 0;
+            while (distanceTraveled > -5){
+                distanceTraveled = leftOdometer.getDistance();
+                Serial.println(distanceTraveled);
+            }
+            turningAngle = 85;
+            car.setAngle(turningAngle);
+            car.setSpeed(-PARKING_SPEED);
+        }
+        if(isObsAtLeft() && leftTimer > 500) {
+            leftTimer = 0;
+            turningAngle = 0;
+            car.setAngle(turningAngle);
+            leftOdometer.reset();
+            distanceTraveled = 0;
+            while (distanceTraveled > -5){
+                distanceTraveled = leftOdometer.getDistance();
+                Serial.println(distanceTraveled);
+            }
+            turningAngle = 85;
+            car.setAngle(turningAngle);
+            car.setSpeed(-PARKING_SPEED);
+        }
+        if(isObsAtFront() && frontTimer > 500){
+            frontTimer = 0;
+            turningAngle = 0;
+            car.setAngle(turningAngle);
+            leftOdometer.reset();
+            distanceTraveled = 0;
+            while (distanceTraveled > -5){
+                distanceTraveled = leftOdometer.getDistance();
+                Serial.println(distanceTraveled);
+            }
+            turningAngle = 85;
+            car.setAngle(turningAngle);
+            car.setSpeed(-PARKING_SPEED);
+        }
+        rightTimer++;
+        frontRightTimer++;
+        leftTimer++;
+        frontLeftTimer++;
+        frontTimer++;
+    }
+    car.setAngle(0);
+    // here the car will have the correct angle, car will drive foward and park
+}
+
+void autoLeftReverse(){ // When the car is supposed to turn left out of a parking spot
+    Serial.println("reverse right!");
+    gyroscope.update();
+    // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
+    int rightTimer = 500;
+    int frontRightTimer = 500;
+    int leftTimer = 500;
+    int frontLeftTimer = 500;
+    int backRightTimer = 500;
+    int backLeftTimer = 500;
+    int frontTimer = 500;
+
+    int distanceTraveled = 0;
+    int targetAngle = 0;
+    int currentAngle = getAngle();
+
+    if (currentAngle - 90 < 0){
+        targetAngle = 360 - abs(currentAngle - 90);
+    } else {
+        targetAngle = currentAngle - 90;
+    }
+
+    Serial.println(targetAngle);
+    car.setSpeed(-PARKING_SPEED);
+    leftOdometer.reset();
+    while (distanceTraveled > -50){
+        distanceTraveled = leftOdometer.getDistance();
+    }
+
+    turningAngle = -85;
+    car.setAngle(turningAngle);
+    while (targetAngle >= getAngle()){
+        currentAngle = gyroscope.getHeading();
+        // during reversing all obstacle detection causes the car to stop turning for a small distance to get the car away from the obstacle
+        if(isObsAtFrontRight() && frontRightTimer > 500) {
+            frontRightTimer = 0;
+            turningAngle = 0;
+            car.setAngle(turningAngle);
+            leftOdometer.reset();
+            distanceTraveled = 0;
+            while (distanceTraveled > -5){
+                distanceTraveled = leftOdometer.getDistance();
+                Serial.println(distanceTraveled);
+            }
+            turningAngle = -85;
+            car.setAngle(turningAngle);
+            car.setSpeed(-PARKING_SPEED);
+        }
+        if(isObsAtFrontLeft() && frontLeftTimer > 500) {
+            frontLeftTimer = 0;
+            turningAngle = 0;
+            car.setAngle(turningAngle);
+            leftOdometer.reset();
+            distanceTraveled = 0;
+            while (distanceTraveled > -5){
+                distanceTraveled = leftOdometer.getDistance();
+                Serial.println(distanceTraveled);
+            }
+            turningAngle = -85;
+            car.setAngle(turningAngle);
+            car.setSpeed(-PARKING_SPEED);
+        }
+        if(isObsAtLeft() && leftTimer > 500) {
+            leftTimer = 0;
+            turningAngle = 0;
+            car.setAngle(turningAngle);
+            leftOdometer.reset();
+            distanceTraveled = 0;
+            while (distanceTraveled > -5){
+                distanceTraveled = leftOdometer.getDistance();
+                Serial.println(distanceTraveled);
+            }
+            turningAngle = -85;
+            car.setAngle(turningAngle);
+            car.setSpeed(-PARKING_SPEED);
+        }
+        if(isObsAtFront() && frontTimer > 500){
+            frontTimer = 0;
+            turningAngle = 0;
+            car.setAngle(turningAngle);
+            leftOdometer.reset();
+            distanceTraveled = 0;
+            while (distanceTraveled > -5){
+                distanceTraveled = leftOdometer.getDistance();
+                Serial.println(distanceTraveled);
+            }
+            turningAngle = -85;
+            car.setAngle(turningAngle);
+            car.setSpeed(-PARKING_SPEED);
+        }
+        rightTimer++;
+        frontRightTimer++;
+        leftTimer++;
+        frontLeftTimer++;
+        frontTimer++;
+    }
+    car.setAngle(0);
     // here the car will have the correct angle, car will drive foward and park
 }
 
@@ -445,6 +699,9 @@ void handleInput(){
         break;
       case 'p':
         park();
+        break;
+      case 'r':
+        retrieve();
         break;
       default:
         break;
