@@ -19,11 +19,7 @@ const unsigned long LEFT_PULSES_PER_METER = 600;
 DirectionalOdometer leftOdometer{ arduinoRuntime,
                                  smartcarlib::pins::v2::leftOdometerPins,
                                  []() { leftOdometer.update(); },
-                                 LEFT_PULSES_PER_METER }; //DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
-DirectionalOdometer rightOdometer{ arduinoRuntime,
-                                 smartcarlib::pins::v2::leftOdometerPins,
-                                 []() { rightOdometer.update(); },
-                                 RIGHT_PULSES_PER_METER };
+                                 LEFT_PULSES_PER_METER }; DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
 
 SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer,rightOdometer);
 
@@ -220,9 +216,8 @@ bool isObsAtBackLeft() {
 
 void checkObstacles(){
   const auto distance = front.getDistance();
-  leftOdometer.update();
   //
-  if (isObsAtFront() && leftOdometer.getDistance() < rightOdometer.getDistance() ) {
+  if (isObsAtFront()) {
     stopCar();
   }
 }
