@@ -311,6 +311,7 @@ void park(){
                 parkingLot[i][j].type = Occupied;
                 parkedAt = parkingLot[i][j];
                 isParked = true;
+                shouldPark = false;
                 return;
             }
         }
