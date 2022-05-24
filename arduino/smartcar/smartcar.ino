@@ -111,7 +111,7 @@ if (mqtt.connected()) {
     }
   }
 
-  if(shouldPark == true && isParked == false){
+  if(shouldPark && !isParked){
     park();
     shouldPark = false;
   }
@@ -143,7 +143,6 @@ void updateCamera(){
     const auto currentTime = millis();
     #ifdef __SMCE__
     static auto previousFrame = 0UL;
-    // ================= 2
     if (currentTime - previousFrame >= 95) {
       previousFrame = currentTime;
       Camera.readFrame(frameBuffer.data());
