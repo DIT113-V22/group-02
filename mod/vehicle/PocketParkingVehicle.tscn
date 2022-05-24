@@ -165,7 +165,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.549106, 0 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.154577, -2.65497 )
 
 [node name="Front2" type="Position3D" parent="AttachmentSlots"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.294913, -2.65374 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1005, -1.30278 )
 
 [node name="FrontTop" type="Position3D" parent="AttachmentSlots"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.810153, -2.64882 )
