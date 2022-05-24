@@ -50,8 +50,8 @@ extents = Vector3( 0.7, 0.485599, 1.35573 )
 size = Vector3( 1.4, 0.3, 2.5 )
 
 [sub_resource type="Gradient" id=26]
-offsets = PoolRealArray( 0.993789, 1 )
-colors = PoolColorArray( 1, 1, 1, 1, 0, 0, 0, 1 )
+offsets = PoolRealArray( 1 )
+colors = PoolColorArray( 1, 1, 1, 1 )
 
 [sub_resource type="GradientTexture" id=27]
 gradient = SubResource( 26 )
@@ -64,7 +64,7 @@ metallic_texture = SubResource( 27 )
 
 [sub_resource type="PrismMesh" id=19]
 left_to_right = 1.0
-size = Vector3( 1.25, 0.965, 2.4 )
+size = Vector3( 1.25, 1, 2.4 )
 
 [sub_resource type="PrismMesh" id=21]
 left_to_right = 0.0
