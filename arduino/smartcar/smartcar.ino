@@ -96,10 +96,9 @@ void setup(){
 }
 
 void loop() {
-
+const auto currentTime = millis();
 if (mqtt.connected()) {
     mqtt.loop();
-    const auto currentTime = millis();
     static auto previousTransmission = 0UL;
     if (currentTime - previousTransmission >= oneSecond) {
       previousTransmission = currentTime;
@@ -112,7 +111,23 @@ if (mqtt.connected()) {
 #endif
   checkObstacles();
   handleInput();
-  if (mqtt.connected()) {
+  updateCamera();
+  static auto previousTransmission = 0UL;
+    if (currentTime - previousTransmission >= oneSecond) {
+      previousTransmission = currentTime;
+      const auto distance = String(front.getDistance());
+      mqtt.publish("/smartcar/ultrasound/front", distance);
+    }
+  #ifdef __SMCE__
+    // Avoid over-using the CPU if we are running in the emulator
+    delay(1);
+  #endif
+}
+
+/*-------------------------------------- MQTT METHODS --------------------------------------*/
+
+void updateCamera(){
+ if (mqtt.connected()) {
     mqtt.loop();
     const auto currentTime = millis();
     #ifdef __SMCE__
@@ -125,20 +140,8 @@ if (mqtt.connected()) {
                    false, 0);
     }
     #endif
-    static auto previousTransmission = 0UL;
-    if (currentTime - previousTransmission >= oneSecond) {
-      previousTransmission = currentTime;
-      const auto distance = String(front.getDistance());
-      mqtt.publish("/smartcar/ultrasound/front", distance);
-    }
-  }
-  #ifdef __SMCE__
-    // Avoid over-using the CPU if we are running in the emulator
-    delay(1);
-  #endif
+ }
 }
-
-/*-------------------------------------- MQTT METHODS --------------------------------------*/
 
 void handleMQTTMessage(String topic, String message){
    if (topic == "/smartcar/control/speed") {
@@ -283,6 +286,7 @@ void move(int r1, int c1, int r2, int c2){
 void move(float distance){
     leftOdometer.reset();
     while(leftOdometer.getDistance() < distance){
+        updateCamera();
         car.setSpeed(PARKING_SPEED);
     }
     car.setSpeed(0);
@@ -318,6 +322,7 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     Serial.println(currentAngle);
     Serial.println(targetAngle);
     while (targetAngle <= currentAngle){
+        updateCamera();
         gyroscope.update();
         newDistanceTraveled = leftOdometer.getDistance();
         currentAngle = gyroscope.getHeading();
@@ -398,6 +403,7 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
     Serial.println(currentAngle);
     Serial.println(targetAngle);
     while (targetAngle-3 >= currentAngle){
+        updateCamera();
         gyroscope.update();
         newDistanceTraveled = leftOdometer.getDistance();
         currentAngle = gyroscope.getHeading();
