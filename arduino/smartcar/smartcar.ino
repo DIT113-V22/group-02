@@ -546,12 +546,14 @@ void autoRightReverse(){ // When the car is supposed to turn right out of a park
     car.setSpeed(-PARKING_SPEED);
     leftOdometer.reset();
     while (distanceTraveled > -50){
+        updateCamera();
         distanceTraveled = leftOdometer.getDistance();
     }
 
     turningAngle = 85;
     car.setAngle(turningAngle);
     while (targetAngle <= getAngle()){
+        updateCamera();
         currentAngle = gyroscope.getHeading();
         // during reversing all obstacle detection causes the car to stop turning for a small distance to get the car away from the obstacle
         if(isObsAtFrontRight() && frontRightTimer > 500) {
@@ -646,12 +648,14 @@ void autoLeftReverse(){ // When the car is supposed to turn left out of a parkin
     car.setSpeed(-PARKING_SPEED);
     leftOdometer.reset();
     while (distanceTraveled > -50){
+        updateCamera();
         distanceTraveled = leftOdometer.getDistance();
     }
 
     turningAngle = -85;
     car.setAngle(turningAngle);
     while (targetAngle >= getAngle()){
+        updateCamera();
         currentAngle = gyroscope.getHeading();
         // during reversing all obstacle detection causes the car to stop turning for a small distance to get the car away from the obstacle
         if(isObsAtFrontRight() && frontRightTimer > 500) {
