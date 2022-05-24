@@ -1,15 +1,15 @@
-# Pocket Parking
+# Pocket Parking - Go Park Yourself! 🅿️🅿️
 **What is Pocket Parking?**  
-Pocket Parking is a software for automated parking, finding an empty spot inside a parking lot and parking in it. A mod for the [SMCE_gd](https://github.com/ItJustWorksTM/smce-gd/) emulator that creates a parking lot is included for testing.
+Pocket Parking is an automated parking service for drivers. Our solution aims to reduce car accidents that frequently occur in parking lots. Our goals is also to introduce digitalized personal valet parking, that everyone can afford, right in your pocket!
 
 **Why is Pocket Parking necessary?**  
 > "20 percent of car accidents happen in parking lots" - [MotorBiscuit](https://www.motorbiscuit.com/an-alarming-number-of-car-accidents-happen-in-parking-lots/)  
 
-Pocket Parking aims to lower driver accidents within parking lots by taking an automated approach to the problem. Driverless parking is not only safer, it is also quite efficient and time saving.
+Pocket Parking aims to reduce driver accidents within parking lots by taking an automated approach to the problem. Driverless parking is not only safer, it is also quite efficient and time saving.
 
 
 **How will Pocket Parking work?**  
-Pocket Parking will use the cars sensors to detect collisions, detect occupied/unoccupied parking spots, and detect paths to drive through in search of parking. It will detect presence of unguarded pedestrians and making decisions of how to keep distance to avoid harm to pedestrians.
+Pocket Parking will use the car's sensors to detect obstacles and avoid collisions, find available parking spaces and find secure paths to drive through in search of parking. It will detect presence of pedestrians and make decisions on how to keep distance to avoid harm to them.
 
 
 ### Group Members
