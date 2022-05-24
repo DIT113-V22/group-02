@@ -51,6 +51,8 @@ typedef GP2Y0A21 Infrared; //Basically a 'rename'
   // Car Info
   int speed = 0;
   int turningAngle = 0;
+  bool shouldRetrieve = false;
+  bool isParked = false;
 
 /*-------------------------------------- CONSTANTS --------------------------------------*/
                                         
@@ -99,6 +101,11 @@ if (mqtt.connected()) {
       const auto distance = String(front.getDistance());
     }
   }
+
+  if(isParked && shouldRetrieve){
+    retrieve();
+  }
+
 #ifdef __SMCE__
   // Avoid over-using the CPU if we are running in the emulator
   delay(1);
@@ -120,6 +127,8 @@ void handleMQTTMessage(String topic, String message){
           setAngle(message.toFloat());
     } else if (topic == "/smartcar/park") {
           park();
+    } else if (topic == "/smartcar/retrieve") {
+          shouldRetrieve = true;
     } else {
           Serial.println(topic + " " + message);
     }
@@ -242,7 +251,6 @@ class GridBox{
     }
 };
 
-boolean isParked = false;
 GridBox parkedAt;
 
 // This is the representation of the parking lot in terms of code

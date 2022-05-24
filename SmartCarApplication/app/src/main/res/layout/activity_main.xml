@@ -36,7 +36,7 @@
     </FrameLayout>
 
     <Button
-        android:id="@+id/parkright"
+        android:id="@+id/park"
         android:layout_width="130dp"
         android:layout_height="70dp"
         android:onClick="togglePark"
