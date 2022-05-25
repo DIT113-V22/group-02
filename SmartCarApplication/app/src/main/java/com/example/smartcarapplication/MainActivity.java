@@ -31,10 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String SPEED_CONTROL = "/smartcar/control/speed";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
     private static final String AUTO_PARK = "/smartcar/park";
-    private static final int MOVEMENT_SPEED = 50;
-    private static final int IDLE_SPEED = 0;
-    private static final int STRAIGHT_ANGLE = 0;
-    private static final int STEERING_ANGLE = 50;
     private static final int QOS = 1;
     private static final int IMAGE_WIDTH = 320;
     private static final int IMAGE_HEIGHT = 240;
