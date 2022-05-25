@@ -33,6 +33,7 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="149dp"
         android:background="#111E6C"
+        android:text="0 km/h"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="24sp"
@@ -41,7 +42,7 @@
         app:layout_constraintHorizontal_bias="0.096"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.788"></TextView>
+        app:layout_constraintVertical_bias="0.828"></TextView>
 
     <TextView
         android:id="@+id/distance"
@@ -49,6 +50,7 @@
         android:layout_height="44dp"
         android:layout_marginTop="50dp"
         android:background="#111E6C"
+        android:text="0 m"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="24sp"
@@ -57,7 +59,7 @@
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.788"></TextView>
+        app:layout_constraintVertical_bias="0.826"></TextView>
 
     <ToggleButton
         android:id="@+id/btnPlay"
@@ -106,7 +108,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.659" />
+        app:layout_constraintVertical_bias="0.68" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -117,5 +119,29 @@
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="3dp"
         tools:layout_editor_absoluteY="-3dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Speedometer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.039"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.53" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ObsDistance"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.828"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.53" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
