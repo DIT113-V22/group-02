@@ -168,10 +168,9 @@ void handleMQTTMessage(String topic, String message){
     }
 }
 
-
-void setSpeed(float newSpeed){
+void setSpeed(int newSpeed){
   car.setSpeed(newSpeed);
-  mqtt.publish("/smartcar/info/speed", String(speed));
+  mqtt.publish("/smartcar/info/speed", String(newSpeed));
 }
 
 void setAngle(float newAngle) {
@@ -331,7 +330,6 @@ void retrieve(){
     move(r, c, ENTRANCE_R, ENTRANCE_C);
     isParked = false;
     parkingLot[r][c].type = Unoccupied;
-
 }
 
 // move(parkedAt.row, parkedAt.col, ENTRANCE_R, ENTRANCE_C);
