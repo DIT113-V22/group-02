@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, successfulConnection);
                     Toast.makeText(getApplicationContext(), successfulConnection, Toast.LENGTH_SHORT).show();
                     mMqttClient.subscribe("/smartcar/ultrasound/front", QOS, null);
-                    mMqttClient.subscribe("/smartcar/camera", 0, null);
+                    mMqttClient.subscribe("/smartcar/camera", QOS, null);
                     mMqttClient.subscribe("/smartcar/cruiseControl",QOS,null);
                     mMqttClient.subscribe("/smartcar/park", QOS, null);
                 }

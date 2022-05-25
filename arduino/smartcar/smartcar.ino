@@ -54,6 +54,8 @@ typedef GP2Y0A21 Infrared; //Basically a 'rename'
   Infrared frontRight(arduinoRuntime, frontRightIRPin);
   Infrared backRight(arduinoRuntime, backRightIRPin);
   Infrared backLeft(arduinoRuntime, backLeftIRPin);
+
+std::vector<char> frameBuffer;
   
 
   // Car Info
@@ -82,7 +84,6 @@ const int ENTRANCE_C = 1;
 
 /*-------------------------------------- SETUP AND LOOP --------------------------------------*/
 
-std::vector<char> frameBuffer;
 
 void setup(){
   #ifdef __SMCE__
@@ -186,10 +187,6 @@ void handleMQTTMessage(String topic, String message){
 }
 
 void setSpeed(float newSpeed){
-  if(newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT){
-    newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
-  }
-  speed = newSpeed;
   car.setSpeed(newSpeed);
 }
 
@@ -309,6 +306,7 @@ GridBox parkedAt;
 // i.e a parking lot of 5x3 works just as well as a parking lot of 30x3, as long as
 // the middle column remains to be the path.
 // c = column, r = row
+
 GridBox parkingLot[PARKING_ROWS][PARKING_COLS] = {
     {GridBox(0, 0, Occupied),  GridBox(0, 1, Path), GridBox(0, 2, Occupied)},
     {GridBox(1, 0, Unoccupied),GridBox(1, 1, Path), GridBox(1, 2, Occupied)},
@@ -800,7 +798,7 @@ void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNI
 
 void stopCar(){
   while(car.getSpeed() > 0){
-    int speed = speed > 0 ? speed-0.1 : speed+0.1;
+    speed = speed > 0 ? speed-0.1 : speed+0.1;
     car.setSpeed(speed);
   }
 }
