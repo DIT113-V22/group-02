@@ -29,7 +29,7 @@ DirectionalOdometer leftOdometer{ arduinoRuntime,
                                  LEFT_PULSES_PER_METER }; DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
 
 SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer,rightOdometer);
-
+OV767X Birdseye;
 
 // Front Ultrasonic Sensor
 const int triggerPin = 12;  //D6
@@ -87,6 +87,9 @@ std::vector<char> frameBuffer;
 void setup(){
   #ifdef __SMCE__
   Serial.begin(9600);
+  const static int birdseye_pins[8]{9, 1, 0, 2, 4, 7, 3, 5};
+  Birdseye.setPins(0, 0, 0, 0, birdseye_pins);
+  Birdseye.begin(QVGA, RGB888, 15);
   Camera.begin(QVGA, RGB888, 15);
   frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
   mqtt.begin("127.0.0.1", 1883, net);
@@ -123,6 +126,7 @@ if (mqtt.connected()) {
   checkObstacles();
   handleInput();
   updateCamera();
+  updateBirdseye();
   static auto previousTransmission = 0UL;
     if (currentTime - previousTransmission >= ONE_SECOND) {
       previousTransmission = currentTime;
@@ -148,6 +152,22 @@ void updateCamera(){
       Camera.readFrame(frameBuffer.data());
       mqtt.publish("/smartcar/camera", frameBuffer.data(), frameBuffer.size(),
                    false, 0);
+    }
+    #endif
+ }
+}
+
+void updateBirdseye(){
+   if (mqtt.connected()) {
+    mqtt.loop();
+    frameBuffer.resize(Birdseye.width() * Birdseye.height() * Birdseye.bytesPerPixel());
+    const auto currentTime = millis();
+    #ifdef __SMCE__
+    static auto previousFrame = 0UL;
+    if (currentTime - previousFrame >= 95) {
+      previousFrame = currentTime;
+      Camera.readFrame(frameBuffer.data());
+      mqtt.publish("/smartcar/birdseye", frameBuffer.data(), frameBuffer.size(), false, 0);
     }
     #endif
  }
