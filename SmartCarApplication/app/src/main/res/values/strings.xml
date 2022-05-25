@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Pocket Parking</string>
+    <string name="speed_log" />
 </resources>
