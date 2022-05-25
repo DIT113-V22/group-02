@@ -24,9 +24,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
-    //private static final String EXTERNAL_MQTT_BROKER = "192.168.0.10";
+    private static final String EXTERNAL_MQTT_BROKER = "192.168.0.10";
     private static final String LOCALHOST = "10.0.2.2";
-    private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
+    private static final String MQTT_SERVER = "tcp://" + EXTERNAL_MQTT_BROKER + ":1883";
     private static final String SPEED_CONTROL = "/smartcar/control/speed";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
     private static final String AUTO_PARK = "/smartcar/park";
@@ -57,26 +57,28 @@ public class MainActivity extends AppCompatActivity {
         speedSelector.setWrapSelectorWheel(false);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         final JoystickJhr joystickJhr = findViewById(R.id.joystick);
+
         joystickJhr.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                ToggleButton toggle = (ToggleButton) findViewById(R.id.btnPlay);
                 joystickJhr.move(motionEvent);
-                float speed = (joystickJhr.joyY() / 150) * 100;
+                ToggleButton toggle = (ToggleButton) findViewById(R.id.btnPlay);
                 if(!toggle.isChecked()){
-                    setSpeed(speed, "setting speed");
+                    setSpeed((joystickJhr.joyY()/joystickJhr.getHeight())*100, "setting speed");
                 }
-                setAngle(joystickJhr.joyX(), "setting angle");
+                setAngle((joystickJhr.joyX()/joystickJhr.getWidth())*100, "setting angle");
                 return true;
             }
         });
 
         mCameraView = findViewById(R.id.imageView);
-
         ToggleButton toggle = (ToggleButton) findViewById(R.id.btnPlay);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b && speedOptions[speedSelector.getValue()] == "0"){
+                    speedSelector.setValue(1);
+                }
                 Log.i(TAG, "Cruise Control On");
                 mMqttClient.publish(CRUISE_CONTROL, Boolean.toString(b), 2, null);
                 if(!toggle.isChecked()){
@@ -140,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                     mMqttClient.subscribe("/smartcar/ultrasound/front", QOS, null);
                     mMqttClient.subscribe("/smartcar/camera", QOS, null);
                     mMqttClient.subscribe("/smartcar/cruiseControl",QOS,null);
+                    mMqttClient.subscribe("/smartcar/park", QOS, null);
                 }
 
                 @Override
@@ -186,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void setSpeed(float speed, String actionDescription) {
+    void setSpeed(double speed, String actionDescription) {
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(TAG, notConnected);
@@ -194,18 +197,19 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Log.i(TAG, actionDescription);
-        mMqttClient.publish(SPEED_CONTROL, Float.toString(speed), QOS, null);
+        mMqttClient.publish(SPEED_CONTROL, Double.toString(speed), QOS, null);
     }
 
-    void setAngle(float angle, String actionDescription) {
+    void setAngle(double angle, String actionDescription) {
         if (!isConnected) {
             final String notConnected = "Not connected (yet)";
             Log.e(TAG, notConnected);
             Toast.makeText(getApplicationContext(), notConnected, Toast.LENGTH_SHORT).show();
             return;
         }
+        //Toast.makeText(getApplicationContext(),Double.toString(angle),Toast.LENGTH_SHORT).show();
         Log.i(TAG, actionDescription);
-        mMqttClient.publish(STEERING_CONTROL, Float.toString(angle), QOS, null);
+        mMqttClient.publish(STEERING_CONTROL, Double.toString(angle), QOS, null);
 
     }
     public void parkTheCar(View view){

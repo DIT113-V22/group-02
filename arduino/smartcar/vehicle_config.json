@@ -8,7 +8,12 @@
         },
         "Front2": {
            "class": "Camera",
-           "name": "Front Camera"
+           "name": "Front Camera",
+           "props":{
+              "pins": [10, 1, 0, 2, 3, 5, 6, 4],
+              "far": 1000,
+              "rotation_degrees": "Vector3(-10,0,0)"
+           }
         },
         "FrontTop": {
            "class": "UltraSonic",

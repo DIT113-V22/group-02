@@ -38,15 +38,15 @@
 
     <NumberPicker
         android:id="@+id/cruisecontrol"
-        android:layout_width="100dp"
-        android:layout_height="75dp"
+        android:layout_width="91dp"
+        android:layout_height="120dp"
         android:descendantFocusability="blocksDescendants"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.99"
+        app:layout_constraintHorizontal_bias="0.978"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.875" />
+        app:layout_constraintVertical_bias="0.929" />
 
     <FrameLayout
         android:layout_width="wrap_content"
