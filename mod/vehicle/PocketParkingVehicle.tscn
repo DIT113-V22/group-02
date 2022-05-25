@@ -50,8 +50,8 @@ extents = Vector3( 0.7, 0.485599, 1.35573 )
 size = Vector3( 1.4, 0.3, 2.5 )
 
 [sub_resource type="Gradient" id=26]
-offsets = PoolRealArray( 0.993789, 1 )
-colors = PoolColorArray( 1, 1, 1, 1, 0, 0, 0, 1 )
+offsets = PoolRealArray( 1 )
+colors = PoolColorArray( 1, 1, 1, 1 )
 
 [sub_resource type="GradientTexture" id=27]
 gradient = SubResource( 26 )
@@ -64,7 +64,7 @@ metallic_texture = SubResource( 27 )
 
 [sub_resource type="PrismMesh" id=19]
 left_to_right = 1.0
-size = Vector3( 1.25, 0.965, 2.4 )
+size = Vector3( 1.25, 1, 2.4 )
 
 [sub_resource type="PrismMesh" id=21]
 left_to_right = 0.0
@@ -165,7 +165,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.549106, 0 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.154577, -2.65497 )
 
 [node name="Front2" type="Position3D" parent="AttachmentSlots"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.294913, -2.65374 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1005, -1.30278 )
 
 [node name="FrontTop" type="Position3D" parent="AttachmentSlots"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.810153, -2.64882 )
@@ -177,7 +177,10 @@ transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.8980
 transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.892303, 0.4, 0 )
 
 [node name="Back" type="Position3D" parent="AttachmentSlots"]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0.4, 2.74527 )
+transform = Transform( 0.999999, 0, 0, 0, -1, 0.000715645, 0, -0.000715645, -1, 0, 0.0436544, 2.64827 )
+
+[node name="360Camera" type="Position3D" parent="AttachmentSlots"]
+transform = Transform( -0.0114898, 0.0331147, -0.999385, -0.0100487, 0.999397, 0.0332307, 0.999884, 0.0104243, -0.0111501, -0.00079, 3.28001, 0.00894597 )
 
 [node name="LeftFront" type="Position3D" parent="AttachmentSlots"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.00833, 0, -2.446 )

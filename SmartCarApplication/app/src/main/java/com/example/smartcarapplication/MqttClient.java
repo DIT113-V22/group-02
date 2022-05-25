@@ -3,7 +3,11 @@ package com.example.smartcarapplication;
 import android.content.Context;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 // Adapted from: https://medium.com/swlh/android-and-mqtt-a-simple-guide-cb0cbba1931c
 
