@@ -105,12 +105,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (toggleCam.isChecked()) {
-                    mMqttClient.unsubscribe("/smartcar/camera", null);
-                    mMqttClient.subscribe("/smartcar/birdseye", 0, null);
+                    mMqttClient.unsubscribe("/smartcar/camera/front", null);
+                    mMqttClient.subscribe("/smartcar/camera/birdseye", 0, null);
                 }
                 else {
-                    mMqttClient.unsubscribe("/smartcar/birdseye", null);
-                    mMqttClient.subscribe("/smartcar/camera", 0, null);
+                    mMqttClient.unsubscribe("/smartcar/camera/birdseye", null);
+                    mMqttClient.subscribe("/smartcar/camera/front", 0, null);
                 }
             }
         });
@@ -146,7 +146,8 @@ public class MainActivity extends AppCompatActivity {
                     final String successfulConnection = "Connected to MQTT broker";
                     Log.i(TAG, successfulConnection);
                     Toast.makeText(getApplicationContext(), successfulConnection, Toast.LENGTH_SHORT).show();
-                    mMqttClient.subscribe("/smartcar/#", QOS, null);
+                    mMqttClient.subscribe("/smartcar/info/#", QOS, null);
+                    mMqttClient.subscribe("/smartcar/camera/front", QOS, null);
                 }
 
                 @Override
@@ -167,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
-                    if (topic.equals("/smartcar/camera")) {
+                    if (topic.equals("/smartcar/camera/front") || topic.equals("/smartcar/camera/birdseye")) {
                         final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
 
                         final byte[] payload = message.getPayload();
@@ -180,27 +181,13 @@ public class MainActivity extends AppCompatActivity {
                         }
                         bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
                         mCameraView.setImageBitmap(bm);
-                    } else if (topic.equals("/smartcar/birdseye")) {
-                        final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
-
-                        final byte[] payload = message.getPayload();
-                        final int[] colors = new int[IMAGE_WIDTH * IMAGE_HEIGHT];
-                        for (int ci = 0; ci < colors.length; ++ci) {
-                            final int r = payload[3 * ci] & 0xFF;
-                            final int g = payload[3 * ci + 1] & 0xFF;
-                            final int b = payload[3 * ci + 2] & 0xFF;
-                            colors[ci] = Color.rgb(r, g, b);
-                        }
-                        bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-                        mCameraView.setImageBitmap(bm);
-                        // display speed in km/h on mobile device if message "/smartcar/info/speed"
                     } else if (topic.equals("/smartcar/info/speed")) {
                         final String speed = message.toString();
                         TextView view = (TextView) findViewById(R.id.speedlog);
                         view.setText(speed + " km/h");
 
                         // display distance in meters on mobile device if message "/smartcar/ultrasound/front"
-                    } else if (topic.equals("/smartcar/ultrasound/front")) {
+                    } else if (topic.equals("/smartcar/info/ultrasound/front")) {
                             final String distance = message.toString();
                             TextView view = (TextView) findViewById(R.id.distance);
                             view.setText(distance + " m");

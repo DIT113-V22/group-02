@@ -112,8 +112,7 @@ if (mqtt.connected()) {
     if (currentTime - previousTransmission >= ONE_SECOND) {
       previousTransmission = currentTime;
       const auto distance = String(front.getDistance());
-      // ================= 3
-      mqtt.publish("/smartcar/ultrasound/front", distance);
+      mqtt.publish("/smartcar/info/ultrasound/front", distance);
     }
   }
 
@@ -133,7 +132,7 @@ if (mqtt.connected()) {
     if (currentTime - previousTransmission >= ONE_SECOND) {
       previousTransmission = currentTime;
       const auto distance = String(front.getDistance());
-      mqtt.publish("/smartcar/ultrasound/front", distance);
+      mqtt.publish("/smartcar/info/ultrasound/front", distance);
     }
   #ifdef __SMCE__
     // Avoid over-using the CPU if we are running in the emulator
@@ -149,23 +148,18 @@ void updateCams(){
 }
 
 void updateFrontCam(){
- if (mqtt.connected()) {
-    mqtt.loop();
     const auto currentTime = millis();
     #ifdef __SMCE__
     static auto previousFrame = 0UL;
     if (currentTime - previousFrame >= 95) {
       previousFrame = currentTime;
       Camera.readFrame(frameBuffer.data());
-      mqtt.publish("/smartcar/camera", frameBuffer.data(), frameBuffer.size(), false, 0);
+      mqtt.publish("/smartcar/camera/front", frameBuffer.data(), frameBuffer.size(), false, 0);
     }
     #endif
- }
 }
 
 void updateBirdseye(){
-   if (mqtt.connected()) {
-    mqtt.loop();
     frameBuffer.resize(Birdseye.width() * Birdseye.height() * Birdseye.bytesPerPixel());
     const auto currentTime = millis();
     #ifdef __SMCE__
@@ -173,10 +167,9 @@ void updateBirdseye(){
     if (currentTime - previousFrame >= 95) {
       previousFrame = currentTime;
       Birdseye.readFrame(frameBuffer.data());
-      mqtt.publish("/smartcar/birdseye", frameBuffer.data(), frameBuffer.size(), false, 0);
+      mqtt.publish("/smartcar/camera/birdseye", frameBuffer.data(), frameBuffer.size(), false, 0);
     }
     #endif
- }
 }
 
 void handleMQTTMessage(String topic, String message){
@@ -186,8 +179,6 @@ void handleMQTTMessage(String topic, String message){
           setAngle(message.toFloat());
     } else if (topic == "/smartcar/park") {
           shouldPark = true;
-    } else {
-          Serial.println(topic + " " + message);
     }
 }
 
@@ -371,7 +362,6 @@ void move(int r1, int c1, int r2, int c2){
     }  else {
         diffR = abs(r1-r2-2.0);
     }
-    Serial.println(diffR);
     distance = (diffR * BOX_HEIGHT);
     move(distance);
 }
