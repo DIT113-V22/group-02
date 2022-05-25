@@ -126,8 +126,7 @@ if (mqtt.connected()) {
 #endif
   checkObstacles();
   handleInput();
-  updateCamera();
-  updateBirdseye();
+  updateCams();
   static auto previousTransmission = 0UL;
     if (currentTime - previousTransmission >= ONE_SECOND) {
       previousTransmission = currentTime;
@@ -142,7 +141,12 @@ if (mqtt.connected()) {
 
 /*-------------------------------------- MQTT METHODS --------------------------------------*/
 
-void updateCamera(){
+void updateCams(){
+  updateFrontCam();
+  updateBirdseye();
+}
+
+void updateFrontCam(){
  if (mqtt.connected()) {
     mqtt.loop();
     const auto currentTime = millis();
@@ -151,8 +155,7 @@ void updateCamera(){
     if (currentTime - previousFrame >= 95) {
       previousFrame = currentTime;
       Camera.readFrame(frameBuffer.data());
-      mqtt.publish("/smartcar/camera", frameBuffer.data(), frameBuffer.size(),
-                   false, 0);
+      mqtt.publish("/smartcar/camera", frameBuffer.data(), frameBuffer.size(), false, 0);
     }
     #endif
  }
@@ -167,7 +170,7 @@ void updateBirdseye(){
     static auto previousFrame = 0UL;
     if (currentTime - previousFrame >= 95) {
       previousFrame = currentTime;
-      Camera.readFrame(frameBuffer.data());
+      Birdseye.readFrame(frameBuffer.data());
       mqtt.publish("/smartcar/birdseye", frameBuffer.data(), frameBuffer.size(), false, 0);
     }
     #endif
@@ -373,7 +376,7 @@ void move(int r1, int c1, int r2, int c2){
 void move(float distance){
     leftOdometer.reset();
     while(leftOdometer.getDistance() < distance){
-        updateCamera();
+        updateCams();
         car.setSpeed(PARKING_SPEED);
     }
     car.setSpeed(0);
@@ -410,7 +413,7 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     Serial.println(currentAngle);
     Serial.println(targetAngle);
     while (targetAngle <= currentAngle){
-        updateCamera();
+        updateCams();
         gyroscope.update();
         newDistanceTraveled = leftOdometer.getDistance();
         currentAngle = gyroscope.getHeading();
@@ -486,7 +489,7 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
     car.setAngle(-85);
     car.setSpeed(PARKING_SPEED);
     while (targetAngle-3 >= currentAngle){
-        updateCamera();
+        updateCams();
         gyroscope.update();
         newDistanceTraveled = leftOdometer.getDistance();
         currentAngle = gyroscope.getHeading();
@@ -563,14 +566,14 @@ void autoRightReverse(){ // When the car is supposed to turn right out of a park
     car.setSpeed(-PARKING_SPEED);
     leftOdometer.reset();
     while (distanceTraveled > -50){
-        updateCamera();
+        updateCams();
         distanceTraveled = leftOdometer.getDistance();
     }
 
     turningAngle = 85;
     car.setAngle(turningAngle);
     while (targetAngle <= getAngle()){
-        updateCamera();
+        updateCams();
         currentAngle = gyroscope.getHeading();
         // during reversing all obstacle detection causes the car to stop turning for a small distance to get the car away from the obstacle
         if(isObsAtFrontRight() && frontRightTimer > 500) {
@@ -665,14 +668,14 @@ void autoLeftReverse(){ // When the car is supposed to turn left out of a parkin
     car.setSpeed(-PARKING_SPEED);
     leftOdometer.reset();
     while (distanceTraveled > -50){
-        updateCamera();
+        updateCams();
         distanceTraveled = leftOdometer.getDistance();
     }
 
     turningAngle = -85;
     car.setAngle(turningAngle);
     while (targetAngle >= getAngle()){
-        updateCamera();
+        updateCams();
         currentAngle = gyroscope.getHeading();
         // during reversing all obstacle detection causes the car to stop turning for a small distance to get the car away from the obstacle
         if(isObsAtFrontRight() && frontRightTimer > 500) {

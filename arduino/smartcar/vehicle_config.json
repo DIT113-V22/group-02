@@ -19,8 +19,7 @@
           "class": "Camera",
           "name": "Birdseye",
           "props": {
-            "pins": [9, 1, 0, 2, 4, 7, 3, 5],
-            "far": 1000
+            "pins": [9, 1, 0, 2, 4, 7, 3, 5]
           }
         },
         "FrontTop": {
