@@ -68,7 +68,7 @@ std::vector<char> frameBuffer;
                                         
 const int SPEED_INCREMENT = 5;
 const int TURNING_INCREMENT = 10;
-const int FORWARD_SPEED_LIMIT = 150;
+const int FORWARD_SPEED_LIMIT = 75;
 const int BACKWARD_SPEED_LIMIT = -50;
 
 const int MAX_STEERING_ANGLE = 90;
@@ -109,6 +109,8 @@ if (mqtt.connected()) {
     if (currentTime - previousTransmission >= ONE_SECOND) {
       previousTransmission = currentTime;
       const auto distance = String(front.getDistance());
+      // ================= 3
+      mqtt.publish("/smartcar/ultrasound/front", distance);
     }
   }
 
@@ -166,11 +168,12 @@ void handleMQTTMessage(String topic, String message){
     }
 }
 
-void setSpeed(float newSpeed){
+void setSpeed(int newSpeed){
   car.setSpeed(newSpeed);
+  mqtt.publish("/smartcar/info/speed", String(newSpeed));
 }
 
-void setAngle(float newAngle){
+void setAngle(float newAngle) {
   if(newAngle > MAX_STEERING_ANGLE){
     newAngle = MAX_STEERING_ANGLE;
   }
@@ -183,6 +186,7 @@ int getAngle(){
 }
 
 /*-------------------------------------- OBSTACLE DETECTION --------------------------------------*/
+
 
 bool isObsAtFront(float obsDistance) {
     const auto frontDist = front.getDistance();
@@ -326,7 +330,6 @@ void retrieve(){
     move(r, c, ENTRANCE_R, ENTRANCE_C);
     isParked = false;
     parkingLot[r][c].type = Unoccupied;
-
 }
 
 // move(parkedAt.row, parkedAt.col, ENTRANCE_R, ENTRANCE_C);
@@ -419,7 +422,6 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
               car.setSpeed(-PARKING_SPEED);
             }
         }
-
         if(isObsAtFront() && frontTimer > 500){ // reverses car and changes the turning angle to the opposite direction
             frontTimer = 0;
             turningAngle = -85;
