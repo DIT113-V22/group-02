@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -30,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String SPEED_CONTROL = "/smartcar/control/speed";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
     private static final String AUTO_PARK = "/smartcar/park";
-    private static final String CRUISE_CONTROL = "/smartcar/cruisecontrol";
     private static final int MOVEMENT_SPEED = 50;
     private static final int IDLE_SPEED = 0;
     private static final int STRAIGHT_ANGLE = 0;
@@ -56,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
         speedSelector.setDisplayedValues(speedOptions);
         speedSelector.setWrapSelectorWheel(false);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
+        mCameraView = findViewById(R.id.imageView);
+
+        connectToMqttBroker();
+
         final JoystickJhr joystickJhr = findViewById(R.id.joystick);
 
         joystickJhr.setOnTouchListener(new View.OnTouchListener() {
@@ -71,42 +75,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mCameraView = findViewById(R.id.imageView);
         ToggleButton toggle = (ToggleButton) findViewById(R.id.btnPlay);
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b && speedOptions[speedSelector.getValue()] == "0"){
-                    speedSelector.setValue(1);
-                }
-                Log.i(TAG, "Cruise Control On");
-                mMqttClient.publish(CRUISE_CONTROL, Boolean.toString(b), 2, null);
-                if(!toggle.isChecked()){
-                    mMqttClient.publish(CRUISE_CONTROL, Boolean.toString(b), 2, null);
-                    speedSelector.setValue(0);
-                    setSpeed(0,"cruise control is OFF now");
-                }
-            }
-        });
-
         speedSelector.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
-            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                int value = speedSelector.getValue();
-                Log.i("Chosen speed", speedOptions[value]);
-                if (Integer.parseInt(speedOptions[value]) > 0) {
+            public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
+                Log.i("Chosen speed", speedOptions[newVal]);
+                if (Integer.parseInt(speedOptions[newVal]) > 0) {
                     toggle.setChecked(true);
                 }
                 else {
                     toggle.setChecked(false);
                 }
-                setSpeed(Float.parseFloat(speedOptions[value]), "setting cruise control speed");
+                mMqttClient.publish(SPEED_CONTROL, speedOptions[newVal], 2, null);
             }
         });
 
-
-
-        connectToMqttBroker();
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b && speedOptions[speedSelector.getValue()].equals("0")){
+                    speedSelector.setValue(1);
+                    mMqttClient.publish(SPEED_CONTROL, speedOptions[1], 2, null);
+                }
+                Log.i(TAG, "Cruise Control On");
+                if(!toggle.isChecked()){
+                    speedSelector.setValue(0);
+                    mMqttClient.publish(SPEED_CONTROL, speedOptions[0], 2, null);
+                }
+            }
+        });
     }
 
     @Override

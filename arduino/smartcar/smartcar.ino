@@ -63,7 +63,6 @@ std::vector<char> frameBuffer;
   int turningAngle = 0;
   bool shouldPark = false;
   bool isParked = false;
-  bool cruiseControlOn = false;
 
 /*-------------------------------------- CONSTANTS --------------------------------------*/
                                         
@@ -160,8 +159,6 @@ void handleMQTTMessage(String topic, String message){
           setSpeed(message.toFloat());
     } else if (topic == "/smartcar/control/steering") {
           setAngle(message.toFloat());
-    } else if (topic == "/smartcar/cruisecontrol"){
-          cruiseControlOn = !cruiseControlOn;
     } else if (topic == "/smartcar/park") {
           shouldPark = true;
     } else {
@@ -170,11 +167,6 @@ void handleMQTTMessage(String topic, String message){
 }
 
 void setSpeed(float newSpeed){
-  if(cruiseControlOn) return;
-  if(newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT){
-    newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
-  }
-  speed = newSpeed;
   car.setSpeed(newSpeed);
 }
 
