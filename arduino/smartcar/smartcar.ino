@@ -464,9 +464,15 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
         frontTimer++;
         distanceTraveled = newDistanceTraveled;
     }
-    car.setAngle(0);
-    car.setSpeed(10);
     // here the car will have the correct angle, car will drive forward and park
+    turningAngle = 0;
+    car.setAngle(turningAngle);
+    car.setSpeed(PARKING_SPEED);
+    // while the car does not detect an obstacle in front, continue moving forward with "PARKING_SPEED"
+    // then when the car detect an obstacle, that means the car is in the correct position and the the car speed
+    // is set to 0
+    while (!isObsAtFront(35));
+    car.setSpeed(0);
 }
 
 void autoLeftPark(){ // the car is supposed to park inside a parking spot to its immediate left
@@ -540,14 +546,18 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
         frontTimer++;
         distanceTraveled = newDistanceTraveled;
     }
-    Serial.println("done!");
-    car.setAngle(0);
-    car.setSpeed(PARKING_SPEED);
     // here the car will have the correct angle, car will drive foward and park
+    turningAngle = 0;
+    car.setAngle(turningAngle);
+    car.setSpeed(PARKING_SPEED);
+    // while the car does not detect an obstacle in front, continue moving forward with "PARKING_SPEED"
+    // then when the car detect an obstacle, that means the car is in the correct position and the the car speed
+    // is set to 0
+    while (!isObsAtFront(35));
+    car.setSpeed(0);
 }
 
 void autoRightReverse(){ // When the car is supposed to turn right out of a parking spot
-    Serial.println("reverse right!");
     gyroscope.update();
     // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
     int rightTimer = 500;
@@ -571,7 +581,7 @@ void autoRightReverse(){ // When the car is supposed to turn right out of a park
     Serial.println(targetAngle);
     car.setSpeed(-PARKING_SPEED);
     leftOdometer.reset();
-    while (distanceTraveled > -50){
+    while (distanceTraveled > -30){
         updateCams();
         distanceTraveled = leftOdometer.getDistance();
     }
@@ -644,12 +654,12 @@ void autoRightReverse(){ // When the car is supposed to turn right out of a park
         frontLeftTimer++;
         frontTimer++;
     }
-    car.setAngle(0);
-    // here the car will have the correct angle, car will drive foward and park
+    // here the car will have the correct angle, car will drive foward and retun to the entrance
+    turningAngle = 0;
+    car.setAngle(turningAngle);
 }
 
 void autoLeftReverse(){ // When the car is supposed to turn left out of a parking spot
-    Serial.println("reverse right!");
     gyroscope.update();
     // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
     int rightTimer = 500;
@@ -673,7 +683,7 @@ void autoLeftReverse(){ // When the car is supposed to turn left out of a parkin
     Serial.println(targetAngle);
     car.setSpeed(-PARKING_SPEED);
     leftOdometer.reset();
-    while (distanceTraveled > -50){
+    while (distanceTraveled > -30){
         updateCams();
         distanceTraveled = leftOdometer.getDistance();
     }
@@ -746,8 +756,9 @@ void autoLeftReverse(){ // When the car is supposed to turn left out of a parkin
         frontLeftTimer++;
         frontTimer++;
     }
-    car.setAngle(0);
-    // here the car will have the correct angle, car will drive foward and park
+    // here the car will have the correct angle, car will drive foward and retun to the entrance
+    turningAngle = 0;
+    car.setAngle(turningAngle);
 }
 
 /*-------------------------------------- SERIAL METHODS --------------------------------------*/
