@@ -522,7 +522,10 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
     turningAngle = 0;
     car.setAngle(turningAngle);
     car.setSpeed(PARKING_SPEED);
-    while (!isObsAtFront(35))
+    // while the car does not detect an obstacle in front, continue moving forward with "PARKING_SPEED"
+    // then when the car detect an obstacle, that means the car is in the correct position and the the car speed
+    // is set to 0
+    while (!isObsAtFront(35));
     car.setSpeed(0);
 }
 
