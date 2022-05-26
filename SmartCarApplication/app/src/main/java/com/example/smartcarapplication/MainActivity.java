@@ -2,6 +2,7 @@ package com.example.smartcarapplication;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -22,9 +23,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
-    //private static final String EXTERNAL_MQTT_BROKER = "192.168.0.10";
+    private static final String EXTERNAL_MQTT_BROKER = "192.168.0.10";
     private static final String LOCALHOST = "10.0.2.2";
-    private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
+    private static final String MQTT_SERVER = "tcp://" + EXTERNAL_MQTT_BROKER + ":1883";
     private static final String SPEED_CONTROL = "/smartcar/control/speed";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
     private static final String AUTO_PARK = "/smartcar/park";
@@ -40,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private MqttClient mMqttClient;
     private boolean isConnected = false;
     private ImageView mCameraView;
-    private boolean toPark = true;
+    private boolean isParked = false;
+    private JoystickJhr joystickJhr;
+    private Button parkingButton;
 
 
     @Override
@@ -48,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
-        final JoystickJhr joystickJhr = findViewById(R.id.joystick);
+        parkingButton = (Button) findViewById(R.id.park);
+        joystickJhr = findViewById(R.id.joystick);
         joystickJhr.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -121,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), successfulConnection, Toast.LENGTH_SHORT).show();
                     mMqttClient.subscribe("/smartcar/ultrasound/front", QOS, null);
                     mMqttClient.subscribe("/smartcar/camera", QOS, null);
-                    mMqttClient.subscribe("/smartcar/park", QOS, null);
+                    mMqttClient.subscribe("/smartcar/parking/#", QOS, null);
                 }
 
                 @Override
@@ -155,6 +159,26 @@ public class MainActivity extends AppCompatActivity {
                         }
                         bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
                         mCameraView.setImageBitmap(bm);
+                    } else if (topic.equals("/smartcar/parking/isParking")  || topic.equals("/smartcar/parking/isRetrieving")){
+                        joystickJhr.setEnabled(false);
+                        joystickJhr.setColorFirst(Color.parseColor("#8d8d8d"));
+                        joystickJhr.setColorSecond(Color.parseColor("#bdbdbd"));
+                        parkingButton.setEnabled(false);
+                        parkingButton.setBackgroundColor(Color.parseColor("#bdbdbd"));
+                        parkingButton.setTextColor(Color.parseColor("#8d8d8d"));
+                    } else if (topic.equals("/smartcar/parking/hasParked") || topic.equals("/smartcar/parking/hasRetrieved")){
+                        isParked = !isParked;
+                        parkingButton.setEnabled(true);
+                        joystickJhr.setEnabled(true);
+                        joystickJhr.setColorFirst(Color.parseColor("#DDE8E8"));
+                        joystickJhr.setColorSecond(Color.parseColor("#111E6C"));
+                        parkingButton.setBackgroundColor(Color.parseColor("#0D1E70"));
+                        parkingButton.setTextColor(Color.parseColor("#ffffff"));
+                        if(parkingButton.getText().equals("P")){
+                            parkingButton.setText("R");
+                        } else {
+                            parkingButton.setText("P");
+                        }
                     } else {
                         Log.i(TAG, "[MQTT] Topic: " + topic + " | Message: " + message.toString());
                     }
@@ -193,21 +217,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void togglePark(View view){
-
-        if (!isConnected){
-            final String notConnected = "Not connected (yet)";
-            Log.e(TAG, notConnected);
-            Toast.makeText(getApplicationContext(), notConnected, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Button button = (Button) view;
-        toPark = !toPark;
-        if(toPark){
-            button.setText("P");
+        if(isParked){
             mMqttClient.publish(RETRIEVE, "Retrieving", 2, null);
         } else {
-            button.setText("R");
             mMqttClient.publish(AUTO_PARK, "Parking", 2, null);
         }
     }

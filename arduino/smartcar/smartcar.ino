@@ -51,8 +51,9 @@ typedef GP2Y0A21 Infrared; //Basically a 'rename'
   // Car Info
   int speed = 0;
   int turningAngle = 0;
-  bool shouldRetrieve = false;
   bool isParked = false;
+  bool shouldPark = false;
+  bool shouldRetrieve = false;
 
 /*-------------------------------------- CONSTANTS --------------------------------------*/
                                         
@@ -102,6 +103,11 @@ if (mqtt.connected()) {
     }
   }
 
+  if(shouldPark && !isParked){
+      park();
+      shouldPark = false;
+  }
+
   if(isParked && shouldRetrieve){
     retrieve();
   }
@@ -126,7 +132,7 @@ void handleMQTTMessage(String topic, String message){
     } else if (topic == "/smartcar/control/steering") {
           setAngle(message.toFloat());
     } else if (topic == "/smartcar/park") {
-          park();
+         shouldPark = true;
     } else if (topic == "/smartcar/retrieve") {
           shouldRetrieve = true;
     } else {
@@ -270,6 +276,7 @@ void park(){
     for(int i = 0; i < PARKING_ROWS; i++){
         for(int j = 0; j < PARKING_COLS; j++){
             if(parkingLot[i][j].type == Unoccupied){
+                mqtt.publish("/smartcar/parking/isParking", "Parking");
                 move(ENTRANCE_R, ENTRANCE_C, i, j);
                 if(j < ENTRANCE_C){
                     autoLeftPark();
@@ -279,6 +286,7 @@ void park(){
                 parkingLot[i][j].type = Occupied;
                 parkedAt = parkingLot[i][j];
                 isParked = true;
+                mqtt.publish("/smartcar/parking/hasParked", "Parked.");
                 return;
             }
         }
@@ -286,6 +294,7 @@ void park(){
 }
 
 void retrieve(){
+    mqtt.publish("/smartcar/parking/isRetrieving", "Retrieving");
     int r = parkedAt.row;
     int c = parkedAt.col;
     if(c < ENTRANCE_C){
@@ -296,7 +305,7 @@ void retrieve(){
     move(r, c, ENTRANCE_R, ENTRANCE_C);
     isParked = false;
     parkingLot[r][c].type = Unoccupied;
-
+    mqtt.publish("/smartcar/parking/hasRetrieved", "Retrieved.");
 }
 
 // move(parkedAt.row, parkedAt.col, ENTRANCE_R, ENTRANCE_C);
