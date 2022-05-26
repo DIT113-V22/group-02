@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String EXTERNAL_MQTT_BROKER = "192.168.187.128";
     private static final String LOCALHOST = "10.0.2.2";
-    private static final String MQTT_SERVER = "tcp://" + EXTERNAL_MQTT_BROKER + ":1883";
+    private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     private static final String SPEED_CONTROL = "/smartcar/control/speed";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
     private static final String AUTO_PARK = "/smartcar/parking/park";
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isParked = false;
     private JoystickJhr joystickJhr;
     private Button parkingButton;
+    private ToggleButton speedToggle;
 
     private NumberPicker speedSelector;
     private String[] speedOptions;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         parkingButton = (Button) findViewById(R.id.park);
         joystickJhr = findViewById(R.id.joystick);
         mCameraView = findViewById(R.id.imageView);
+        speedToggle = (ToggleButton) findViewById(R.id.btnPlay);
 
         connectToMqttBroker();
 
@@ -80,22 +82,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ToggleButton toggle = (ToggleButton) findViewById(R.id.btnPlay);
         speedSelector.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
                 Log.i("Chosen speed", speedOptions[newVal]);
                 if (Integer.parseInt(speedOptions[newVal]) > 0) {
-                    toggle.setChecked(true);
+                    speedToggle.setChecked(true);
                 }
                 else {
-                    toggle.setChecked(false);
+                    speedToggle.setChecked(false);
                 }
                 mMqttClient.publish(SPEED_CONTROL, speedOptions[newVal], 2, null);
             }
         });
 
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        speedToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b && speedOptions[speedSelector.getValue()].equals("0")){
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                     mMqttClient.publish(SPEED_CONTROL, speedOptions[1], 2, null);
                 }
                 Log.i(TAG, "Cruise Control On");
-                if(!toggle.isChecked()){
+                if(!speedToggle.isChecked()){
                     speedSelector.setValue(0);
                     mMqttClient.publish(SPEED_CONTROL, speedOptions[0], 2, null);
                 }
@@ -197,6 +198,8 @@ public class MainActivity extends AppCompatActivity {
                         joystickJhr.setEnabled(false);
                         joystickJhr.setColorFirst(Color.parseColor("#8d8d8d"));
                         joystickJhr.setColorSecond(Color.parseColor("#bdbdbd"));
+                        speedSelector.setEnabled(false);
+                        speedToggle.setEnabled(false);
                         parkingButton.setEnabled(false);
                         parkingButton.setBackgroundColor(Color.parseColor("#bdbdbd"));
                         parkingButton.setTextColor(Color.parseColor("#8d8d8d"));
@@ -206,6 +209,8 @@ public class MainActivity extends AppCompatActivity {
                         joystickJhr.setEnabled(true);
                         joystickJhr.setColorFirst(Color.parseColor("#DDE8E8"));
                         joystickJhr.setColorSecond(Color.parseColor("#111E6C"));
+                        speedSelector.setEnabled(true);
+                        speedToggle.setEnabled(true);
                         parkingButton.setBackgroundColor(Color.parseColor("#0D1E70"));
                         parkingButton.setTextColor(Color.parseColor("#ffffff"));
                         if(parkingButton.getText().equals("P")){
