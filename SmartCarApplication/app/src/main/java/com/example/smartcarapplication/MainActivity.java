@@ -25,14 +25,11 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
-    private static final String EXTERNAL_MQTT_BROKER = "192.168.168.128";
+    private static final String EXTERNAL_MQTT_BROKER = "192.168.0.10";
     private static final String LOCALHOST = "10.0.2.2";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     private static final String SPEED_CONTROL = "/smartcar/control/speed";
     private static final String STEERING_CONTROL = "/smartcar/control/steering";
-    private static final int IDLE_SPEED = 0;
-    private static final int STRAIGHT_ANGLE = 0;
-    private static final int STEERING_ANGLE = 50;
     private static final String AUTO_PARK = "/smartcar/park";
     private static final int QOS = 1;
     private static final int IMAGE_WIDTH = 320;
@@ -103,6 +100,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        ToggleButton toggleCam = (ToggleButton) findViewById(R.id.switchCam);
+        toggleCam.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (toggleCam.isChecked()) {
+                    mMqttClient.unsubscribe("/smartcar/camera/front", null);
+                    mMqttClient.subscribe("/smartcar/camera/birdseye", 0, null);
+                }
+                else {
+                    mMqttClient.unsubscribe("/smartcar/camera/birdseye", null);
+                    mMqttClient.subscribe("/smartcar/camera/front", 0, null);
+                }
+            }
+        });
     }
 
     @Override
@@ -135,7 +146,8 @@ public class MainActivity extends AppCompatActivity {
                     final String successfulConnection = "Connected to MQTT broker";
                     Log.i(TAG, successfulConnection);
                     Toast.makeText(getApplicationContext(), successfulConnection, Toast.LENGTH_SHORT).show();
-                    mMqttClient.subscribe("/smartcar/#", QOS, null);
+                    mMqttClient.subscribe("/smartcar/info/#", QOS, null);
+                    mMqttClient.subscribe("/smartcar/camera/front", QOS, null);
                 }
 
                 @Override
@@ -156,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
-                    if (topic.equals("/smartcar/camera")) {
+                    if (topic.equals("/smartcar/camera/front") || topic.equals("/smartcar/camera/birdseye")) {
                         final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
 
                         final byte[] payload = message.getPayload();
@@ -169,19 +181,16 @@ public class MainActivity extends AppCompatActivity {
                         }
                         bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
                         mCameraView.setImageBitmap(bm);
-
-                        // display speed in km/h on mobile device if message "/smartcar/info/speed"
                     } else if (topic.equals("/smartcar/info/speed")) {
                         final String speed = message.toString();
                         TextView view = (TextView) findViewById(R.id.speedlog);
                         view.setText(speed + " km/h");
 
                         // display distance in meters on mobile device if message "/smartcar/ultrasound/front"
-                    } else if (topic.equals("/smartcar/ultrasound/front")) {
+                    } else if (topic.equals("/smartcar/info/ultrasound/front")) {
                             final String distance = message.toString();
                             TextView view = (TextView) findViewById(R.id.distance);
                             view.setText(distance + " m");
-
                     } else {
                         Log.i(TAG, "[MQTT] Topic: " + topic + " | Message: " + message.toString());
                     }

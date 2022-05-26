@@ -4,6 +4,7 @@
 #include <WiFi.h>
 
 #include <stdlib.h>
+
 #ifdef __SMCE__
 #include <OV767X.h>
 #endif
@@ -29,7 +30,9 @@ DirectionalOdometer leftOdometer{ arduinoRuntime,
                                  LEFT_PULSES_PER_METER }; DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
 
 SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer,rightOdometer);
-
+#ifdef __SMCE__
+OV767X Birdseye;
+#endif
 
 // Front Ultrasonic Sensor
 const int triggerPin = 12;  //D6
@@ -88,6 +91,9 @@ const int ENTRANCE_C = 1;
 void setup(){
   #ifdef __SMCE__
   Serial.begin(9600);
+  const static int birdseye_pins[8]{9, 1, 0, 2, 4, 7, 3, 5};
+  Birdseye.setPins(0, 0, 0, 0, birdseye_pins);
+  Birdseye.begin(QVGA, RGB888, 15);
   Camera.begin(QVGA, RGB888, 15);
   frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
   mqtt.begin("127.0.0.1", 1883, net);
@@ -109,8 +115,7 @@ if (mqtt.connected()) {
     if (currentTime - previousTransmission >= ONE_SECOND) {
       previousTransmission = currentTime;
       const auto distance = String(front.getDistance());
-      // ================= 3
-      mqtt.publish("/smartcar/ultrasound/front", distance);
+      mqtt.publish("/smartcar/info/ultrasound/front", distance);
     }
   }
 
@@ -125,12 +130,12 @@ if (mqtt.connected()) {
 #endif
   checkObstacles();
   handleInput();
-  updateCamera();
+  updateCams();
   static auto previousTransmission = 0UL;
     if (currentTime - previousTransmission >= ONE_SECOND) {
       previousTransmission = currentTime;
       const auto distance = String(front.getDistance());
-      mqtt.publish("/smartcar/ultrasound/front", distance);
+      mqtt.publish("/smartcar/info/ultrasound/front", distance);
     }
   #ifdef __SMCE__
     // Avoid over-using the CPU if we are running in the emulator
@@ -140,20 +145,34 @@ if (mqtt.connected()) {
 
 /*-------------------------------------- MQTT METHODS --------------------------------------*/
 
-void updateCamera(){
- if (mqtt.connected()) {
-    mqtt.loop();
+void updateCams(){
+  updateFrontCam();
+  updateBirdseye();
+}
+
+void updateFrontCam(){
     const auto currentTime = millis();
     #ifdef __SMCE__
     static auto previousFrame = 0UL;
     if (currentTime - previousFrame >= 95) {
       previousFrame = currentTime;
       Camera.readFrame(frameBuffer.data());
-      mqtt.publish("/smartcar/camera", frameBuffer.data(), frameBuffer.size(),
-                   false, 0);
+      mqtt.publish("/smartcar/camera/front", frameBuffer.data(), frameBuffer.size(), false, 0);
     }
     #endif
- }
+}
+
+void updateBirdseye(){
+    const auto currentTime = millis();
+    #ifdef __SMCE__
+    frameBuffer.resize(Birdseye.width() * Birdseye.height() * Birdseye.bytesPerPixel());
+    static auto previousFrame = 0UL;
+    if (currentTime - previousFrame >= 95) {
+      previousFrame = currentTime;
+      Birdseye.readFrame(frameBuffer.data());
+      mqtt.publish("/smartcar/camera/birdseye", frameBuffer.data(), frameBuffer.size(), false, 0);
+    }
+    #endif
 }
 
 void handleMQTTMessage(String topic, String message){
@@ -163,8 +182,6 @@ void handleMQTTMessage(String topic, String message){
           setAngle(message.toFloat());
     } else if (topic == "/smartcar/park") {
           shouldPark = true;
-    } else {
-          Serial.println(topic + " " + message);
     }
 }
 
@@ -348,7 +365,6 @@ void move(int r1, int c1, int r2, int c2){
     }  else {
         diffR = abs(r1-r2-2.0);
     }
-    Serial.println(diffR);
     distance = (diffR * BOX_HEIGHT);
     move(distance);
 }
@@ -356,7 +372,7 @@ void move(int r1, int c1, int r2, int c2){
 void move(float distance){
     leftOdometer.reset();
     while(leftOdometer.getDistance() < distance){
-        updateCamera();
+        updateCams();
         car.setSpeed(PARKING_SPEED);
     }
     car.setSpeed(0);
@@ -393,7 +409,7 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     Serial.println(currentAngle);
     Serial.println(targetAngle);
     while (targetAngle <= currentAngle){
-        updateCamera();
+        updateCams();
         gyroscope.update();
         newDistanceTraveled = leftOdometer.getDistance();
         currentAngle = gyroscope.getHeading();
@@ -468,7 +484,7 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
     car.setAngle(-85);
     car.setSpeed(PARKING_SPEED);
     while (targetAngle-3 >= currentAngle){
-        updateCamera();
+        updateCams();
         gyroscope.update();
         newDistanceTraveled = leftOdometer.getDistance();
         currentAngle = gyroscope.getHeading();
@@ -545,14 +561,14 @@ void autoRightReverse(){ // When the car is supposed to turn right out of a park
     car.setSpeed(-PARKING_SPEED);
     leftOdometer.reset();
     while (distanceTraveled > -50){
-        updateCamera();
+        updateCams();
         distanceTraveled = leftOdometer.getDistance();
     }
 
     turningAngle = 85;
     car.setAngle(turningAngle);
     while (targetAngle <= getAngle()){
-        updateCamera();
+        updateCams();
         currentAngle = gyroscope.getHeading();
         // during reversing all obstacle detection causes the car to stop turning for a small distance to get the car away from the obstacle
         if(isObsAtFrontRight() && frontRightTimer > 500) {
@@ -647,14 +663,14 @@ void autoLeftReverse(){ // When the car is supposed to turn left out of a parkin
     car.setSpeed(-PARKING_SPEED);
     leftOdometer.reset();
     while (distanceTraveled > -50){
-        updateCamera();
+        updateCams();
         distanceTraveled = leftOdometer.getDistance();
     }
 
     turningAngle = -85;
     car.setAngle(turningAngle);
     while (targetAngle >= getAngle()){
-        updateCamera();
+        updateCams();
         currentAngle = gyroscope.getHeading();
         // during reversing all obstacle detection causes the car to stop turning for a small distance to get the car away from the obstacle
         if(isObsAtFrontRight() && frontRightTimer > 500) {
