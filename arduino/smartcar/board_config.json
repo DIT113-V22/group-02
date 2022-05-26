@@ -35,6 +35,6 @@
         { "pin": 205, "analog": true }
     ],
     "uart_channels": [{}],
-    "frame_buffers": [{}],
+    "frame_buffers": [{"key": "289924736488571146"}, {"key": "361140108914589961"}],
     "sd_cards": []
 }

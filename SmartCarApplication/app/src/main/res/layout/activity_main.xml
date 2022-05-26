@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#DDE8E8"
     tools:context=".MainActivity">
 
     <com.example.joystickjhr.JoystickJhr
@@ -12,8 +13,8 @@
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         app:alphaCircleFirst="200"
-        app:colorFirst="#2962ff"
-        app:colorSecond="#90caf9"
+        app:colorFirst="#DDE8E8"
+        app:colorSecond="#111E6C"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -24,6 +25,88 @@
         app:relleno="false">
 
     </com.example.joystickjhr.JoystickJhr>
+
+    <TextView
+        android:id="@+id/speedlog"
+        android:layout_width="127dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="149dp"
+        android:background="@drawable/rounded_bg"
+        android:gravity="center"
+        android:text="0 km/h"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/joystick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.096"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"></TextView>
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="127dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/rounded_bg"
+        android:gravity="center"
+        android:text="0 m"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/joystick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"></TextView>
+
+    <ToggleButton
+        android:id="@+id/btnPlay"
+        android:layout_width="74dp"
+        android:layout_height="41dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="512dp"
+        android:layout_marginEnd="16dp"
+        android:textOn="cruise"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ToggleButton
+        android:id="@+id/switchCam"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="268dp"
+        android:autoText="false"
+        android:background="#80000000"
+        android:button="@drawable/ic_baseline_flip_camera_ios_24"
+        android:textColor="#FFFFFF"
+        android:textOff="360 Cam"
+        android:textOn="Front Cam"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <NumberPicker
+        android:id="@+id/cruisecontrol"
+        android:layout_width="71dp"
+        android:layout_height="122dp"
+        android:descendantFocusability="blocksDescendants"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.952"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.931" />
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -41,24 +124,49 @@
         android:layout_height="70dp"
         android:onClick="togglePark"
         android:text="P"
-        android:textColor="#B8E9FF"
+        android:textColor="#FFFFFF"
         android:textSize="40dp"
-        app:backgroundTint="#0000FF"
+        app:backgroundTint="#0D1E70"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.644" />
+        app:layout_constraintVertical_bias="0.643" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="405dp"
-        android:layout_height="330dp"
+        android:layout_width="411dp"
+        android:layout_height="298dp"
         android:background="#BFD4F6"
-        android:translationY="50dp"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="3dp"
-        tools:layout_editor_absoluteY="-3dp" />
+        android:padding="2dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Speedometer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.039"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.476" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ObsDistance"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.828"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.476" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

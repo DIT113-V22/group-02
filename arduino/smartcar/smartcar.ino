@@ -1,7 +1,15 @@
+#include <vector>
+
 #include <MQTT.h>
 #include <WiFi.h>
-#include <Smartcar.h>
+
 #include <stdlib.h>
+
+#ifdef __SMCE__
+#include <OV767X.h>
+#endif
+
+#include <Smartcar.h>
 
 WiFiClient net;
 MQTTClient mqtt;
@@ -22,6 +30,9 @@ DirectionalOdometer leftOdometer{ arduinoRuntime,
                                  LEFT_PULSES_PER_METER }; DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
 
 SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer,rightOdometer);
+#ifdef __SMCE__
+OV767X Birdseye;
+#endif
 
 // Front Ultrasonic Sensor
 const int triggerPin = 12;  //D6
@@ -46,6 +57,8 @@ typedef GP2Y0A21 Infrared; //Basically a 'rename'
   Infrared frontRight(arduinoRuntime, frontRightIRPin);
   Infrared backRight(arduinoRuntime, backRightIRPin);
   Infrared backLeft(arduinoRuntime, backLeftIRPin);
+
+std::vector<char> frameBuffer;
   
 
   // Car Info
@@ -59,8 +72,9 @@ typedef GP2Y0A21 Infrared; //Basically a 'rename'
                                         
 const int SPEED_INCREMENT = 5;
 const int TURNING_INCREMENT = 10;
-const int FORWARD_SPEED_LIMIT = 150;
+const int FORWARD_SPEED_LIMIT = 75;
 const int BACKWARD_SPEED_LIMIT = -50;
+
 const int MAX_STEERING_ANGLE = 90;
 const auto ONE_SECOND = 1000UL;
 
@@ -74,32 +88,35 @@ const int ENTRANCE_C = 1;
 
 /*-------------------------------------- SETUP AND LOOP --------------------------------------*/
 
-void setup(){
 
-  // Move the car with 50% of its full speed
-  Serial.begin(9600);
+void setup(){
   #ifdef __SMCE__
-    mqtt.begin("127.0.0.1", 1883, net); // Will connect to localhost
+  Serial.begin(9600);
+  const static int birdseye_pins[8]{9, 1, 0, 2, 4, 7, 3, 5};
+  Birdseye.setPins(0, 0, 0, 0, birdseye_pins);
+  Birdseye.begin(QVGA, RGB888, 15);
+  Camera.begin(QVGA, RGB888, 15);
+  frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
+  mqtt.begin("127.0.0.1", 1883, net);
   #else
-    mqtt.begin(net);
+  mqtt.begin(net);// Will connect to localhost
   #endif
     if (mqtt.connect("arduino", "public", "public")) {
       mqtt.subscribe("/smartcar/#", 1);
       mqtt.onMessage([](String topic, String message) { handleMQTTMessage(topic, message); });
-    }
-    Serial.println(getAngle());
+  }
 }
 
 void loop() {
-
+const auto currentTime = millis();
 if (mqtt.connected()) {
     rightOdometer.update();
     mqtt.loop();
-    const auto currentTime = millis();
     static auto previousTransmission = 0UL;
     if (currentTime - previousTransmission >= ONE_SECOND) {
       previousTransmission = currentTime;
       const auto distance = String(front.getDistance());
+      mqtt.publish("/smartcar/info/ultrasound/front", distance);
     }
   }
 
@@ -118,6 +135,13 @@ if (mqtt.connected()) {
 #endif
   checkObstacles();
   handleInput();
+  updateCams();
+  static auto previousTransmission = 0UL;
+    if (currentTime - previousTransmission >= ONE_SECOND) {
+      previousTransmission = currentTime;
+      const auto distance = String(front.getDistance());
+      mqtt.publish("/smartcar/info/ultrasound/front", distance);
+    }
   #ifdef __SMCE__
     // Avoid over-using the CPU if we are running in the emulator
     delay(1);
@@ -126,29 +150,54 @@ if (mqtt.connected()) {
 
 /*-------------------------------------- MQTT METHODS --------------------------------------*/
 
+void updateCams(){
+  updateFrontCam();
+  updateBirdseye();
+}
+
+void updateFrontCam(){
+    const auto currentTime = millis();
+    #ifdef __SMCE__
+    static auto previousFrame = 0UL;
+    if (currentTime - previousFrame >= 95) {
+      previousFrame = currentTime;
+      Camera.readFrame(frameBuffer.data());
+      mqtt.publish("/smartcar/camera/front", frameBuffer.data(), frameBuffer.size(), false, 0);
+    }
+    #endif
+}
+
+void updateBirdseye(){
+    const auto currentTime = millis();
+    #ifdef __SMCE__
+    frameBuffer.resize(Birdseye.width() * Birdseye.height() * Birdseye.bytesPerPixel());
+    static auto previousFrame = 0UL;
+    if (currentTime - previousFrame >= 95) {
+      previousFrame = currentTime;
+      Birdseye.readFrame(frameBuffer.data());
+      mqtt.publish("/smartcar/camera/birdseye", frameBuffer.data(), frameBuffer.size(), false, 0);
+    }
+    #endif
+}
+
 void handleMQTTMessage(String topic, String message){
    if (topic == "/smartcar/control/speed") {
           setSpeed(message.toFloat());
     } else if (topic == "/smartcar/control/steering") {
           setAngle(message.toFloat());
-    } else if (topic == "/smartcar/park") {
+    } else if (topic == "/smartcar/parking/park") {
          shouldPark = true;
-    } else if (topic == "/smartcar/retrieve") {
+    } else if (topic == "/smartcar/parking/retrieve") {
           shouldRetrieve = true;
-    } else {
-          Serial.println(topic + " " + message);
     }
 }
 
-void setSpeed(float newSpeed){
-  if(newSpeed > FORWARD_SPEED_LIMIT || newSpeed < BACKWARD_SPEED_LIMIT){
-    newSpeed = newSpeed > 0 ? FORWARD_SPEED_LIMIT : BACKWARD_SPEED_LIMIT;
-  }
-  speed = newSpeed;
+void setSpeed(int newSpeed){
   car.setSpeed(newSpeed);
+  mqtt.publish("/smartcar/info/speed", String(newSpeed));
 }
 
-void setAngle(float newAngle){
+void setAngle(float newAngle) {
   if(newAngle > MAX_STEERING_ANGLE){
     newAngle = MAX_STEERING_ANGLE;
   }
@@ -161,6 +210,7 @@ int getAngle(){
 }
 
 /*-------------------------------------- OBSTACLE DETECTION --------------------------------------*/
+
 
 bool isObsAtFront(float obsDistance) {
     const auto frontDist = front.getDistance();
@@ -264,6 +314,7 @@ GridBox parkedAt;
 // i.e a parking lot of 5x3 works just as well as a parking lot of 30x3, as long as
 // the middle column remains to be the path.
 // c = column, r = row
+
 GridBox parkingLot[PARKING_ROWS][PARKING_COLS] = {
     {GridBox(0, 0, Occupied),  GridBox(0, 1, Path), GridBox(0, 2, Occupied)},
     {GridBox(1, 0, Unoccupied),GridBox(1, 1, Path), GridBox(1, 2, Occupied)},
@@ -286,6 +337,7 @@ void park(){
                 parkingLot[i][j].type = Occupied;
                 parkedAt = parkingLot[i][j];
                 isParked = true;
+                shouldPark = false;
                 mqtt.publish("/smartcar/parking/hasParked", "Parked.");
                 return;
             }
@@ -324,7 +376,6 @@ void move(int r1, int c1, int r2, int c2){
     }  else {
         diffR = abs(r1-r2-2.0);
     }
-    Serial.println(diffR);
     distance = (diffR * BOX_HEIGHT);
     move(distance);
 }
@@ -332,6 +383,7 @@ void move(int r1, int c1, int r2, int c2){
 void move(float distance){
     leftOdometer.reset();
     while(leftOdometer.getDistance() < distance){
+        updateCams();
         car.setSpeed(PARKING_SPEED);
     }
     car.setSpeed(0);
@@ -368,6 +420,7 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     Serial.println(currentAngle);
     Serial.println(targetAngle);
     while (targetAngle <= currentAngle){
+        updateCams();
         gyroscope.update();
         newDistanceTraveled = leftOdometer.getDistance();
         currentAngle = gyroscope.getHeading();
@@ -396,7 +449,6 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
               car.setSpeed(-PARKING_SPEED);
             }
         }
-
         if(isObsAtFront() && frontTimer > 500){ // reverses car and changes the turning angle to the opposite direction
             frontTimer = 0;
             turningAngle = -85;
@@ -443,6 +495,7 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
     car.setAngle(-85);
     car.setSpeed(PARKING_SPEED);
     while (targetAngle-3 >= currentAngle){
+        updateCams();
         gyroscope.update();
         newDistanceTraveled = leftOdometer.getDistance();
         currentAngle = gyroscope.getHeading();
@@ -519,12 +572,14 @@ void autoRightReverse(){ // When the car is supposed to turn right out of a park
     car.setSpeed(-PARKING_SPEED);
     leftOdometer.reset();
     while (distanceTraveled > -50){
+        updateCams();
         distanceTraveled = leftOdometer.getDistance();
     }
 
     turningAngle = 85;
     car.setAngle(turningAngle);
     while (targetAngle <= getAngle()){
+        updateCams();
         currentAngle = gyroscope.getHeading();
         // during reversing all obstacle detection causes the car to stop turning for a small distance to get the car away from the obstacle
         if(isObsAtFrontRight() && frontRightTimer > 500) {
@@ -619,12 +674,14 @@ void autoLeftReverse(){ // When the car is supposed to turn left out of a parkin
     car.setSpeed(-PARKING_SPEED);
     leftOdometer.reset();
     while (distanceTraveled > -50){
+        updateCams();
         distanceTraveled = leftOdometer.getDistance();
     }
 
     turningAngle = -85;
     car.setAngle(turningAngle);
     while (targetAngle >= getAngle()){
+        updateCams();
         currentAngle = gyroscope.getHeading();
         // during reversing all obstacle detection causes the car to stop turning for a small distance to get the car away from the obstacle
         if(isObsAtFrontRight() && frontRightTimer > 500) {
@@ -750,7 +807,7 @@ void turnRight(){ // turns the car 10 degrees clockwise (degrees depend on TURNI
 
 void stopCar(){
   while(car.getSpeed() > 0){
-    int speed = speed > 0 ? speed-0.1 : speed+0.1;
+    speed = speed > 0 ? speed-0.1 : speed+0.1;
     car.setSpeed(speed);
   }
 }
