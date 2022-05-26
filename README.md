@@ -26,7 +26,8 @@ Pocket Parking will use the car's sensors to detect obstacles and avoid collisio
 **MainActivity.java**
 > The MainActivity.java file is responsible for initializing, handling and displaying the functionality that is visible in the mobile application. The views and buttons all communicate through the IDs found in the activity_main.xml file. For instance, the camera feed is established when invoking the onCreate() method. It later then subscribes to message publications through the id in the activity_main.xml file. To the bottom right of the camera feed, there's a toggle button for switching between frontcam and birds-eye view. An external library is used for creating the joystick and is related to the setSpeed() and setAngle() methods. Additionally, connectToMQTTBroker() establishes communication between the mobile application and the broker.
 
-**MqttCLient.java**
+**MqttClient.java**
+> The MqttClient.java file is mainly responsible for setting up the MQTT protocol for the Android application. In this file, there are methods that connect and disconnect the mobile application to the broker. Also methods for subscribing, unsubscribing and publishing from the mobile application is implemented in this part of the system.
 
 ***
 
