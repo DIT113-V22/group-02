@@ -70,9 +70,31 @@
         android:layout_gravity="center"
         android:layout_marginTop="512dp"
         android:layout_marginEnd="16dp"
-        android:textOn="cruise control"
+        android:textOn="cruise"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ToggleButton
+        android:id="@+id/switchCam"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="268dp"
+        android:autoText="false"
+        android:background="#80000000"
+        android:button="@drawable/ic_baseline_flip_camera_ios_24"
+        android:textColor="#FFFFFF"
+        android:textOff="360 Cam"
+        android:textOn="Front Cam"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.0" />
 
     <NumberPicker
         android:id="@+id/cruisecontrol"
@@ -97,10 +119,10 @@
     </FrameLayout>
 
     <Button
-        android:id="@+id/parkright"
-        android:layout_width="148dp"
-        android:layout_height="72dp"
-        android:onClick="parkTheCar"
+        android:id="@+id/park"
+        android:layout_width="130dp"
+        android:layout_height="70dp"
+        android:onClick="togglePark"
         android:text="P"
         android:textColor="#FFFFFF"
         android:textSize="40dp"
@@ -114,13 +136,14 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="409dp"
-        android:layout_height="300dp"
+        android:layout_width="411dp"
+        android:layout_height="298dp"
         android:background="#BFD4F6"
-        android:scaleType="fitCenter"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-1dp"
-        tools:layout_editor_absoluteY="-3dp" />
+        android:padding="2dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/textView"

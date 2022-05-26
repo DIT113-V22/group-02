@@ -180,7 +180,7 @@ transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.89230
 transform = Transform( 0.999999, 0, 0, 0, -1, 0.000715645, 0, -0.000715645, -1, 0, 0.0436544, 2.64827 )
 
 [node name="360Camera" type="Position3D" parent="AttachmentSlots"]
-transform = Transform( -0.0114898, 0.0331147, -0.999385, -0.0100487, 0.999397, 0.0332307, 0.999884, 0.0104243, -0.0111501, -0.00079, 3.28001, 0.00894597 )
+transform = Transform( 1, 0, 0, 0, -0.00191991, 0.999998, 0, -0.999998, -0.00191991, -0.001, 6, 0 )
 
 [node name="LeftFront" type="Position3D" parent="AttachmentSlots"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.00833, 0, -2.446 )
