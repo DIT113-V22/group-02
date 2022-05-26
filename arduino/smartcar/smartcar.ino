@@ -4,6 +4,7 @@
 #include <WiFi.h>
 
 #include <stdlib.h>
+
 #ifdef __SMCE__
 #include <OV767X.h>
 #endif
@@ -29,7 +30,9 @@ DirectionalOdometer leftOdometer{ arduinoRuntime,
                                  LEFT_PULSES_PER_METER }; DirectionlessOdometer rightOdometer{ arduinoRuntime,smartcarlib::pins::v2::rightOdometerPin,[]() { rightOdometer.update(); },pulsesPerMeter };
 
 SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer,rightOdometer);
+#ifdef __SMCE__
 OV767X Birdseye;
+#endif
 
 // Front Ultrasonic Sensor
 const int triggerPin = 12;  //D6
@@ -160,9 +163,9 @@ void updateFrontCam(){
 }
 
 void updateBirdseye(){
-    frameBuffer.resize(Birdseye.width() * Birdseye.height() * Birdseye.bytesPerPixel());
     const auto currentTime = millis();
     #ifdef __SMCE__
+    frameBuffer.resize(Birdseye.width() * Birdseye.height() * Birdseye.bytesPerPixel());
     static auto previousFrame = 0UL;
     if (currentTime - previousFrame >= 95) {
       previousFrame = currentTime;
