@@ -1,5 +1,8 @@
 # Pocket Parking - Go Park Yourself! 🅿️🅿️
 **What is Pocket Parking?**  
+
+![Arduino CI](https://img.shields.io/travis/DIT113-V22/group-02?label=Arduino%20CI&style=flat-square)
+
 Pocket Parking is an automated parking service for drivers. Our solution aims to reduce car accidents that frequently occur in parking lots. Our goal is also to introduce digitalized personal valet parking, that everyone can afford, right in your pocket!
 
 ***
