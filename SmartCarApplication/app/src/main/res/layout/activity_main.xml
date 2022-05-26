@@ -43,7 +43,7 @@
         app:layout_constraintHorizontal_bias="0.096"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75"></TextView>
+        app:layout_constraintVertical_bias="0.731"></TextView>
 
     <TextView
         android:id="@+id/distance"
@@ -58,10 +58,10 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/joystick"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintHorizontal_bias="0.947"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75"></TextView>
+        app:layout_constraintVertical_bias="0.731"></TextView>
 
     <ToggleButton
         android:id="@+id/btnPlay"
@@ -70,11 +70,12 @@
         android:layout_gravity="center"
         android:layout_marginTop="512dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_bg"
         android:textOn="cruise"
         android:textSize="13sp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <ToggleButton
         android:id="@+id/switchCam"
@@ -100,6 +101,8 @@
         android:id="@+id/cruisecontrol"
         android:layout_width="71dp"
         android:layout_height="122dp"
+        android:background="#FFFFFF"
+        android:solidColor="#0D1E70"
         android:descendantFocusability="blocksDescendants"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -161,10 +164,10 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ObsDistance"
+        android:text="Distance-2-Object"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.828"
+        app:layout_constraintHorizontal_bias="0.897"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.476" />
