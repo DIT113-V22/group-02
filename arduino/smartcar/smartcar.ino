@@ -282,8 +282,6 @@ bool isObsAtBackLeft() {
 }
 
 void checkObstacles(){
-  const auto distance = front.getDistance();
-  //
   if (isObsAtFront()) {
     stopCar();
   }
@@ -368,8 +366,6 @@ void move(int r1, int c1, int r2, int c2){
     int parkingR;
     if(!isParked){
         parkingR = r2+1;
-        int parkingC = 1;
-        int currentAngle = getAngle();
         // add 1.46 to take the distance of the entrance box into account
         // and the slight movement into the parking space
         diffR = r1-parkingR+1.46;
@@ -399,8 +395,6 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     int frontRightTimer = 500;
     int leftTimer = 500;
     int frontLeftTimer = 500;
-    int backRightTimer = 500;
-    int backLeftTimer = 500;
     int frontTimer = 500;
 
     // these are used so that if isObsAtFrontRight() is true, the car does not stop turning while reversing
@@ -483,8 +477,6 @@ void autoLeftPark(){ // the car is supposed to park inside a parking spot to its
     int frontRightTimer = 500;
     int leftTimer = 500;
     int frontLeftTimer = 500;
-    int backRightTimer = 500;
-    int backLeftTimer = 500;
     int frontTimer = 500;
 
     // these are used so that if isObsAtFrontLeft() is true, the car does not stop turning while reversing
@@ -564,8 +556,6 @@ void autoRightReverse(){ // When the car is supposed to turn right out of a park
     int frontRightTimer = 500;
     int leftTimer = 500;
     int frontLeftTimer = 500;
-    int backRightTimer = 500;
-    int backLeftTimer = 500;
     int frontTimer = 500;
 
     int distanceTraveled = 0;
@@ -666,8 +656,6 @@ void autoLeftReverse(){ // When the car is supposed to turn left out of a parkin
     int frontRightTimer = 500;
     int leftTimer = 500;
     int frontLeftTimer = 500;
-    int backRightTimer = 500;
-    int backLeftTimer = 500;
     int frontTimer = 500;
 
     int distanceTraveled = 0;
