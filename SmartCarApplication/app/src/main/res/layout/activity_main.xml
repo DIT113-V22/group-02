@@ -119,10 +119,10 @@
     </FrameLayout>
 
     <Button
-        android:id="@+id/parkright"
-        android:layout_width="148dp"
-        android:layout_height="72dp"
-        android:onClick="parkTheCar"
+        android:id="@+id/park"
+        android:layout_width="130dp"
+        android:layout_height="70dp"
+        android:onClick="togglePark"
         android:text="P"
         android:textColor="#FFFFFF"
         android:textSize="40dp"
