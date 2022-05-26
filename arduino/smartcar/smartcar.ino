@@ -260,8 +260,8 @@ bool isObsAtBackLeft() {
 void checkObstacles(){
   const auto distance = front.getDistance();
   //
-  if (isObsAtFront(20)) {
-    car.setSpeed(0);
+  if (isObsAtFront()) {
+    stopCar();
   }
 }
 
