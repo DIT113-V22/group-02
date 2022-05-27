@@ -45,7 +45,7 @@ Mosquitto
 (https://mosquitto.org/download/)
 2nd: Install dependencies:
 To download the project “ Pocket parking ”, you need to follow the following steps:
-![]("https://user-images.githubusercontent.com/90387423/170666733-98750ff6-5ce2-4521-a4c2-0349f348d376.png")
+![github download](https://user-images.githubusercontent.com/90387423/170666733-98750ff6-5ce2-4521-a4c2-0349f348d376.png)
 
 
 Clone project DIT113-V22/group-02. To clone the project you can just simply click on the code button and copy the URL.
