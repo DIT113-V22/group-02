@@ -40,49 +40,62 @@ Pocket Parking will use the car's sensors to detect obstacles and avoid collisio
 You need to download SMCE, Mosquitto and Android Studio
 Android Studio
  (https://developer.android.com/studio)
-SMCE (https://platis.solutions/blog/2021/09/25/smce-arduino-car-emulator/)
+SMCE-lib 
+https://github.com/ItJustWorksTM/libSMCE
+SMCE_gd
+https://github.com/ItJustWorksTM/smce-gd/releases
 Mosquitto
 (https://mosquitto.org/download/)
 2nd: Install dependencies:
 To download the project “ Pocket parking ”, you need to follow the following steps:
-![github download](https://user-images.githubusercontent.com/90387423/170666733-98750ff6-5ce2-4521-a4c2-0349f348d376.png | width=200)
-
-
 Clone project DIT113-V22/group-02. To clone the project you can just simply click on the code button and copy the URL.
 
+<img src="https://user-images.githubusercontent.com/90387423/170666733-98750ff6-5ce2-4521-a4c2-0349f348d376.png" width="300">
+
+
+
+
 After copying the URL code, open the android studio on we get the following screen, screenshot is given below you can click on the “Get from VCS ”
+
+<img src="https://user-images.githubusercontent.com/90387423/170670323-82ccf6fd-7ff0-41cf-b148-396b450921fa.png" width="400">
+
 
 
 
 
 Then you can paste a URL link to clone the project and press clone.
 
+<img src="https://user-images.githubusercontent.com/90387423/170671081-0825909c-f83c-4065-baa6-2ba2adaec0f8.png" width="400">
+
 
 
 
 3rd: 
-For the mod to be recognized by the emulator, one needs to find a file called "ppmod.pck" and copy-paste it in a folder called "mods" in the user directory of the SMCE-Godot app:
-For Windows: C:/Users/admin/AppData/Roaming/Godot/app_userdata/SMCE
-For Mac: ~/Library/Application Support/Godot/app_userdata/SMCE/mods
-For Linux: ~/.local/share/godot/app_userdata/SMCE/mods/
-It is also important to run the sketch in DIT113-V22/group-02/arduino/smartcar directory, as it also contains the necessary config files for the mod to work correctly on the emulator.
+Find a file in the repo at location group-02/mod/ppmod.pck, copy it and paste it in the mods directory of the SMCE-gd app (SMCE/mods), for it to register the terrain and vehicle. The location is different based on your operating system, use the relevant location from the list below.  
   
-Find a file in the repo at location group-02/mod/ppmod.pck, copy it and paste it in the user directory of the SMCE-gd app, for it to register the terrain and vehicle. It is different based on whether SMCE is run on a Mac, Windows or Linux, so check the instructions.
+For Windows: C:/Users/admin/AppData/Roaming/Godot/app_userdata/SMCE/mods 
+For Mac: ~/Library/Application Support/Godot/app_userdata/SMCE/mods  
+For Linux: ~/.local/share/godot/app_userdata/SMCE/mods/  
+
+  
+
 
 
 4th:
 Start up SMCE, click on “Start Fresh”, and click the + in the top left corner. Click on + Add New, then select the group-02 folder. After that, navigate through arduino/SmartCar/SmartCar.ino, and select as sketch. It is the set of commands and procedures that the car requires to function, written in C/C++.  
 
+<img src="https://user-images.githubusercontent.com/90387423/170671896-97a847fc-1870-4d04-bb14-4ff1bf451e22.png" width="400">
 
 
 
 
 
- press compile 
-
-press start
-
+ Press compile  
  
+<img src="https://user-images.githubusercontent.com/90387423/170672110-f397fa77-f7a4-4d8d-9fae-5dc3ca2dd1cf.png" width="400">  
+Press start  
+
+<img src="https://user-images.githubusercontent.com/90387423/170676764-7c1deb73-b506-4857-a12f-9fce000abf8e.png" width="400">  
 
 
 
@@ -95,7 +108,7 @@ press start
 Run the mosquitto broker in your command prompt using  “mosquitto --v” to transmit the mqtt messages 
 
 
-
+<img src="https://user-images.githubusercontent.com/90387423/170672684-4497a51b-5568-4f66-941f-cb91946b830c.png" width="400">
 
 
 
@@ -120,6 +133,7 @@ Run the mosquitto broker in your command prompt using  “mosquitto --v” to tr
 
 6th:
 Run the application on the Android Studio then you have a complete control of the car on the emulator 
+<img src="https://user-images.githubusercontent.com/90387423/170674674-66537b88-1a7d-49fa-bd8d-b763f150ae6e.png" width="400">
 
 
 
