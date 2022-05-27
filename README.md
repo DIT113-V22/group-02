@@ -98,7 +98,7 @@ Next, **Press** `Compile`.
 
 <br />
 
-After successful compilation, press `Start` to spawn the smartcar. Once the car is spawned, press `Follow` to have a clear view of the car in the emulator, from the perspective of where it is heading. To get the x-ray view of the sensors beneath the car, as visualised in the second picture that follows, press `Fn + F3`.   
+After successful compilation, press `Start` to spawn the smartcar. Once the car is spawned, press `Follow` to have a clear view of the car in the emulator, from the perspective of where it is heading. To get the x-ray view of the sensors beneath the car, as visualised in the second picture that follows, press `F3`.   
 
 <img src="https://user-images.githubusercontent.com/90387423/170676764-7c1deb73-b506-4857-a12f-9fce000abf8e.png">  
 
