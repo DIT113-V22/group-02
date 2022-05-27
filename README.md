@@ -73,7 +73,7 @@ Then you can paste a URL link to clone the project and press clone.
 3rd: 
 Find a file in the repo at location group-02/mod/ppmod.pck, copy it and paste it in the mods directory of the SMCE-gd app (SMCE/mods), for it to register the terrain and vehicle. The location is different based on your operating system, use the relevant location from the list below.  
   
-For Windows: C:/Users/admin/AppData/Roaming/Godot/app_userdata/SMCE/mods 
+For Windows: C:/Users/admin/AppData/Roaming/Godot/app_userdata/SMCE/mods  
 For Mac: ~/Library/Application Support/Godot/app_userdata/SMCE/mods  
 For Linux: ~/.local/share/godot/app_userdata/SMCE/mods/  
 
@@ -105,7 +105,7 @@ Press start
 
 
 5th:
-Run the mosquitto broker in your command prompt using  “mosquitto --v” to transmit the mqtt messages 
+Run the mosquitto broker in your command prompt  using the command “mosquitto" to transmit the mqtt messages 
 
 
 <img src="https://user-images.githubusercontent.com/90387423/170672684-4497a51b-5568-4f66-941f-cb91946b830c.png" width="400">
