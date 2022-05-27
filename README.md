@@ -33,7 +33,109 @@ Pocket Parking will use the car's sensors to detect obstacles and avoid collisio
 **MqttClient.java**
 > The MqttClient.java file is mainly responsible for setting up the MQTT protocol for the Android application. In this file, there are methods that connect and disconnect the mobile application to the broker. Also methods for subscribing, unsubscribing and publishing from the mobile application is implemented in this part of the system.
 
-***
+**Setup Instruction**
+
+-To start testing the pocket car parking product on your computer:-
+ 1st :
+You need to download SMCE, Mosquitto and Android Studio
+Android Studio
+ (https://developer.android.com/studio)
+SMCE-lib 
+https://github.com/ItJustWorksTM/libSMCE
+SMCE_gd
+https://github.com/ItJustWorksTM/smce-gd/releases
+Mosquitto
+(https://mosquitto.org/download/)
+2nd: Install dependencies:
+To download the project “ Pocket parking ”, you need to follow the following steps:
+Clone project DIT113-V22/group-02. To clone the project you can just simply click on the code button and copy the URL.
+
+<img src="https://user-images.githubusercontent.com/90387423/170666733-98750ff6-5ce2-4521-a4c2-0349f348d376.png" width="300">
+
+
+
+
+After copying the URL code, open the android studio on we get the following screen, screenshot is given below you can click on the “Get from VCS ”
+
+<img src="https://user-images.githubusercontent.com/90387423/170670323-82ccf6fd-7ff0-41cf-b148-396b450921fa.png" width="400">
+
+
+
+
+
+Then you can paste a URL link to clone the project and press clone.
+
+<img src="https://user-images.githubusercontent.com/90387423/170671081-0825909c-f83c-4065-baa6-2ba2adaec0f8.png" width="400">
+
+
+
+
+3rd: 
+Find a file in the repo at location group-02/mod/ppmod.pck, copy it and paste it in the mods directory of the SMCE-gd app (SMCE/mods), for it to register the terrain and vehicle. The location is different based on your operating system, use the relevant location from the list below.  
+  
+For Windows: C:/Users/admin/AppData/Roaming/Godot/app_userdata/SMCE/mods  
+For Mac: ~/Library/Application Support/Godot/app_userdata/SMCE/mods  
+For Linux: ~/.local/share/godot/app_userdata/SMCE/mods/  
+
+  
+
+
+
+4th:
+Start up SMCE, click on “Start Fresh”, and click the + in the top left corner. Click on + Add New, then select the group-02 folder. After that, navigate through arduino/SmartCar/SmartCar.ino, and select as sketch. It is the set of commands and procedures that the car requires to function, written in C/C++.  
+
+<img src="https://user-images.githubusercontent.com/90387423/170671896-97a847fc-1870-4d04-bb14-4ff1bf451e22.png" width="400">
+
+
+
+
+
+ Press compile  
+ 
+<img src="https://user-images.githubusercontent.com/90387423/170672110-f397fa77-f7a4-4d8d-9fae-5dc3ca2dd1cf.png" width="400">  
+Press start  
+
+<img src="https://user-images.githubusercontent.com/90387423/170676764-7c1deb73-b506-4857-a12f-9fce000abf8e.png" width="400">  
+
+
+
+
+
+
+
+
+5th:
+Run the mosquitto broker in your command prompt  using the command “mosquitto" to transmit the mqtt messages 
+
+
+<img src="https://user-images.githubusercontent.com/90387423/170672684-4497a51b-5568-4f66-941f-cb91946b830c.png" width="400">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6th:
+Run the application on the Android Studio then you have a complete control of the car on the emulator 
+<img src="https://user-images.githubusercontent.com/90387423/170674674-66537b88-1a7d-49fa-bd8d-b763f150ae6e.png" width="400">
+
+
 
 ### The Team
 
