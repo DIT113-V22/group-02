@@ -65,15 +65,16 @@
 
     <ToggleButton
         android:id="@+id/btnPlay"
-        android:layout_width="74dp"
+        android:layout_width="71dp"
         android:layout_height="41dp"
         android:layout_gravity="center"
         android:layout_marginTop="512dp"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/rounded_bg"
+        android:background="@drawable/rounded_bg_light"
+        android:textColor="#0D1E70"
+        android:textColorLink="#DAE8E8"
         android:textOn="cruise"
         android:textSize="13sp"
-        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -102,8 +103,8 @@
         android:layout_width="71dp"
         android:layout_height="122dp"
         android:background="#FFFFFF"
-        android:solidColor="#0D1E70"
         android:descendantFocusability="blocksDescendants"
+        android:solidColor="#19868CAE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.952"
@@ -155,10 +156,10 @@
         android:text="Speedometer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.039"
+        app:layout_constraintHorizontal_bias="0.049"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.476" />
+        app:layout_constraintVertical_bias="0.466" />
 
     <TextView
         android:id="@+id/textView3"
@@ -167,9 +168,9 @@
         android:text="Distance-2-Object"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.897"
+        app:layout_constraintHorizontal_bias="0.893"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.476" />
+        app:layout_constraintVertical_bias="0.466" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
