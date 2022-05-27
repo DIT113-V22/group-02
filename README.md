@@ -122,7 +122,7 @@ To run the mosquitto broker, open a compatible terminal, and type the command `m
 
 Run the application on the Android Studio then you have a complete control of the car on the emulator 
 
-&nbsp;&nbsp;&nbsp;&nbsp;<img src ="https://user-images.githubusercontent.com/91271297/170490811-0b763fb7-99df-40fd-bbd2-663323f4627f.png" width="690" /> <img src ="https://user-images.githubusercontent.com/91271297/170494120-dae9e37a-4cd1-4513-92bb-0f48ac364a37.gif" width="250" height="520" />
+&nbsp;&nbsp;&nbsp;&nbsp;<img src ="https://user-images.githubusercontent.com/91271297/170490811-0b763fb7-99df-40fd-bbd2-663323f4627f.png" width="650" /> <img src ="https://user-images.githubusercontent.com/91271297/170494120-dae9e37a-4cd1-4513-92bb-0f48ac364a37.gif" width="250" height="520" />
 
 *** 
 
