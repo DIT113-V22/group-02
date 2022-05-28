@@ -133,7 +133,6 @@ if (mqtt.connected()) {
   // Avoid over-using the CPU if we are running in the emulator
   delay(1);
 #endif
-  checkObstacles();
   handleInput();
   updateCams();
   static auto previousTransmission = 0UL;
@@ -281,11 +280,7 @@ bool isObsAtBackLeft() {
     return (backLeftDist > 0 && backLeftDist < 15);
 }
 
-void checkObstacles(){
-  if (isObsAtFront()) {
-    stopCar();
-  }
-}
+
 
 /*-------------------------------------- INTERNAL MAP SETUP --------------------------------------*/
 
@@ -388,7 +383,6 @@ void move(float distance){
 /*-------------------------------------- AUTO PARKING --------------------------------------*/
 
 void autoRightPark(){ // the car is supposed to park inside a parking spot to its immediate right
-    Serial.println("auto right park");
     gyroscope.update();
     // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
     int rightTimer = 500;
@@ -411,8 +405,6 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
     }
     car.setAngle(85);
     car.setSpeed(15);
-    Serial.println(currentAngle);
-    Serial.println(targetAngle);
     while (targetAngle <= currentAngle){
         updateCams();
         gyroscope.update();
@@ -470,7 +462,6 @@ void autoRightPark(){ // the car is supposed to park inside a parking spot to it
 }
 
 void autoLeftPark(){ // the car is supposed to park inside a parking spot to its immediate left
-    Serial.println("auto left park");
     gyroscope.update();
     // currently using these timers as a way to reduce the amount of times the if-statements are true, to reduce the amount of changes to the cars turning
     int rightTimer = 500;
@@ -568,7 +559,6 @@ void autoRightReverse(){ // When the car is supposed to turn right out of a park
         targetAngle = currentAngle - 90;
     }
 
-    Serial.println(targetAngle);
     car.setSpeed(-PARKING_SPEED);
     leftOdometer.reset();
     while (distanceTraveled > -30){
@@ -590,7 +580,6 @@ void autoRightReverse(){ // When the car is supposed to turn right out of a park
             distanceTraveled = 0;
             while (distanceTraveled > -5){
                 distanceTraveled = leftOdometer.getDistance();
-                Serial.println(distanceTraveled);
             }
             turningAngle = 85;
             car.setAngle(turningAngle);
@@ -604,7 +593,6 @@ void autoRightReverse(){ // When the car is supposed to turn right out of a park
             distanceTraveled = 0;
             while (distanceTraveled > -5){
                 distanceTraveled = leftOdometer.getDistance();
-                Serial.println(distanceTraveled);
             }
             turningAngle = 85;
             car.setAngle(turningAngle);
@@ -618,7 +606,6 @@ void autoRightReverse(){ // When the car is supposed to turn right out of a park
             distanceTraveled = 0;
             while (distanceTraveled > -5){
                 distanceTraveled = leftOdometer.getDistance();
-                Serial.println(distanceTraveled);
             }
             turningAngle = 85;
             car.setAngle(turningAngle);
@@ -632,7 +619,6 @@ void autoRightReverse(){ // When the car is supposed to turn right out of a park
             distanceTraveled = 0;
             while (distanceTraveled > -5){
                 distanceTraveled = leftOdometer.getDistance();
-                Serial.println(distanceTraveled);
             }
             turningAngle = 85;
             car.setAngle(turningAngle);
@@ -668,7 +654,6 @@ void autoLeftReverse(){ // When the car is supposed to turn left out of a parkin
         targetAngle = currentAngle - 90;
     }
 
-    Serial.println(targetAngle);
     car.setSpeed(-PARKING_SPEED);
     leftOdometer.reset();
     while (distanceTraveled > -30){
@@ -690,7 +675,6 @@ void autoLeftReverse(){ // When the car is supposed to turn left out of a parkin
             distanceTraveled = 0;
             while (distanceTraveled > -5){
                 distanceTraveled = leftOdometer.getDistance();
-                Serial.println(distanceTraveled);
             }
             turningAngle = -85;
             car.setAngle(turningAngle);
@@ -704,7 +688,6 @@ void autoLeftReverse(){ // When the car is supposed to turn left out of a parkin
             distanceTraveled = 0;
             while (distanceTraveled > -5){
                 distanceTraveled = leftOdometer.getDistance();
-                Serial.println(distanceTraveled);
             }
             turningAngle = -85;
             car.setAngle(turningAngle);
@@ -718,7 +701,6 @@ void autoLeftReverse(){ // When the car is supposed to turn left out of a parkin
             distanceTraveled = 0;
             while (distanceTraveled > -5){
                 distanceTraveled = leftOdometer.getDistance();
-                Serial.println(distanceTraveled);
             }
             turningAngle = -85;
             car.setAngle(turningAngle);
@@ -732,7 +714,6 @@ void autoLeftReverse(){ // When the car is supposed to turn left out of a parkin
             distanceTraveled = 0;
             while (distanceTraveled > -5){
                 distanceTraveled = leftOdometer.getDistance();
-                Serial.println(distanceTraveled);
             }
             turningAngle = -85;
             car.setAngle(turningAngle);
