@@ -133,7 +133,6 @@ if (mqtt.connected()) {
   // Avoid over-using the CPU if we are running in the emulator
   delay(1);
 #endif
-  checkObstacles();
   handleInput();
   updateCams();
   static auto previousTransmission = 0UL;
@@ -281,11 +280,7 @@ bool isObsAtBackLeft() {
     return (backLeftDist > 0 && backLeftDist < 15);
 }
 
-void checkObstacles(){
-  if (isObsAtFront()) {
-    stopCar();
-  }
-}
+
 
 /*-------------------------------------- INTERNAL MAP SETUP --------------------------------------*/
 
