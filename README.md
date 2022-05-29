@@ -2,6 +2,12 @@
 
 &nbsp;![Android CI](https://github.com/DIT113-V22/group-02/actions/workflows/android.yml/badge.svg?branch=master)&nbsp;&nbsp;&nbsp;![Arduino CI](https://github.com/DIT113-V22/group-02/actions/workflows/arduino-build.yml/badge.svg?branch=master)
 
+
+[![Pocket Parking Thumbnail](https://user-images.githubusercontent.com/21986219/170846174-ac997b38-ebb3-4104-88ca-fe07ea0bfa13.png)](https://www.youtube.com/watch?v=snG1YhIBNhA)  
+[Demo Video](https://www.youtube.com/watch?v=snG1YhIBNhA)
+
+
+
 **What is Pocket Parking?**  
 Pocket Parking is an automated parking service for drivers. Our solution aims to reduce car accidents that frequently occur in parking lots. Our goal is also to introduce digitalized personal valet parking, that everyone can afford, right in your pocket!
 
